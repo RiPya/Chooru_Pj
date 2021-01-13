@@ -1,0 +1,168 @@
+/* 공통 style */
+/*teal 색상 버튼*/
+.btn-teal {
+    background-color: teal;
+    color : rgb(250, 255, 250);
+}
+.btn-teal:hover{
+    background-color: #006666;
+    color : rgb(250, 255, 250);
+}       			
+
+div { box-sizing: border-box; }
+
+
+/* ------------------------------------------- */
+
+
+/* header style */
+/* header 위쪽 padding */
+
+/* .header > div {
+    height : 150px;
+} */
+
+.bg-light {
+    background-color: white !important;
+}
+
+.navbar-brand{
+	margin : 0px;
+}
+
+/* header 왼쪽 */
+#header-brand {
+    width : 200px;
+    height : 100%;
+    text-align : center;
+    line-height : 50px;
+    margin-left : 0px;
+}
+
+/*header-nav 후손의 nav-link*/
+.header-nav .nav-link { 
+    color : rgb(51,51,51) !important;
+    font-size : 20px;
+    font-family : "맑은 고딕";
+}
+/*nav의 해당 게시판 선택 시 색 변경: class 추가해서 색 변하게*/
+.nav-item > .active {
+    font-weight : bold;
+    color : teal !important;
+}
+
+/*회원 관리 : 관리자 로그인 시에 user을 제거 / 로그인 안할 때는 추가*/
+.user {
+    display : none;
+}
+
+
+/*--------------------------------------------------------------*/
+/* header 오른쪽 */
+.header-right{ 
+    padding-top : 45px;
+    height : 150px;
+}      
+
+.icon-text {
+    width : 40px;
+    height : 60px;
+    margin-top : 0px; 
+}
+#cs-icon, #logout-icon { 
+    font-size : 40px; 
+    color : rgb(51,51,51);
+    margin-bottom : 12px;
+}
+#user-icon {
+    width : 100%;
+    height : 70%;
+    font-size : 38px;
+    color : rgb(51,51,51);
+    text-align: center;
+    padding : 0px;
+    margin : 0px;
+}
+
+/*로그인이 되어 있을 때 마이페이지, 고객센터 클릭 시*/
+.header-right-users .active { color : teal !important; }
+
+/*(under-icon 클래스)관리자 로그인 시 닉네임 색 변경*/
+.admin-account { color : red !important; }
+
+.under-icon{
+    display : inline-block;
+    width : 100%;
+    height : 30%;
+    font-size : 12px;
+    color : rgb(51,51,51);
+    font-weight : bold;
+    text-align : center;
+    padding : 0px;
+    margin : 0px;
+}
+/*검색 input 태그 밑줄만*/
+.search-input {
+    border : solid 1px transparent;
+    background-image: linear-gradient(rgb(51,51,51), rgb(51,51,51));
+    background-position: bottom 0px center;
+    background-size: calc(100% - 10px) 4px;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    padding : 0px;
+}
+.search-btn {
+    width : 30px;
+    height : 50px;
+    padding : 0px;
+    margin-right : 20px;
+}
+.search-icon {
+    font-size : 30px;
+    color : rgb(51,51,51);
+}
+
+
+
+/* -------------로그인 모달 style------------------ */
+
+	
+
+
+
+
+
+/*------------------- header 반응형 @media ---------------------*/
+/* nav는 기본 부트스트랩 내의 반응형 사용 + header-right 부분 추가*/
+/* 990px 이하일 경우 스타일 지정 */
+@media screen and (max-width : 990px){
+    .header-nav .nav-link {
+        font-size : 20px;
+        text-align: center;
+    }
+
+    .header-right {
+        display : none;
+        padding-top : 10px;
+        height : 80px; 
+        line-height: 0;
+    }    
+
+    /* .header-right > ul { display : inline-block; }
+    .header-right > ul > li { 
+        float : left;
+        margin-right : 10px;
+        margin-left : 10px;
+        padding : 0;
+    } */
+    .header-right-users #mypage, #login { margin-top : 5px; }
+    #nickname, #login>span { margin-top : 5px; }
+    .header-right-users #cs-page, #logout { margin-right : 3px; }
+
+}
+
+
+
+
+
+

@@ -1,0 +1,258 @@
+/* index + main-down style */
+
+div { box-sizing : border-box;}
+
+/* index(main)의 윗부분(carousel) style*/ 
+
+/* 입양/분양 carousel 부분 div */
+.main-up {
+    position : relative;
+    width : 100%;
+    height : 400px;
+    background-color: teal;
+    
+}
+/* carousel 안의 wrapper div 크기 */
+.main-up .carousel-inner {
+   width : 100%;
+   height : 100%;
+   text-align: center;
+}
+/* 입양/분양 메인 게시글 div */
+.main-adopt-div {
+   display : inline-block;
+   width : 300px;
+   height : 300px;
+   margin-top : 40px;
+   margin-left : 2px;
+   margin-right : 2px;
+   background-color : white;
+}
+.main-adopt-div:hover{
+	cursor : pointer;
+}
+/* 입양/분양 메인 게시글 썸네일 크기지정 */
+.main-adopt-div img {
+   width : 100%;
+   height: 100%;
+}
+/* carousel 밑의 페이지 표시 아이콘 */
+.carousel-indicators{
+   position : absolute;
+   top : 360px;
+}
+
+/* ------------------------------------------------------------- */
+/* main-down(메인의 밑부분) style */
+/* <공통> */
+.main-down { 
+	width : 100%; 
+}
+
+.main-left, .main-right {
+    width : 50%;
+    height: 600px;
+    margin-top : 50px;
+    float : left;
+}
+
+/*게시판 색상 div*/
+#main-notice .main-label,
+#main-review .main-label { 
+    width : 80%;
+    background-color: teal;
+    padding : 0;
+    text-align : left;
+}
+.main-title{ /*게시판 이름 div*/
+    font : bold 18px/40px "맑은 고딕";/*style size/height family*/
+    color : rgb(250, 255, 250);
+    margin-left : 5px;
+}
+.main-href > span { /* + 버튼*/
+    display : inline-block;
+    width : 30px;
+    height : 30px;
+    background-color: rgb(250, 255, 250);
+    text-align: center;
+    font : bold 30px/20px "맑은 고딕";
+    color : rgb(51,51,51);
+    border-radius : 20%;
+    margin-top : 5px;
+    margin-right : 5px;
+}
+
+.empty-main {
+    width : 100%;
+    height: 80px; 
+    text-align: center; 
+    line-height:50px;
+}
+
+
+/* <공지사항 박스(왼)> */
+
+/*공지사항 박스 table*/
+#main-notice {
+    box-sizing: border-box;
+    width : 80%;
+    float : right;     
+}
+#main-notice :hover{
+    cursor : pointer;
+}
+
+/*공지사항의 제목 td*/
+#main-notice .notice-no{
+    width : 5%;
+}
+#main-notice .notice-title{
+    width : 75%;
+    height : 40px;
+    font : bold 16px/20px "맑은 고딕";
+}
+/*공지사항의 날짜 td*/
+#main-notice .notice-date {
+    width : 20%;
+    height : 40px;
+    font-size : 14px;
+    color : gray;
+}
+
+/* <입양 후기 박스(오)> */
+/* 입양 후기 박스 table */
+#main-review {
+    box-sizing: border-box;
+    width : 80%;
+    float : left;
+}
+#main-review :hover{
+    cursor : pointer;
+}
+/* 입양 후기 번호 td */
+/* #main-review .review-no {
+    width : 5%;
+    height : 100px;
+} */
+/* 입양 후기 카드 td*/
+#main-review .review-card {
+    width : 100%;
+    height : 100px;
+    padding : 0px;
+}
+
+/* 입양 후기 카드 div*/
+.review-card .card{
+    width : 100%;
+    height : 100px;
+    margin : 0 auto !important;
+    border-color: transparent;
+    padding : 10px;
+}
+/* 입양 후기 카드 섬네일 div */
+.review-card .review-thumb{
+    box-sizing : border-box;
+    width: 30%;
+    height : 100%;
+}
+
+.review-thumb img {
+		width : 100px;
+		height : 100%;
+}
+/* 입양 후기 카드 바디(텍스트) */
+.review-card .review-text {
+    padding-top: 10px;
+    width : 70%;
+    padding : 10px;
+}
+/* 입양 후기 카드 바디 내 제목 */
+.review-card .card-title {
+    font-size : 16px;
+    font-weight: bold;
+    height: 50px;
+    margin:0;
+    padding-bottom: 5px;
+}
+/* 입양 후기 카드 바디 내 입양 날짜 */
+.review-card .card-date {
+    width : 100%;
+    font-size : 14px;
+    margin : 0;
+    color : gray;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/* index(main) + main-down 반응형 @media */
+/* 990px 이하일 경우 스타일 지정 */
+@media screen and (max-width : 990px){
+	
+	/* main-up 메인 윗부분 */
+	/* 입양/분양 carousel 부분 div */
+	.main-up {
+    position : relative;
+    width : 80%;
+    height : 1000px;
+    background-color: teal;
+    
+	}
+	/* carousel 안의 wrapper div 크기 */
+	.main-up .carousel-inner {
+  	width : 320px;
+   	height : 100%;
+   	margin : 0 auto;
+	}
+	
+	/* 입양/분양 메인 게시글 div 3개 wrapper */
+	.main-adopt{
+		margin-top : 25px;
+	}
+	
+	/* 입양/분양 메인 게시글 div */
+  .main-adopt-div {
+   	display : block;
+   	width : 300px;
+   	height : 300px;
+  	padding-top : 0;
+  	margin-top : 5px;
+	}  	
+
+	/* carousel 밑의 페이지 표시 아이콘 */	
+	.carousel-indicators{
+  	position : absolute;
+ 	  top : 960px;
+	}
+	
+	
+	/* ----------------------------------- */
+	/* 메인 아래 */
+	
+	/* main-down(메인의 밑부분) style */
+	/* <공통> */
+	.main-left, .main-right {
+    width : 100%;
+    height: 600px;
+    margin-top : 50px;
+    padding : 0;
+	}
+
+	/* <공지사항 박스(왼)> */
+	/*공지사항 박스 table*/
+	#main-notice {
+    box-sizing: border-box;
+    width : 100%;
+    margin : 0 auto;
+    
+	}	
+
+	/* <입양 후기 박스(오)> */
+	/* 입양 후기 박스 table */
+	#main-review {
+    width : 100%;
+    margin : 0 auto;
+    clear : left;
+	}
+}
+
+
