@@ -155,7 +155,24 @@
 		list-style-type: none;
 	}
 	
-	
+	/* 입양 후기 라인 */
+	.header-review{
+		width: 100%;
+		padding-top : 8px;
+		margin-bottom: 2rem;
+	}
+	.form-review {
+	   font-size: 20px;
+	   font-weight: bolder;
+	   padding-right: 20px;
+	} 
+	.form-hr > hr{
+		height: 8px;
+		margin-bottom: .1rem;
+		display: inline-block;
+		background-color: teal;
+		border-radius: 1rem;
+	}
 
 	
 </style>
@@ -169,6 +186,11 @@
 
 	<jsp:include page="../common/header.jsp"></jsp:include>
 	<div class="container  my-5">
+		<div class="header-review">
+			<span class="form-review">입양 후기</span>
+			<span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
+		</div>
+
 
 		<div>
 
