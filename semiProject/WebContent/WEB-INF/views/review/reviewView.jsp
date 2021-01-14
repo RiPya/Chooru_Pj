@@ -182,7 +182,15 @@
 		<%-- url 작성 시 붙여야 하는 str --%>
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
-
+	<!-- tp와 no(게시글 번호)을 파라미터로 동시에 보낼 때 사용하는 변수 : 수정글에 필요(카테고리 없는 글: 공지, 입양후기)-->
+	<c:set var="tpNoStr" value="tp=${param.tp}&no=${param.no}"/>
+	
+	<!-- 검색을 통해 온 경우 -->
+	<c:if test="${!empty param.sk && !empty param.sv }">
+		<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
+	</c:if>
+	
+	
 
 	<jsp:include page="../common/header.jsp"></jsp:include>
 	<div class="container  my-5">
@@ -264,12 +272,14 @@
 				<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<%-- <c:if test="${!empty loginMember && (loginMember.grade == 0)}"> --%>
-						<a href="#블라인드처리.do?${tpStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
+					<!-- tpNoStr == tp와 no을 같이 보냄 : 해당 글을 블라인드하도록 -->
+						<a href="#블라인드처리.do?${tpNoStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
 					<%-- </c:if> --%>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
 					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-						<a href="#" class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
+						<a href="${contextPath}/review/updateForm.do?${tpNoStr}${searchStr}" 
+							class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
 					<%-- </c:if> --%>
 					
 					

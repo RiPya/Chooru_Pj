@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>입양 후기 글 작성</title>
+<title>입양 후기 글 수정</title>
 
 		<!-- summernote 라이브러리 연결 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
@@ -79,7 +79,6 @@
    }
 	
 	.btn-size{
-		width : 75px !important;
 		border-radius: 1rem;
 		margin-left : 20px;
 		margin-top : 20px;
@@ -94,10 +93,15 @@
 <%-- url 작성 시 붙여야 하는 str --%>
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
-	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<%-- 	<c:if test="${!empty param.cd}">
-			<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
-		</c:if> --%>
+	<!-- tp와 no(게시글 번호)을 파라미터로 동시에 보낼 때 사용하는 변수 : 수정글에 필요(카테고리 없는 글: 공지, 입양후기)-->
+	<c:set var="tpNoStr" value="tp=${param.tp}&no=${param.no}"/>
+	
+	<!-- 검색을 통해 온 경우 -->
+	<c:if test="${!empty param.sk && !empty param.sv }">
+		<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
+	</c:if>
+	
+	
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -109,27 +113,32 @@
 				</div>
 	
 	        <div id="form-wrapper">
-            <form action="${contextPath}/review/reviewInsert.do?${tpStr}" method="post" onsubmit="return boardValidate()">
+            <form action="${contextPath}/review/reviewUpdate.do?${tpNoStr}${searchStr}" 
+            															method="post" onsubmit="return boardValidate()">
                 <div class="form-size">
                     <input type="text" name="title" id="titleInput" class="form-control"
-                         placeholder="제목을 입력해 주세요.">
+                         <%-- value="${review.reviewTitle}" --%>>
                 </div>
                 <div class="form-size">
                     <label for="adtDateInput" class="inputLabel">입양 날짜</label>
-                    <input type="date" name="adtDate" id="adtDateInput" class="inputContent form-control">
+                    <input type="date" name="adtDate" id="adtDateInput" class="inputContent form-control"
+                    	<%-- value="${review.adtDate }" --%>>
                 </div>
                 <div class="form-size">
                     <label for="adtLinkInput" class="inputLabel">입양/분양 글</label>
                     <input type="url" name="adtLink" id="adtLinkInput" class="inputContent form-control" 
-                        placeholder="입양/분양 글 url을 입력해 주세요.">
+                       <%--  value="${review.adtLink }" --%>>
                 </div>
             
                 <div class="form-size">
-                    <textarea name="content" id="summernote"></textarea>
+                    <textarea name="content" id="summernote">
+                    <%-- ${review.content} --%>
+                    </textarea>
                 </div>
                 <div id="form-btn" class="form-size">
-                    <button type="submit" class="btn btn-teal float-right btn-size">등록</button>
-                    <button type="button" class="btn btn-secondary float-right btn-size">취소</button>
+                    <button type="submit" class="btn btn-teal float-right btn-size" style="width:75px;">수정</button>
+                    <button type="button" class="btn btn-secondary float-right btn-size"
+                    	onclick="location.href='${header.referer}'">이전으로</button>
                 </div>
             </form>
         </div>
@@ -206,6 +215,13 @@
 			
 			/* img태그가 있는지 확인 후 없으면 img 추가하는 경고창 필요 → 썸네일이 필요하기 때문 */
 		}
+    
+    
+    
+    
+    
+    
+    
 	</script>
 	
 	
