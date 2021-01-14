@@ -107,6 +107,26 @@ public class ReviewController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
+			//입양 후기 글 등록 controller--------------
+			
+			
+			
+			
+			//입양 후기 수정 폼 연결-----------------------
+			else if(command.equals("/updateForm.do")) {
+				errorMsg = "게시글 조회 과정에서 오류 발생";
+				
+				path = "/WEB-INF/views/review/reviewUpdate.jsp";
+				
+				//request.setAttribute("fList", fList);
+				//request.setAttribute("pInfo", pInfo);
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+				
+			
+			
 			
 			
 		} catch (Exception e) {
