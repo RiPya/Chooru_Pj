@@ -94,7 +94,18 @@ public class ReviewController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
-			
+			//입양 후기 작성 폼 연결-------------------------------
+			else if(command.equals("/insertForm.do")) {
+				errorMsg = "게시글 조회 과정에서 오류 발생";
+				
+				path = "/WEB-INF/views/review/reviewInsertForm.jsp";
+				
+				//request.setAttribute("fList", fList);
+				//request.setAttribute("pInfo", pInfo);
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
 			
 			
 			
