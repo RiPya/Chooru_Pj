@@ -5,11 +5,14 @@ import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.kh.semiProject.member.model.service.MemberService;
+import com.kh.semiProject.member.model.vo.Member;
 
 @WebServlet("/member/*")
 public class MemberController extends HttpServlet {
@@ -51,9 +54,7 @@ public class MemberController extends HttpServlet {
 		String errorMsg = null;
 		
 		try {
-			
 			MemberService service = new MemberService();
-			
 			
 			//현재 페이지를 얻어옴
 			String cp = request.getParameter("cp");
@@ -71,13 +72,89 @@ public class MemberController extends HttpServlet {
 			String activeCode = request.getParameter("my");
 			
 			
-			
 			//회원가입 화면으로 연결해주는 Controller
 			if(command.equals("/signUpForm.do")) {
 				path = "/WEB-INF/views/member/signUpForm.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			} 
+			
+			
+			// 로그인 작업을 위한 Controller ----------------------
+			else if(command.equals("/login.do")) {
+				errorMsg = "로그인 작업 중 오류 발생";
+				
+				// 파라미터 얻어오기
+				String memberId = request.getParameter("memberId");
+				String memberPwd = request.getParameter("memberPwd");
+				String save = request.getParameter("save");
+				
+				// 로그인 모달창에 잘 적용 되는지 확인용 콘솔
+				// System.out.println(memberId + "/" + memberPwd + "/" + save);
+				
+				// JDBC 수행 (아이디, 비번 Member객체에 담아주기)
+				Member member = new Member();
+				member.setMemId(memberId);
+				member.setMemPw(memberPwd);
+				
+				Member loginMember = service.loginMember(member);
+				
+				// Service에서 값을 잘 받아왔는지 확인하기위한 콘솔
+				// System.out.println(loginMember);
+				
+				// 응답화면 문서타입 지정
+				response.setContentType("text/html; charset=UTF-8");
+				
+				// session 객체를 얻어와 로그인 정보를 추가
+				HttpSession session = request.getSession();
+				
+				// 로그인이 성공했을 때만 Session에 로그인 정보 추가
+				if(loginMember != null) {
+					// 30분동안 동작이 없을 경우 Session 만료
+					session.setMaxInactiveInterval(60*30);
+					
+					// Session에 로그인 정보 추가
+					session.setAttribute("loginMember", loginMember);
+					
+					// 아이디를 쿠키에 저장
+					// 쿠키 객체 생성
+					Cookie cookie = new Cookie("saveId", memberId);
+					
+					// 아이디 저장 체크가 되었는지 확인
+					// 일주일동안 쿠키 유효
+					if(save != null) {
+						cookie.setMaxAge(60*60*24*7); // 일주일
+					}else {
+						// 아이디 저장 체크가 안된경우
+						cookie.setMaxAge(0);
+					}
+					
+					// 쿠키 유효 디렉토리 지정 (semiProject)
+					cookie.setPath(request.getContextPath());
+					
+					// 생성된 쿠키를 클라이언트로 전달
+					// → 응답 성공 시 클라이언트 컴퓨터에 쿠키파일 자동저장
+					response.addCookie(cookie);
+				}else {
+					session.setAttribute("swalIcon", "error");
+					session.setAttribute("swalTitle", "로그인 실패");
+					session.setAttribute("swalText", "아이디 또는 비밀번호를 확인해주세요.");
+				}
+				
+				response.sendRedirect(request.getHeader("referer"));
+			}
+			
+			
+			// 로그아웃 기능 controller ---------------------------
+			else if(command.equals("/logout.do")) {
+				// 세션 만료(무효화)
+				request.getSession().invalidate();
+				
+				// 로그아웃 후 메인 또는 로그아웃 을 수행한 페이지로
+				// response.sendRedirect(request.getContentType()); // 메인으로
+				response.sendRedirect(request.getHeader("referer")); // 로그아웃 한 페이지
+			}
+			
 			
 			// 아이디찾기 페이지 1 : 찾기 폼으로 연결--------------
 			else if(command.equals("/idFind1.do")) {
@@ -114,6 +191,7 @@ public class MemberController extends HttpServlet {
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);		
 			}
+			
 			// 비밀번호 찾기 페이지 3 : 비번 변경 및 결과로 요청 위임
 			else if(command.equals("/pwdFindResult.do")) {
 				errorMsg = "비밀번호 변경 과정에서 오류 발생";
@@ -166,8 +244,6 @@ public class MemberController extends HttpServlet {
 				view.forward(request, response);
 			}
 
-			
-			
 			
 			//마이페이지: 탈퇴 설명 폼으로 연결-------------------
 			//mypageCode가 updateStatus이면 탈퇴

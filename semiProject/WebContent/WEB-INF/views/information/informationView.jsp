@@ -220,9 +220,9 @@
 				<!-- 목록으로/수정/삭제/블라인드 버튼 -->				
 				<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
-					<%-- <c:if test="${!empty loginMember && (loginMember.grade == 0)}"> --%>
+					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
 						<a href="#블라인드처리.do?${tpCdStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
-					<%-- </c:if> --%>
+					</c:if>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
 					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
