@@ -15,7 +15,8 @@ import javax.servlet.http.HttpSession;
 import com.kh.semiProject.member.model.vo.Member;
 
 @WebFilter(urlPatterns = {"/member/myPage.do", "/member/changePwd.do", "/member/secession.do",
-						  "/member/updateMember.do", "/member/updatePwd.do", "/member/updateStatus.do"})
+						  "/member/updateMember.do", "/member/updatePwd.do", "/member/updateStatus.do",
+						  "/adoption/*", "/review/*"})
 public class LoginFilter implements Filter {
 
     public LoginFilter() {  }
@@ -36,6 +37,9 @@ public class LoginFilter implements Filter {
 		Member loginMember = (Member)session.getAttribute("loginMember");
 		
 		if(loginMember == null) { // 로그인이 되어있지 않을 때
+			
+			session.setAttribute("swalIcon", "warning");
+			session.setAttribute("swalTitle", "로그인 후 이용하세요.");
 			
 			// 메인 페이지로 강제 이동시키기
 			res.sendRedirect(req.getContextPath());
