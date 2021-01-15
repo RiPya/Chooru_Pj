@@ -10,7 +10,6 @@
 
 		<!-- summernote 라이브러리 연결 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
 		<!-- 이거 없으면 진행이 안됨? -->
  		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js" defer></script>
@@ -150,32 +149,40 @@
         	placeholder: "사진과 함께 입양 후기를 작성해 주세요.",
         	
         	/* 이미지 삽입 후 서버에 저장을 위한 callback */
-        	/* callbacks: function(files, editor, welEditable) {
-	            for (var i = files.length - 1; i >= 0; i--) {
-	            	sendFile(files[i], this);
-	            }
-					} */
+        	callbacks: {
+        			onImageUpload : function(files, editor, welEditable) {
+		            for (var i = files.length - 1; i >= 0; i--) {
+		            	sendFile(files[i], this);
+		            }
+							} 
+        	}
         });
         
-      /* 이미지 서버 저장 후 url 반환 받는 함수 */  
-/*    		function sendFile(file, el) {
-   			var form_data = new FormData();
-   			form_data.append('file', file);
-        
-   			$.ajax({
-           	data: form_data,
-           	type: "POST",
-           	url: '${contextPath}/file/uploadFile.do',
-           	cache: false,
-           	contentType: false,
-           	enctype: 'multipart/form-data',
-           	processData: false,
-           	success: function(file) {
-          		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
-             		$(el).summernote('editor.insertImage', file.filePath, file.fileName);
-           	}
-         	});
-      } */
+        /* 이미지 서버 저장 후 url 반환 받는 함수 */  
+				function sendFile(file, el) {
+				var form_data = new FormData();
+				form_data.append('file', file);
+	    
+				$.ajax({
+	       	data: form_data,
+	       	type: "POST",
+	       	url: '${contextPath}/image/uploadImage.do',
+	       	cache: false,
+	       	contentType: false,
+	       	enctype: 'multipart/form-data',
+	       	dataType : "json",
+	       	processData: false,
+	       	success: function(image) {
+	      		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
+	      			var imageUrl = image.filePath + image.fileName
+	         		$(el).summernote('editor.insertImage', imageUrl);
+	      			console.log("서버 업로드 성공");
+	      			/* console.log(image);
+	      			console.log(image.filePath);
+	      			console.log(image.fileName); */
+	       	}
+	     	});
+  } 
         
     });//ready 함수 끝
 	
