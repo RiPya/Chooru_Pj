@@ -1,5 +1,6 @@
 package com.kh.semiProject.common.model.vo;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class Board {
@@ -19,7 +20,7 @@ public class Board {
 	private String code; //자유(FR_DAY/FR_REVIEW/FR_INFO) 고객센터코드(QUEST/REPORT)
 	
 	//입양 후기 관련 필드
-	private Timestamp adtDate;//입양 날짜
+	private Date adtDate;//입양 날짜
 	private String adtLink;//입양글 링크
 	
 	
@@ -29,7 +30,7 @@ public class Board {
 	
 	//매개변수 생성자
 	public Board(int brdNo, String brdTitle, String brdContent, String nickName, Timestamp brdCrtDt,
-			Timestamp brdModify, char brdStatus, int readCount, String brdType, String code, Timestamp adtDate,
+			Timestamp brdModify, char brdStatus, int readCount, String brdType, String code, Date adtDate,
 			String adtLink) {
 		super();
 		this.brdNo = brdNo;
@@ -128,11 +129,11 @@ public class Board {
 		this.code = code;
 	}
 
-	public Timestamp getAdtDate() {
+	public Date getAdtDate() {
 		return adtDate;
 	}
 
-	public void setAdtDate(Timestamp adtDate) {
+	public void setAdtDate(Date adtDate) {
 		this.adtDate = adtDate;
 	}
 
