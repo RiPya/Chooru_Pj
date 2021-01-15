@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<!-- 입양후기 게시글 번호 찾기 -->
+<entry key="selectNextNo">
+SELECT SEQ_BNO.NEXTVAL FROM DUAL
+</entry>
+
+<!-- 입양후기 BOARD 부분 삽입(제목, 내용, 작성자 등) -->
+<entry key="insertBoard">
+INSERT INTO BOARD(BRD_NO, TITLE, CONTENT, MEM_NO, BRD_TYPE)
+			VALUES(?, ?, ?, ?, ?)
+</entry>
+
+<!-- 입양후기 ADT_REVIEW 부분(입양날짜, 입양 url 등) 삽입 -->
+<entry key="insertReview">
+INSERT INTO ADT_REVIEW VALUES(?, ?, ?)
+</entry>
+
+<!-- 입양후기 IMAGE 이미지 삽입 -->
+<entry key="insertImage">
+INSERT INTO IMAGE VALUES(SEQ_FMO.NEXTVAL, ?, ?, ?, SYSDATE, ?)
+</entry>
+
+</properties>

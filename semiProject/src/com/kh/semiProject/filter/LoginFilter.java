@@ -43,6 +43,7 @@ public class LoginFilter implements Filter {
 			
 			// 메인 페이지로 강제 이동시키기
 			res.sendRedirect(req.getContextPath());
+			
 		}else {
 			chain.doFilter(request, response);
 			// 다음 필터를 호출
