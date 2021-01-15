@@ -282,7 +282,7 @@
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
 					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-						<a href="#" class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
+						<a href="${contextPath}/adoption/updateForm.do?${tpNoStr}${searchStr}" class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
 					<%-- </c:if> --%>
 					
 					
