@@ -72,4 +72,59 @@ public class MemberDAO {
 		return loginMember;
 	}
 
+
+	/** 현재 비밀번호 일치여부 DAO
+	 * @param conn
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int checkCurrentPwd(Connection conn, Member loginMember) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("checkCurrentPwd");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, loginMember.getMemNo());
+			pstmt.setString(2, loginMember.getMemPw());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				result = rset.getInt(1);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return result;
+	}
+
+
+	/** 비밀번호 변경 DAO
+	 * @param conn
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updatePwd(Connection conn, Member loginMember) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("updatePwd");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, loginMember.getMemPw());
+			pstmt.setInt(2, loginMember.getMemNo());
+			
+			result = pstmt.executeUpdate();
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
 }
