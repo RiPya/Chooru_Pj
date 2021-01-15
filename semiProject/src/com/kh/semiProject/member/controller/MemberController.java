@@ -46,7 +46,7 @@ public class MemberController extends HttpServlet {
 		RequestDispatcher view = null; //요청 위임 객체
 		
 		//sweet alert로 메시지 전달하는 용도
-		String swalICon = null;
+		String swalIcon = null;
 		String swalTitle = null;
 		String swalText = null;
 		
@@ -242,6 +242,32 @@ public class MemberController extends HttpServlet {
 				path = "/WEB-INF/views/member/changePwd.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
+			}
+			
+			// 비밀번호 변경 Controller ---------------------
+			else if(command.equals("/updatePwd.do")) {
+				errorMsg = "비밀번호 변경 과정에서 오류 발생";
+				
+				// 현재 비밀번호, 새로운 비밀번호
+				String currentPwd = request.getParameter("currentPwd"); // 현재 비밀번호
+				String newPwd = request.getParameter("newPwd1"); // 새 비밀번호
+				
+				// 현재 로그인한 회원의 정보를 얻어와 확인
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				loginMember.setMemPw(currentPwd);
+				
+				// 비즈니스 로직 처리
+				int result = service.updatePwd(loginMember, newPwd);
+				
+				if(result > 0) { // 비밀번호 변경 성공
+					swalIcon = "success";
+					swalTitle = "비밀번호가 변경되었습니다.";
+				}else if(result == 0) { // 비밀번호 변경 실패
+					
+					
+				}
 			}
 
 			
