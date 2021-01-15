@@ -169,7 +169,7 @@
 	                                   			<c:if test="${param.tp == 'mypage'}"> active </c:if>"
 	                                  			id="user-icon"></i><!--user아이콘-->
 	                                   <span class="under-icon" id="nickname" <c:if test="${loginMember.grade == '0'.charAt(0)}">style="color:red"</c:if>>
-	                                   	 	닉네임</span> 
+	                                   	 	${loginMember.nickName}</span> 
 	                                   <!--관리자 로그인 시 color 추가 / ${loginMember.memNm} -->
 	                               </div>
 	                             </a>
