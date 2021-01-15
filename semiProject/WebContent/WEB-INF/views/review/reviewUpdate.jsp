@@ -43,7 +43,7 @@
 
    /*form-wrapper 크기 */
    #form-wrapper {
-       width : 90%;
+       width : 100%;
        min-height : 1000px;
        margin: 0 auto;
        padding: 30px 0px;
@@ -62,15 +62,15 @@
 		}
    .inputLabel {
        height : 3rem;
-       width: 25% !important;
+       width: 16% !important;
+       min-width : 130px;
        line-height: 1.3;
        padding: .75rem .75rem;
        margin : 0;
-       font-weight : bold;
        font-size : 18px;
    }
    .inputContent{
-       width: 74% !important;
+       width: 83% !important;
    }
    .form-size{
        width : 100%;
@@ -80,7 +80,7 @@
 	
 	.btn-size{
 		border-radius: 1rem;
-		margin-left : 20px;
+		margin-left : 10px;
 		margin-top : 20px;
 	}
 
@@ -136,9 +136,9 @@
                     </textarea>
                 </div>
                 <div id="form-btn" class="form-size">
-                    <button type="submit" class="btn btn-teal float-right btn-size" style="width:75px;">수정</button>
+                    <button type="submit" class="btn btn-teal float-right btn-size">수정 완료</button>
                     <button type="button" class="btn btn-secondary float-right btn-size"
-                    	onclick="location.href='${header.referer}'">이전으로</button>
+                    	onclick="location.href='${header.referer}'">취소</button>
                 </div>
             </form>
         </div>

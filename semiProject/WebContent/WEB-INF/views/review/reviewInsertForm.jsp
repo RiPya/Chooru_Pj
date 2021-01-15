@@ -42,7 +42,7 @@
 
    /*form-wrapper 크기 */
    #form-wrapper {
-       width : 90%;
+       width : 100%;
        min-height : 1000px;
        margin: 0 auto;
        padding: 30px 0px;
@@ -61,15 +61,15 @@
 		}
    .inputLabel {
        height : 3rem;
-       width: 25% !important;
+       width: 16% !important;
+       min-width : 130px;
        line-height: 1.3;
        padding: .75rem .75rem;
        margin : 0;
-       font-weight : bold;
        font-size : 18px;
    }
    .inputContent{
-       width: 74% !important;
+       width: 83% !important;
    }
    .form-size{
        width : 100%;
@@ -80,7 +80,7 @@
 	.btn-size{
 		width : 75px !important;
 		border-radius: 1rem;
-		margin-left : 20px;
+		margin-left : 10px;
 		margin-top : 20px;
 	}
 
