@@ -127,7 +127,7 @@ public class ReviewDAO {
 		int result = 0;
 		
 		String query = prop.getProperty("insertImage");
-		/*INSERT INTO IMAGE VALUES(SEQ_FMO.NEXTVAL, ?, ?, ?, SYSDATE, ?)*/
+		/*INSERT INTO IMAGE VALUES(SEQ_INO.NEXTVAL, ?, ?, ?, SYSDATE, ?)*/
 		
 		try {
 			pstmt = conn.prepareStatement(query);

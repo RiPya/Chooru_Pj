@@ -35,7 +35,7 @@ public class ReviewService {
 			imgUrl.add(matcher.group(1));
 		}
 		
-		System.out.println(imgUrl);//src 추출 확인
+		//System.out.println(imgUrl);//src 추출 확인
 
 		return imgUrl;
 	}

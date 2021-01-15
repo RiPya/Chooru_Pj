@@ -20,7 +20,7 @@ INSERT INTO ADT_REVIEW VALUES(?, ?, ?)
 
 <!-- 입양후기 IMAGE 이미지 삽입 -->
 <entry key="insertImage">
-INSERT INTO IMAGE VALUES(SEQ_FMO.NEXTVAL, ?, ?, ?, SYSDATE, ?)
+INSERT INTO IMAGE VALUES(SEQ_INO.NEXTVAL, ?, ?, ?, SYSDATE, ?)
 </entry>
 
 </properties>

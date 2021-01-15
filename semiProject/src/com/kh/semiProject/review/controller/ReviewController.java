@@ -201,7 +201,7 @@ public class ReviewController extends HttpServlet {
 				if(result > 0) { 
 					swalIcon = "success";
 					swalTitle = "입양 후기 등록 성공";
-					path = "reviewView.do?tp=b3&cp=1&no=" + result;
+					path = "view.do?tp=b3&cp=1&no=" + result;
 						//작성된 글번호와 게시판 타입 + 목록페이지를 파라미터로 전달
 				} else {
 					swalIcon = "error";
