@@ -9,7 +9,6 @@
 
 		<!-- summernote 라이브러리 연결 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
 		<!-- 이거 없으면 진행이 안됨? -->
  		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js" defer></script>
@@ -45,14 +44,18 @@
 	line-height: 60px;
 }
 
-.adt-category {
+.adtCategory {
 	width: 128px !important;
 	display: inline-block !important;
 }
 
-.adt-title {
-	width: 71% !important;
+.adtTitle {
+	width: 76.5% !important;
 	display: inline-block !important;
+}
+
+#adtAddress, #adtNotes {
+	width: 90% !important;
 }
 
 .adtGender, .adtYn {
@@ -90,7 +93,7 @@
 	<div class="container my-5">
 		<div class="header-info">
 			<span class="form-info">입양/분양</span>
-			<span class="form-hr" ><hr></span>
+			<span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
 		</div>
 	</div>
 	
@@ -100,32 +103,32 @@
 	
 			<div class="form-container">
 				<label class="form-label mr-3">카테고리</label> 
-				<select class="form-control mr-3 adt-category">
+				<select id="adtCategory" class="form-control mr-3 adtCategory">
 					<option value="adtDog">입양 개</option>
 					<option value="adtCat">입양 고양이</option>
 					<option value="adtEtc">입양 기타</option>
 					<option value="shelter">임시 보호소</option>
 				</select>
 
-				<input type="text" id="adtTitle" class="form-control adt-title" value="">
+				<input type="text" id="adtTitle" class="form-control adtTitle" value="">
 
 			<div class="form-inline">
 				<label for="adtAddress" class="form-label mr-5">주소</label> 
-				<input type="text" id="adtAddress" class="form-control ml-1" size="104" value="">
+				<input type="text" id="adtAddress" class="form-control ml-1" value="">
 				
 			</div>
 
 			<div class="form-inline">
 				<label for="adtNotes" class="form-label mr-3">특이 사항</label> 
-				<input type="text" id="adtNotes" class="form-control" size="104" value="">
+				<input type="text" id="adtNotes" class="form-control" value="">
 			</div>
 				
 							<div class="form-inline">
 					<label for="adtKind" class="form-label mr-5">품종</label> 
-					<input type="text" id="adtKind" class="form-control ml-1 mr-3" size="17" placeholder="품종을 입력해 주세요">
+					<input type="text" id="adtKind" class="form-control ml-1 mr-3" size="17">
 		
 					<label for="adtAge" class="form-label mr-5">나이</label> 
-					<input type="text" id="adtAge" class="form-control ml-1 mr-3" size="9" placeholder="개월 / 살">
+					<input type="text" id="adtAge" class="form-control ml-1 mr-3" size="9">
 		
 					<label class="form-label mr-3">성별</label> 
 					<select class="form-control mr-4 adtGender">
@@ -167,7 +170,7 @@
 				</div>
 
         <div class="form-btn">
-            <button type="submit" class="btn btn-teal float-right btn-lg">완료</button>
+            <button type="submit" class="btn btn-teal float-right btn-lg">수정 완료</button>
             <button type="button" class="btn btn-secondary float-right btn-lg"
             				onclick="location.href='${header.referer}'">취소</button>
         </div>
