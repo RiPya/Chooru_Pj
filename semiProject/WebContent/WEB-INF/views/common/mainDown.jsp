@@ -72,7 +72,7 @@
                             <a class="main-href" href="${contextPath}/review/list.do?tp=b3">
                                 <span>+</span>
                             </a>
-                          <%--  </c:if> --%>
+                          <%-- </c:if> --%>
                         </th>
                     </tr>
                 
