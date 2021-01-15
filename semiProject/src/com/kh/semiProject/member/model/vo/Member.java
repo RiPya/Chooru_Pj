@@ -17,7 +17,7 @@ public class Member {
 	
 	// 기본 생성자
 	public Member() {}
-
+	
 	// 매개변수 생성자
 	public Member(int memNo, char grade, String memId, String memPw, String memNm, String phone, String nickName,
 			String email, Date enrollDate, char petYn) {
@@ -34,7 +34,22 @@ public class Member {
 		this.petYn = petYn;
 	}
 
+	
+	// 로그인용 생성자
+	public Member(int memNo, char grade, String memId, String memNm, String phone, String nickName, String email,
+			char petYn) {
+		super();
+		this.memNo = memNo;
+		this.grade = grade;
+		this.memId = memId;
+		this.memNm = memNm;
+		this.phone = phone;
+		this.nickName = nickName;
+		this.email = email;
+		this.petYn = petYn;
+	}
 
+	
 	// 게터, 세터
 	public int getMemNo() {
 		return memNo;

@@ -80,7 +80,7 @@
 		
 		1) 서버로부터 전달받은 메시지가 있는지 검사
 		session에 text라는 게 있다면 -->
-  <%--  <c:if test="${!empty sessionScope.swalTitle}"> 
+  <c:if test="${!empty sessionScope.swalTitle || !empty sessionScope.swalText}"> 
 	     <!-- 임시로 swal 사용 안함 -->
 		 	 <script>
 		 		swal({	icon : "${swalIcon}", 
@@ -93,7 +93,7 @@
 		 	<c:remove var="swalIcon"/>
 		 	<c:remove var="swalTitle"/>
 		 	<c:remove var="swalText"/>
-    </c:if> --%> 
+    </c:if>
     
       
      
@@ -127,12 +127,13 @@
 	                          <a class="nav-link <c:if test="${param.tp == 'b4'}"> active </c:if>" 
 	                          		id="free" href="${contextPath}/free/list.do?tp=b4">자유게시판</a>
 	                  </li>
-	                  <%-- <c:if test="${!empty loginMember && loginMember.grade == 0 }"> --%>
+	                  
+	                  <c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0) }"> 
 	                   <li class="nav-item"> <!-- 관리인 로그인시에만 보임 -->
 	                           <a class="nav-link <c:if test="${param.tp == 'adminMem'}"> active </c:if>" 
 	                           	id="admin-mem" href="${contextPath}/admin/adminMem.do?tp=adminMem">회원 관리</a>
 	                   </li>
-	                  <%-- </c:if> --%>
+	                  </c:if>
 	              </ul>
 	          </div>
 	          <div class="header-right" id="bs-example-navbar-collapse-2">
@@ -144,21 +145,21 @@
 	              </form>
 	          </div>
 	          <div class="header-right" id="bs-example-navbar-collapse-3">                        
-	               <%-- <c:choose>    
-	                  <c:when test="${empty sessionScope.loginMember}">  --%>
+	               <c:choose>    
+	                  <c:when test="${empty sessionScope.loginMember}"> 
 	                  <!--로그인이 되어 있지 않을 때-->
-	            <%--   <ul class="navbar-nav">
+	               <ul class="navbar-nav">
 	                          <li class="nav-item">
 	                              <a class="nav-link" data-toggle="modal" href="#modal-container-1">
-	                               <div class="icon-text" id="login">
+	                              	<div class="icon-text" id="login">
 	                                   <i class="fas fa-user-alt" id="user-icon"></i>
 	                                  <span class="under-icon">로그인</span>
-	                               </div>
-	                             </a><!-- user아이콘 -->
+	                               	</div>
+	                              </a><!-- user아이콘 -->
 	                          </li>
-	                      </ul> --%>
-	                <%-- </c:when>
-	                   <c:otherwise> <!--active : 현재 활성화 버튼 → 현재 페이지<i>-->  --%>
+	                      </ul>
+	                 </c:when>
+	                   <c:otherwise> <!--active : 현재 활성화 버튼 → 현재 페이지<i>-->  
 	                  <!--로그인이 되어 있을 때-->
 	                	 <ul class="navbar-nav">
 	                          <li class="nav-item header-right-users">
@@ -167,27 +168,26 @@
 	                                   <i class="fas fa-user-alt 
 	                                   			<c:if test="${param.tp == 'mypage'}"> active </c:if>"
 	                                  			id="user-icon"></i><!--user아이콘-->
-	                                   <span class="under-icon" id="nickname" <c:if test="${loginMember.grade == 0}">style="color:red"</c:if>>
+	                                   <span class="under-icon" id="nickname" <c:if test="${loginMember.grade == '0'.charAt(0)}">style="color:red"</c:if>>
 	                                   	 	닉네임</span> 
-	                                   <!--관리자 로그인 시 color 추가 / ${loginMember.memberName} -->
+	                                   <!--관리자 로그인 시 color 추가 / ${loginMember.memNm} -->
 	                               </div>
 	                             </a>
 	                          </li>
 	                          <li class="nav-item header-right-users">
-	                              <a class="nav-link" 
-	                              										id="cs-page" href="${contextPath}/information/list.do?tp=b5">
+	                              <a class="nav-link" id="cs-page" href="${contextPath}/information/list.do?tp=b5">
 	                                  <i class="fas fa-question-circle <c:if test="${param.tp == 'b5'}"> active </c:if>" 
 	                                  	id="cs-icon"></i><!--고객센터 아이콘-->
 	                              </a>
 	                          </li>
 	                          <li class="nav-item header-right-users">
-	                              <a class="nav-link" id="logout" href="#로그아웃페이지">
+	                              <a class="nav-link" id="logout" href="${contextPath}/member/logout.do">
 	                                  <i class="fas fa-sign-out-alt" id="logout-icon"></i> <!--로그아웃 아이콘-->
 	                              </a>
 	                          </li>
 	                      </ul>
-	               <%-- </c:otherwise>
-	              </c:choose> --%>
+	               	</c:otherwise>
+	              </c:choose>
 	          </div>
 	      </nav>
 	  </div>
@@ -206,15 +206,19 @@
 				</div>
 
 				<div class="modal-body">
-					<form class="form-signin" method="POST" action="#">
-						<input type="text" class="form-control" id="memberId" name="memberId" placeholder="아이디" value="">
+					<form class="form-signin" method="POST" action="${contextPath}/member/login.do">
+						<input type="text" class="form-control" id="memberId" name="memberId" placeholder="아이디" value="${cookie.saveId.value}">
 						<br>
 						<input type="password" class="form-control" id="memberPwd" name="memberPwd" placeholder="비밀번호">
 						<br>
 						<div class="checkbox mb-3">
 							<span class="list-area1">
 								<label> 
-									<input type="checkbox" name="save" id="save"> 아이디 저장
+									<input type="checkbox" name="save" id="save"
+										<c:if test="${!empty cookie.saveId.value}">
+											checked
+										</c:if>
+									> 아이디 저장
 								</label>							
 							</span>
 							<span class="list-area2">
