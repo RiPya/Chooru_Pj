@@ -93,6 +93,25 @@ public class AdoptionController extends HttpServlet {
 				
 			}
 			
+			// 입양/분양 글 작성 화면 연결 Controller
+			else if(command.equals("/insertForm.do")) {
+				errorMsg = "게시판 상세 조회 과정에서 오류 발생";
+
+				path = "/WEB-INF/views/adoption/adoptionInsert.jsp";
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+
+			// 입양/분양 글 수정 화면 연결 Controller
+			else if(command.equals("/updateForm.do")) {
+				errorMsg = "게시판 상세 조회 과정에서 오류 발생";
+				
+				path = "/WEB-INF/views/adoption/adoptionUpdate.jsp";
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			

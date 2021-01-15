@@ -274,7 +274,7 @@
 						<%-- 로그인이 되어있는 경우 --%>
 	<%--c:if test="${!empty loginMember}" --%>
 				<button type="button" class="btn btn-teal float-right" id="insertBtn" 
-							onclick="location.href='${contextPath}/adoption/adoptionInsertForm.do?${tpStr}'">글쓰기</button>
+						  onclick="location.href='${contextPath}/adoption/insertForm.do?${tpStr}'">글쓰기</button>
 	<%--/c:if --%>
 			
 			
