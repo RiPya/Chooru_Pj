@@ -90,9 +90,9 @@ public class MemberDAO {
 			pstmt.setInt(1, loginMember.getMemNo());
 			pstmt.setString(2, loginMember.getMemPw());
 			
-			result = pstmt.executeUpdate();
+			rset = pstmt.executeQuery();
 			
-			if(result > 0) {
+			if(rset.next()) {
 				result = rset.getInt(1);
 			}
 		} finally {
