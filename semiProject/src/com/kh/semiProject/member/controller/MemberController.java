@@ -151,8 +151,8 @@ public class MemberController extends HttpServlet {
 				request.getSession().invalidate();
 				
 				// 로그아웃 후 메인 또는 로그아웃 을 수행한 페이지로
-				// response.sendRedirect(request.getContentType()); // 메인으로
-				response.sendRedirect(request.getHeader("referer")); // 로그아웃 한 페이지
+				response.sendRedirect(request.getContextPath()); // 메인으로
+				// response.sendRedirect(request.getHeader("referer")); // 로그아웃 한 페이지
 			}
 			
 			
@@ -244,6 +244,7 @@ public class MemberController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
+			
 			// 비밀번호 변경 Controller ---------------------
 			else if(command.equals("/updatePwd.do")) {
 				errorMsg = "비밀번호 변경 과정에서 오류 발생";
@@ -265,9 +266,16 @@ public class MemberController extends HttpServlet {
 					swalIcon = "success";
 					swalTitle = "비밀번호가 변경되었습니다.";
 				}else if(result == 0) { // 비밀번호 변경 실패
-					
-					
+					swalIcon = "error";
+					swalTitle = "비밀번호 변경에 실패하였습니다.";
+				}else { // 비밀번호 불일치
+					swalIcon = "warning";
+					swalTitle = "현재 비밀번호가 일치하지 않습니다.";
 				}
+				session.setAttribute("swalIcon", swalIcon);
+				session.setAttribute("swalTitle", swalTitle);
+				
+				response.sendRedirect(request.getHeader("referer"));
 			}
 
 			
