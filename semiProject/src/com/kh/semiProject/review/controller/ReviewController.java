@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kh.semiProject.common.model.vo.Board;
+import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.member.model.vo.Member;
 import com.kh.semiProject.review.model.service.ReviewService;
@@ -69,26 +70,45 @@ public class ReviewController extends HttpServlet {
 			
 			//게시판 타입 : b1(공지) b2(입양) b3(후기) b4(자유) b5(고객센터) 
 			//mypage(마이페이지) adminMem(회원관리)
-			String boardType = request.getParameter("tp");
+			String brdType = request.getParameter("tp");
 			
 			//파라미터 tp는 필수로 전달해야함!!!!!
 			//입양/분양, 자유, 고객센터, 마이페이지는 cd도 꼭 전달해야 함!!
 			/* String reviewCode = request.getParameter("cd"); */
 
 			
-			//입양 후기 목록 연결 Controller
+			//입양 후기 목록 조회 Controller
 			if(command.equals("/list.do")) {
-				
 				errorMsg = "게시판 목록 조회 과정에서 오류 발생";
 				
-				path = "/WEB-INF/views/review/reviewList.jsp";
+				//1. 페이징 처리를 위한 값 계산 service 호출
+				// 페이징 처리시 전체 글 수를 확인해야 하는데 게시판 타입을 알아야 해당 게시판 글만 조회함
+				PageInfo pInfo = service.getPageInfo(cp);
 				
-				//request.setAttribute("fList", fList);
-				//request.setAttribute("pInfo", pInfo);
+				//pInfo의 limit을 9로 바꿔주기 → 입양 후기는 한 페이지 조회 게시글 수 9
+				pInfo.setLimit(9);
+				
+				//2. 게시글 목록 조회 비즈니스 로직 수행
+				
+				List<Board> rList = service.selectReviewList(pInfo);
+				
+				//3. 게시글 목록이 조회 되었을 때 썸네일 목록 조회 비즈니스 로직
+				if(rList != null) {
+					List<Image> iList = service.selectThumbnails(pInfo);
+					
+					//썸네일 목록이 비어있지 않은 경우
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+				}
+				
+				request.setAttribute("rList", rList);
+				request.setAttribute("pInfo", pInfo);
+
+				path = "/WEB-INF/views/review/reviewList.jsp";
 				
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
-				
 			}
 			
 			
@@ -97,14 +117,27 @@ public class ReviewController extends HttpServlet {
 			else if(command.equals("/view.do")) {
 				errorMsg = "게시글 조회 과정에서 오류 발생";
 				
-				path = "/WEB-INF/views/review/reviewView.jsp";
+				int brdNo = Integer.parseInt(request.getParameter("no"));
 				
-				//request.setAttribute("fList", fList);
-				//request.setAttribute("pInfo", pInfo);
+				Board review = service.selectReview(brdNo);
 				
-				view = request.getRequestDispatcher(path);
-				view.forward(request, response);
+				if(review != null) {
+					//이미지는 따로 가져올 필요 없음. content에 이미 이미지 url이 있음.
+					
+					//리퀘스트로 review 보내기
+					request.setAttribute("review", review);
+
+					path = "/WEB-INF/views/review/reviewView.jsp";
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+					
+				} else {
+					request.getSession().setAttribute("swalIcon", "error");
+					request.getSession().setAttribute("swalTitle", "게시판 상세 조회");
+				}
 			}
+			
+			
 			
 			//입양 후기 작성 폼 연결-------------------------------
 			else if(command.equals("/insertForm.do")) {
@@ -118,7 +151,6 @@ public class ReviewController extends HttpServlet {
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}
-			
 			
 			
 			//입양 후기 글 등록 controller-----------------------------------------------------
@@ -180,7 +212,7 @@ public class ReviewController extends HttpServlet {
 
 						iList.add(temp); 
 					} 
-				}
+				} 
 				
 
 				//5. 입력 내용 + 이미지 List Map에 담아서 service로 호출 삽입 결과 반환
@@ -190,7 +222,7 @@ public class ReviewController extends HttpServlet {
 				map.put("adtLink", adtLink);
 				map.put("content", content);
 				map.put("memNo", memNo);//회원번호 == 작성자
-				map.put("brdType", boardType);//게시판타입(B#)
+				map.put("brdType", brdType);//게시판타입(B#)
 				map.put("iList", iList);
 				
 				int result = service.insertReview(map);
