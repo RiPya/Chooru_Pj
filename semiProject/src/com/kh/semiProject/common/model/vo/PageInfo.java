@@ -1,4 +1,4 @@
-package com.kh.semiProject.free.model.vo;
+package com.kh.semiProject.common.model.vo;
 
 public class PageInfo {
 	//공지사항, 자유게시판, 고객센터, 내글조회 등 페이징 처리를 위한 값을 저장할 객체

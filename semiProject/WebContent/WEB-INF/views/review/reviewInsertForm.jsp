@@ -148,7 +148,9 @@
         	lang: "ko-KR",
         	placeholder: "사진과 함께 입양 후기를 작성해 주세요.",
         	
-        	/* 이미지 삽입 후 서버에 저장을 위한 callback */
+
+        
+         /* 이미지 삽입 후 서버에 저장을 위한 callback */
         	callbacks: {
         			onImageUpload : function(files, editor, welEditable) {
 		            for (var i = files.length - 1; i >= 0; i--) {
@@ -204,15 +206,16 @@
 				$("#adtDateInput").focus();
 				return false;
 			}
-
+			
 			if ($("#summernote").val().trim().length == 0) {
 				swal({icon:"warning", title:"내용을 입력해 주세요."});
 				$("#summernote").focus();
 				return false;
 			}
+			//이미지 없을 때 검사...?
 			
-			/* img태그가 있는지 확인 후 없으면 img 추가하는 경고창 필요 → 썸네일이 필요하기 때문 */
 		}
+    
 	</script>
 	
 	

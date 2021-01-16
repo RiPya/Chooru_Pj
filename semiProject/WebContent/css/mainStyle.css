@@ -26,15 +26,23 @@ div { box-sizing : border-box;}
    margin-top : 40px;
    margin-left : 2px;
    margin-right : 2px;
-   background-color : white;
+   background-color : teal;
+   
+   /* 이미지 크기 조정을 위한 속성 */
+   overflow : hidden;
+   position: relative;
 }
 .main-adopt-div:hover{
 	cursor : pointer;
 }
 /* 입양/분양 메인 게시글 썸네일 크기지정 */
-.main-adopt-div img {
-   width : 100%;
-   height: 100%;
+.main-adopt-div > img {
+	/*img 태그: 사진 가운데에 오게 하기! 세로는 div 크기 만큼만 보이게 하기*/
+	position: absolute;
+	min-width : 150%;
+	top: 50%;
+	left: 50%;
+	transform : translate(-50%, -50%);
 }
 /* carousel 밑의 페이지 표시 아이콘 */
 .carousel-indicators{
@@ -152,13 +160,21 @@ div { box-sizing : border-box;}
 /* 입양 후기 카드 섬네일 div */
 .review-card .review-thumb{
     box-sizing : border-box;
-    width: 30%;
+    width: 120px;
     height : 100%;
+    
+    /* img 크기 조정을 위해 필요한 속성 */
+    position: relative;
+    overflow: hidden;
 }
 
 .review-thumb img {
-		width : 100px;
-		height : 100%;
+	/*img 태그: 사진 가운데에 오게 하기!*/
+	position: absolute;
+	height : 100%;
+	top: 50%;
+	left: 50%;
+	transform : translate(-50%, -50%);
 }
 /* 입양 후기 카드 바디(텍스트) */
 .review-card .review-text {

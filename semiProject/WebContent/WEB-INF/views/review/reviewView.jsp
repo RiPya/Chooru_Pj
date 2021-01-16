@@ -205,33 +205,26 @@
 			<div id="board-area">
 
 				<h3>
-				<!--Title ${review.reviewTitle} class에 inline-block이 있어야 다른 게시글과 위치가 맞음-->
-				<span class="mt-4 brd-title inline-block">인절미와 함께 제목 긴 버전 체크합니다아 제목 두줄 스타일 보세요</span>
+				<span class="mt-4 brd-title inline-block">${review.brdTitle}</span>
 				</h3>
 				<br>
 				
 				<p id="brd-second-area">
-				<!-- Writer ${review.nickName}  --> 
-					<span class="inline-block brd-second" id="writer">인절미누나</span>
+					<span class="inline-block brd-second" id="writer">${review.nickName}</span>
 					
 					<!-- Date -->
 					<span class="brd-second inline-block">
-						2021-01-06 23:41:75
-						
-						<%-- <fmt:formatDate value="${review.brdCrtDt}" 
-														pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
-						<!-- 수정일을 굳이 상세 조회 때 출력해야하나? -->
-						<%--<br>
-						 마지막 수정일 : <fmt:formatDate value="${review.brdModify}" 
-																									pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
+						작성일 <fmt:formatDate value="${review.brdCrtDt}" pattern="yy-MM-dd HH:mm"/>
+						<c:if test="${!empty review.brdModify}">
+						 | 수정일 <fmt:formatDate value="${review.brdModifiy}" pattern="yy-MM-dd HH:mm"/>
+						</c:if>
 					</span>
 					
 					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-					<!-- 댓글 ${review.replyCount} -->
-					<span class="float-right brd-second">댓글 2</span>
+					<!-- 댓글은 ajax로 가져올 때 같이 가져와야 실시간 반영 가능 -->
+					<span class="float-right brd-second">댓글 추가</span>
 					
-					<!-- 조회 ${review.readCount}-->
-			 		<span class="float-right brd-second">조회 202</span>
+			 		<span class="float-right brd-second">조회 ${review.readCount}</span>
 				</p>
 
 				<hr>
@@ -241,14 +234,16 @@
 					<table id="brd-detail">
 						<tr>
 							<td class="detailMenu">입양 날짜</td>
-							<td class="detailContent">2020.10.20.</td> <!-- ${review.adoptDate} -->
+							<td class="detailContent">
+								<fmt:formatDate value="${review.adtDate}" pattern="yyyy년 MM월 dd일"/>
+							</td> 
 						</tr>
 						<tr>
 							<td class="detailMenu">입양/분양 url</td>
 							<td class="detailContent">
-								<a class="adoptUrl" target="_blank">https://mungnyang.com/123256243</a>
+								<a class="adoptUrl" target="_blank">${review.adtLink}</a>
 							</td>
-							<!-- ${review.adoptLink} script에서 해당 주소가 a href 속성 추가로 + 클릭 시 새창 열기 (즉시함수) -->
+							<!-- script에서 해당 주소가 a href 속성 추가로 + 클릭 시 새창 열기 (즉시함수) -->
 						</tr>
 					</table>
 				</div>
@@ -256,13 +251,8 @@
  
 				<!-- 썸머노트를 사용하면 content에 img파일에 <img>태그로 연결되기 때문에 
 						별도의 이미지 영역 필요 없음 -->
-				<!-- Content ${free.freeContent} -->
 				<div id="board-content">
-					
-					<img src="https://i2.pickpik.com/photos/714/11/745/golden-retriever-animal-shelter-dog-pension-kennels-preview.jpg" 
-						width="60%"/>
-					<p>이제 우리랑 행복하게 살자~~~~~</p> <!-- ${review.reviewContent} -->
-					
+					${review.brdContent}
 				</div>
 				
 
@@ -271,45 +261,44 @@
 				<!-- 목록으로/수정/삭제/블라인드 버튼 -->				
 				<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
-					<%-- <c:if test="${!empty loginMember && (loginMember.grade == 0)}"> --%>
-					<!-- tpNoStr == tp와 no을 같이 보냄 : 해당 글을 블라인드하도록 -->
-						<a href="#블라인드처리.do?${tpNoStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
-					<%-- </c:if> --%>
+					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
+						<!-- tpNoStr == tp와 no을 같이 보냄 : 해당 글을 블라인드하도록 -->
+						<a href="${contextPath}/admin/blindBrd.do?${tpNoStr}${searchStr}" 
+								class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
+					</c:if>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
-					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
+					<c:if test="${!empty loginMember && (review.nickName == loginMember.nickName)}">
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
 						<a href="${contextPath}/review/updateForm.do?${tpNoStr}${searchStr}" 
 							class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
-					<%-- </c:if> --%>
+					</c:if>
 					
 					
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
-					<%-- <c:choose> 
-						<c:when test="${!empty param.sk && !empty param.sv }"> --%>
+					<c:choose> 
+						<c:when test="${!empty param.sk && !empty param.sv }">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨
 								ex) wsp/board/search.do(X), wsp/search.do(O)
 								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
-							<%-- <c:url var="goToList" value="../search.do">
+							<c:url var="goToList" value="../search.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>
-								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
-							</c:url> --%>
-						<%-- </c:when> --%>
+							</c:url>
+						</c:when>
 						
 						<%-- 이전 목록이 일반 게시글 목록일 때 --%>
 						<%-- c:url를 통해 목록으로 돌아가는 주소를 만들고 그 안에 파라미터 cp(현재페이지)에 지정하면 
 									목록으로 돌아갈 때 cp가 같이 전달됨 --%>
-<%-- 						<c:otherwise>--%>
+						<c:otherwise>
 							<c:url var="goToList" value="list.do">
 								<c:param name="cp">${param.cp}</c:param>
-								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
-						<%--</c:otherwise>
-					</c:choose> --%>
+						</c:otherwise>
+					</c:choose>
 					
 					<!-- 전체 검색 후 view로 연결했을 때 목록 돌아가기는 전체 검색 목록으로..? 그냥 이전으로 처리? -->
 					
@@ -360,7 +349,6 @@
 		</div>
 
 
-
 	</div>
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 	
@@ -372,9 +360,6 @@
 				var url = $(".adoptUrl").text();
 				$(".adoptUrl").attr("href", url);
 			})();
-			
-			
-			
 			
 		});
 	

@@ -16,7 +16,7 @@
 	width : 100%;
 	min-height : 900px;
 	padding : 5px;
-	text-align : center;
+/* 	text-align : center; 한 페이지에 게시글이 9개 미만일 때 하면 이상해짐*/
 }
 
 #noneList {
@@ -26,7 +26,12 @@
 	line-height: 260px;
 	border-top: 1px solid #EAEAEA;
 	border-bottom: 1px solid #EAEAEA;
+	text-align: center; /*추가*/
 }
+
+#reviewList .list-card:nth-of-type(3n+1){ margin-left:30px;}
+/* 한 페이지에 게시글이 9개 미만일 때 리스트가 가운데에 있는 것처럼 하기 위해
+ 맨 왼쪽에 있는 list-card에 추가 margin 주기 */
 
 #reviewList .list-card {
 	display : inline-block !important;
@@ -37,17 +42,19 @@
 }
 
 #reviewList > .list-card > .card-image { 
+	position: relative;
 	width : 100%;
 	height : 250px;
-/* 	margin-bottom : 10px; */
-/* 	background-position : center;
-	background-size : cover;
-	overflow : hidden; */
+	overflow : hidden; /* img 가운데 오게 하기 위해 필요함 */
 }
 
-#reviewList .card-img-top {
-/* 	width : 100%; */
-	height: 100%;
+#reviewList .card-image > .card-img-top { 
+	/*img 태그: 사진 가운데에 오게 하기! 세로는 div 크기 만큼만 보이게 하기*/
+	position: absolute;
+	min-width : 115%;
+	top: 50%;
+	left: 50%;
+	transform : translate(-50%, -50%);
 }
 
 .card-body > p { margin:0; }
@@ -140,9 +147,6 @@
 	background-color: teal;
 	border-radius: 1rem;
 }
-	
-
-
 
 
 </style>
@@ -168,90 +172,128 @@
 				</div>
 			
 			<div id="reviewList">
-<%-- 			<c:choose>
-				<c:when test="${empty reviewList}">  
+			<c:choose>
+				<c:when test="${empty rList}">  
 					<p id="noneList">존재하는 게시글이 없습니다.</p>
 				</c:when>
-				<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> --%>
-					<c:forEach var="i" begin="0" end="2">
-		<%-- 			<c:forEach var="review" items="${reviewList}"> --%>
+				
+				<%-- 게시글이 있을 때 모두 출력--%>
+				<c:otherwise>
+					<c:forEach var="review" items="${rList}">
+					
 						<div class="card list-card">
-						  <div class="card-image"> <!-- c:forEach 사용해서 해당 게시글 번호에 맞는 첫번째 이미지 붙여넣기 -->
-						 		<img src="https://i2.pickpik.com/photos/714/11/745/golden-retriever-animal-shelter-dog-pension-kennels-preview.jpg" 
-						  		class="card-img-top" alt="${review.reviewTitle}}">
+						  <div class="card-image"> 
+						  <%-- c:forEach 사용해서 해당 게시글 번호에 맞는 첫번째 이미지 붙여넣기 --%>
+						  	<c:forEach var="thumbnail" items="${iList}">
+							 		<c:if test="${review.brdNo == thumbnail.brdNo}">
+							 			<img src="${thumbnail.filePath}${thumbnail.fileName}"
+							 				 class="card-img-top" alt="${review.brdTitle}">
+							 		</c:if>
+						 		</c:forEach>
 						  </div>
 						  <div class="card-body">
-						    <p class="card-title reviewTitle">인절미와 함께 제목 긴 버전 체크합니다아 제목 두줄 스타일 보세요</p> <!-- ${review.reviewTitle}} -->
-						    <p class="card-text reviewWriter">인절미누나</p><!-- 품종 : ${review.reviewWriter}} -->
-						    <p class="review-no sr-only">123</p><!-- sr-only : 안보이게하는 클래스 --> <!-- ${review.reviewBrdNo}} -->
+						    <p class="card-title reviewTitle">${review.brdTitle}</p>
+						    <p class="card-text reviewWriter">${review.nickName}</p>
+						    <p class="review-no sr-only">${review.brdNo}</p><!-- sr-only : 안보이게하는 클래스 -->
 						  </div>
 						</div>
-						<div class="card list-card">
-						  <div class="card-image"> <!-- c:forEach 사용해서 해당 게시글 번호에 맞는 첫번째 이미지 붙여넣기 -->
-						 		<img src="https://cdn.pixabay.com/photo/2014/10/01/10/46/cat-468232_960_720.jpg" 
-						  		class="card-img-top" alt="${review.reviewTitle}}">
-						  </div>
-						  <div class="card-body">
-						    <p class="card-title reviewTitle">냥냥냥 행복하자</p> <!-- ${review.reviewTitle}} -->
-						    <p class="card-text reviewWriter">무릎냥</p><!-- 품종 : ${review.reviewWriter}} -->
-						    <p class="review-no sr-only">123</p><!-- sr-only : 안보이게하는 클래스 --> <!-- ${review.reviewBrdNo}} -->
-						  </div>
-						</div>
-						<div class="card list-card">
-						  <div class="card-image"> <!-- c:forEach 사용해서 해당 게시글 번호에 맞는 첫번째 이미지 붙여넣기 -->
-						 		<img src="https://cdn.pixabay.com/photo/2020/02/29/18/59/rabbit-4890861_960_720.jpg" 
-						  		class="card-img-top" alt="${review.reviewTitle}}">
-						  </div>
-						  <div class="card-body">
-						    <p class="card-title reviewTitle">토끼토끼토끼</p> <!-- ${review.reviewTitle}} -->
-						    <p class="card-text reviewWriter">토끼 궁뎅이</p><!-- 품종 : ${review.reviewWriter}} -->
-						    <p class="review-no sr-only">123</p><!-- sr-only : 안보이게하는 클래스 --> <!-- ${review.reviewBrdNo}} -->
-						  </div>
-						</div>
-					</c:forEach> 
-<%-- 		</c:otherwise> 
-			</c:choose> --%>
-			
+						
+					</c:forEach>
+				</c:otherwise> 
+			</c:choose>
 			
 			
 			</div><!-- 카드형 목록 리스트 div 끝 -->
 			
 						<%-- 로그인이 되어있는 경우 --%>
-	<%--c:if test="${!empty loginMember}" --%>
+			<c:if test="${!empty loginMember}">
 				<button type="button" class="btn btn-teal float-right" id="insertBtn" 
 							style="margin-top: 10px;"
 							onclick="location.href='${contextPath}/review/insertForm.do?${tpStr}'">글쓰기</button>
-	<%--/c:if --%>
+			</c:if>
 			
 			
 			<%---------------------- Pagination ----------------------%>
 			<%-- boardList.jsp에서 복붙한 거 놔두면 오류나서 메모장 파일에 옮겨놓음 --%>
 			<!-- cd가 없다면 href의 url 뒤에 -->
 			
+			<%-- 파라미터의 sk(searchKey)와 sv(searchValue)가 비어있지 않을 때
+					 == 검색 후 페이징바 클릭 --%>
+			<c:choose>
+				<c:when test="${!empty param.sk && !empty param.sv}">
+				 	<c:url var="pageUrl" value="/search.do"/>
+				 	
+				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
+				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
+				</c:when>
+				
+					<%-- 비어있을 때 --%>
+				<c:otherwise>
+					<c:url var="pageUrl" value="/review/list.do"/>
+				</c:otherwise>
+			</c:choose>
 			
-			<!-- 임시 확인용 Pagination -->
+			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
+			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${searchStr}"/>
+			
+			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
+				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
+				integerOnly="true" : 정수로만 숫자를 표현(소수점 버림)
+			--%>
+			<%-- pInfo.pageSize : 10 --%>
+			<!-- < 화살표를 눌렀을 때 이전 페이징의 endPage가 prev가 되도록 -->
+			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
+			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${searchStr}"/>
+			
+			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
+			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
+			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${searchStr}"/>
+			
+			
+			
 			<div class="my-5">
 				<ul class="pagination">
+				
+					<%-- 현재 페이지가 10페이지 초과인 경우 --%>
+					<c:if test="${pInfo.currentPage > pInfo.pageSize}">
 						<li> <!-- 첫 페이지로 이동(<<) -->
-							<a class="page-link" href="#">&lt;&lt;</a>
+							<a class="page-link" href="${firstPage}">&lt;&lt;</a>
 						</li>
 						<li> <!-- 이전 페이지로 이동(<) -->
-							<a class="page-link" href="#">&lt;</a>
+							<a class="page-link" href="${prevPage}">&lt;</a>
 						</li>
-						
-						<c:forEach var='i' begin="1" end="10">
-							<li>
-								<a class="page-link <c:if test="${param.cp==i}">pag-active</c:if>" 
-									href="#">${i}</a>
+					</c:if>
+					
+					<!-- 페이지 목록 -->
+					<c:forEach var='page' begin="${pInfo.startPage}" end="${pInfo.endPage}">
+						<c:choose>
+						<c:when test="${pInfo.currentPage == page}">
+							<li> <!-- 현재 페이지인 경우 활성화 -->
+								<a class="page-link pag-active">${page}</a>
 							</li>
-						</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<li>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${searchStr}">${page}</a>
+							</li>
+						</c:otherwise>
+						</c:choose>
+					</c:forEach>
 						
+					<%-- 다음 페이징의 첫번째 페이지가 마지막 페이지 미만일 경우 --%>	
+					<c:if test="${next <= pInfo.maxPage}">
 						<li> <!-- 이전 페이지로 이동(>>) -->
-							<a class="page-link" href="#">&gt;</a>
+							<a class="page-link" href="${nextPage}">&gt;</a>
 						</li>
 						<li> <!-- 마지막 페이지로 이동(>>) -->
-							<a class="page-link" href="#}">&gt;&gt;</a>
+							<a class="page-link" href="${lastPage}">&gt;&gt;</a>
 						</li>
+					</c:if>
 				</ul>
 			</div>
 						
@@ -286,26 +328,31 @@
 
 	<script>
 		$(document).ready(function(){
-			
-			//페이징바 활성화(현재 페이지 부분 색바꾸기) 진행?
-			
 					
-			//입양/분양 카드가 클릭되었을 때
+			//입양 후기 카드가 클릭되었을 때
 			$(".list-card").on("click", function(){
 				//글번호를 얻어와 해당 주소로 전달
 				var reviewNo = $(this).children().children(".review-no").text();
 				
-
-				var url = "${contextPath}/review/view.do?${tpStr}&cp=1&no="  + reviewNo;
+				var url = "${contextPath}/review/view.do?${tpStr}&cp=${pInfo.currentPage}&no="  + reviewNo;
 										//tdCdStr == tp=_&cd=_ / cp 추가하기 ${param.cp}
 				location.href = url;
 			});		
+			
+			//입양 후기 썸네일이 없을 때 야멍 로고 넣기 즉시 함수
+			(function(){
+				//카드 이미지에 반복 접근해 해당 카드 이미지 자식 요소 중 <img>가 없을 때 <img>태그 추가
+				$(".card-image").each(function(index, item){
+					if($(item).children("img").length == 0){
+						var img = $("<img>").addClass("card-img-top").attr("src", "${pageContext.request.contextPath}/css/yamung_logo.png");
+						
+						$(item).html(img);
+				}
+				});
+				
+			})();//썸네일 추가 즉시 함수 끝
 					
-		
 		});
-	
-
-	
 	
 	</script>
 
