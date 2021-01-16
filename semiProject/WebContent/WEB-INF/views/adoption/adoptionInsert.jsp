@@ -10,12 +10,12 @@
 		<!-- summernote 라이브러리 연결 -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 
-
 		<!-- 이거 없으면 진행이 안됨? -->
  		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js" defer></script>
 		
 		<!-- include summernote-ko-KR -->
 		<script src="lang/summernote-ko-KR.js"></script>
+		
 
 <style>
 /* 입양/분양 라인 */
@@ -45,18 +45,22 @@
 	line-height: 60px;
 }
 
-.adtCategory {
+.category {
 	width: 128px !important;
 	display: inline-block !important;
 }
 
-.adtTitle {
+.title {
 	width: 76.5% !important;
 	display: inline-block !important;
 }
 
-#adtAddress, #adtNotes {
-	width: 90% !important;
+#address, #adtNote {
+	width: 82.5% !important;
+}
+
+#btnAddress {
+	border-radius: 1rem;
 }
 
 .adtGender, .adtYn {
@@ -71,16 +75,20 @@
 	margin-right: 5px;	
 }
 
+/* 주소 팝업 창 스타일 */
+
 </style>
 
 </head>
 <body>
 	
+
+	
 	<%-- url 작성 시 붙여야 하는 str --%>
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
-	<c:set var="tpStr" value="tp=${param.tp}"/>
+  <c:set var="tpStr" value="tp=${param.tp}"/>
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<%-- <c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/> --%>
+	<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -93,63 +101,64 @@
 	</div>
 	
 	<div class="container my-5">
-		<form action="${contextPath}/adoption/adoptionInsert.do?${tpStr}" method="post" onsubmit="return boardValidate();">
+		<form action="${contextPath}/adoption/insert.do?${tpStr}" method="post" onsubmit="return boardValidate();">
 	
 			<div class="form-container">
 				<label class="form-label mr-3">카테고리</label> 
-				<select name="adtCategory" class="form-control mr-3 adtCategory">
+				<select name="category" class="form-control mr-3 category">
 					<option value="adtDog">입양 개</option>
 					<option value="adtCat">입양 고양이</option>
 					<option value="adtEtc">입양 기타</option>
-					<option value="shelter">임시 보호</option>
+					<option value="temp">임시 보호</option>
 				</select>
 
-				<input type="text" id="adtTitle" class="form-control adtTitle" placeholder="제목을 입력해 주세요">
+				<input type="text" name="title" id="title" class="form-control title" placeholder="제목을 입력해 주세요">
 
 			<div class="form-inline">
-				<label for="adtAddress" class="form-label mr-5">주소</label> 
-				<input type="text" id="adtAddress" class="form-control ml-1" placeholder="주소를 입력해 주세요(시/군/구)">				
+				<label for="address" class="form-label mr-5">주소</label> 
+				<input type="text" name="address" id="address" class="form-control ml-1 mr-2 postcodify_address" placeholder="주소를 입력해 주세요(시/군/구)">				
+        <button type="button" id="postcodifyBtn" class="btn btn-teal btn-lg">검색</button>
 			</div>
 
 			<div class="form-inline">
-				<label for="adtNotes" class="form-label mr-3">특이 사항</label> 
-				<input type="text" id="adtNotes" class="form-control" placeholder="특이 사항을 입력해주세요">				
+				<label for="adtNote" class="form-label mr-3">특이 사항</label> 
+				<input type="text" name="adtNote" id="adtNote" class="form-control" placeholder="특이 사항을 입력해주세요">				
 			</div>
 				
 				<div class="form-inline">
-					<label for="adtKind" class="form-label mr-5">품종</label> 
-					<input type="text" id="adtKind" class="form-control ml-1 mr-3" size="17" placeholder="품종을 입력해 주세요">
+					<label for="adtBreed" class="form-label mr-5">품종</label> 
+					<input type="text" name="adtBreed" id="adtBreed" class="form-control ml-1 mr-3" size="17" placeholder="품종을 입력해 주세요">
 		
 					<label for="adtAge" class="form-label mr-5">나이</label> 
-					<input type="text" id="adtAge" class="form-control ml-1 mr-3" size="9" placeholder="개월 / 살">
+					<input type="text" name="adtAge" id="adtAge" class="form-control ml-1 mr-3" size="9" placeholder="개월 / 살">
 		
 					<label class="form-label mr-3">성별</label> 
-					<select name="adtGender" class="form-control mr-4 adtGender">
+					<select name="adtGender" class="form-control mr-4 gender">
 						<option value="boy">수컷</option>
 						<option value="girl">암컷</option>
-						<option value="boy1">수컷 (중성화)</option>
-						<option value="girl1">암컷 (중성화)</option>
+						<option value="ntrBoy">수컷 (중성화)</option>
+						<option value="ntrGirl">암컷 (중성화)</option>
 					</select>				
 				</div>
 		
 				<div class="form-inline">
 					<label for="adtDate" class="form-label mr-3">공고 기간</label> 
-		 			<input type="date" id="adtDate" class="form-control mr-3">				
+		 			<input type="date" name="adtDate" id="adtDate" class="form-control mr-3">				
 
 					<label class="form-label mr-3">입양 여부</label>
-					<select class="form-control mr-4 adtYn">
-						<option value="adtYes">진행 중</option>
-						<option value="adtNo">완료</option>
+					<select name="adtYn" class="form-control mr-4 adtYn">
+						<option value="Y">진행 중</option>
+						<option value="N">완료</option>
 					</select>
 				</div>
 
 				<div class="form-inline">
 					<label class="form-label mr-3">예방 접종 여부</label> 
 					
-					<input type="radio" name="vacc" id="vaccYes" class="form-check-input mr-2">
+					<input type="radio" name="adtVaccination" value="Y" id="vaccYes" class="form-check-input mr-2">
 					<label for="vaccYes" class="form-label mr-3">유</label> 		
 		
-					<input type="radio" name="vacc" id="vaccNo" class="form-check-input mr-2">
+					<input type="radio" name="adtVaccination" value="N" id="vaccNo" class="form-check-input mr-2">
 					<label for="vaccNo" class="form-label mr-3">무</label> 		
 				</div>
 			</div>
@@ -157,13 +166,12 @@
 			<hr>
 
 			<div class="form-group">
-				<textarea name="adtContent" id="summernote"></textarea>
+				<textarea name="content" id="summernote"></textarea>
 			</div>
 
        <div class="form-btn">
            <button type="submit" class="btn btn-teal float-right btn-lg">등록</button>
-           <button type="button" class="btn btn-secondary float-right btn-lg"
-           				onclick="location.href='${header.referer}'">취소</button>
+           <button type="button" class="btn btn-secondary float-right btn-lg">취소</button>
        </div>
 		</form>
 	</div>
@@ -174,13 +182,25 @@
 		
 	<script>
 	
-	 $(document).ready(function() {
+	/* Postcodify 주소 창 스타일 커스텀마이징 (시간 되면?) */
+	/* $(function() { $("#postcodify").postcodify({
+        insertAddress : "#address",
+        hideOldAddresses : false
+    }); }); */
+	
+
+	 /* Postcodify 주소창  */	
+ 	 	$(function(){
+		    $("#postcodifyBtn").postcodifyPopUp();
+		});
+	 
+	 $(function() {
+				  
 		   /* 써머노트 스타일 지정 */
 		        $("#summernote").summernote({
 		           minHeight: 500, //최소높이
 		           maxHeight: null, //최대높이
 		           lang: "ko-KR",
-		           placeholder: "사진과 함께 입양 후기를 작성해 주세요.",
 		           
 		           /* 이미지 삽입 후 서버에 저장을 위한 callback */
 		           callbacks: {
@@ -223,21 +243,21 @@
 
 		// 유효성 검사 
 		function boardValidate() {
-			if ($("#adtTitle").val().trim().length == 0) {
+			if ($("#title").val().trim().length == 0) {
 				swal({icon:"warning", title:"제목을 입력해 주세요."});
-				$("#adtTitle").focus();
+				$("#title").focus();
 				return false;
 			}
 
-			if ($("#adtAddress").val().trim().length == 0) {
+			if ($("#address").val().trim().length == 0) {
 				swal({icon:"warning", title:"주소를 입력해 주세요."});
-				$("#adtAddress").focus();
+				$("#address").focus();
 				return false;
 			}
 			
-			if ($("#adtKind").val().trim().length == 0) {
+			if ($("#adtBreed").val().trim().length == 0) {
 				swal({icon:"warning", title:"품종을 입력해 주세요."});
-				$("#adtKind").focus();
+				$("#adtBreed").focus();
 				return false;
 			}
 			

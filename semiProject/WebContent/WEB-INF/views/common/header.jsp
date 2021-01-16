@@ -22,6 +22,9 @@
 		<!-- header의 css + btn-teal 버튼 -->
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerStyle.css?ver=1.4">
 
+		<!-- Postcodify 오픈 소스 -->
+		<script src="//d1p7wdleee1q2z.cloudfront.net/post/search.min.js"></script>
+
 <style>
 
 /* 모달 스타일 */
