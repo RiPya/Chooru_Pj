@@ -183,7 +183,7 @@
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 	<!-- tp와 no(게시글 번호)을 파라미터로 동시에 보낼 때 사용하는 변수 : 수정글에 필요(카테고리 없는 글: 공지, 입양후기)-->
-	<c:set var="tpNoStr" value="tp=${param.tp}&no=${param.no}"/>
+	<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
 	
 	<!-- 검색을 통해 온 경우 -->
 	<c:if test="${!empty param.sk && !empty param.sv }">
@@ -263,13 +263,13 @@
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
 						<!-- tpNoStr == tp와 no을 같이 보냄 : 해당 글을 블라인드하도록 -->
-						<a href="${contextPath}/admin/blindBrd.do?${tpNoStr}${searchStr}" 
+						<a href="${contextPath}/admin/blindBrd.do?${tpCpNoStr}${searchStr}" 
 								class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
 					</c:if>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
 					<c:if test="${!empty loginMember && (review.nickName == loginMember.nickName)}">
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-						<a href="${contextPath}/review/updateForm.do?${tpNoStr}${searchStr}" 
+						<a href="${contextPath}/review/updateForm.do?${tpCpNoStr}${searchStr}" 
 							class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
 					</c:if>
 					
@@ -364,7 +364,7 @@
 			//삭제 버튼 클릭
 			$("#deleteBtn").on("click", function(){
 				if(confirm("정말 삭제하시겠습니까?")) {
-					location.href = "${contextPath}/review/delete.do?${tpNoStr}";
+					location.href = "${contextPath}/review/delete.do?${tpCpNoStr}";
 				}
 			});
 			

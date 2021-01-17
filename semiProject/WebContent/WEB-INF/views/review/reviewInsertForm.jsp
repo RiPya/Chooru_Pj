@@ -108,7 +108,7 @@
 				</div>
 	
 	        <div id="form-wrapper">
-            <form action="${contextPath}/review/insert.do?${tpStr}" method="post" onsubmit="return boardValidate()">
+            <form action="${contextPath}/review/insert.do?${tpStr}&cp=1" method="post" onsubmit="return boardValidate()">
                 <div class="form-size">
                     <input type="text" name="title" id="titleInput" class="form-control"
                          placeholder="제목을 입력해 주세요.">
@@ -128,7 +128,8 @@
                 </div>
                 <div id="form-btn" class="form-size">
                     <button type="submit" class="btn btn-teal float-right btn-size">등록</button>
-                    <button type="button" class="btn btn-secondary float-right btn-size">취소</button>
+                    <button type="button" class="btn btn-secondary float-right btn-size"
+                    	onclick="location.href='${header.referer}'">취소</button>
                 </div>
             </form>
         </div>
@@ -165,26 +166,27 @@
 				var form_data = new FormData();
 				form_data.append('file', file);
 	    
-				$.ajax({
-	       	data: form_data,
-	       	type: "POST",
-	       	url: '${contextPath}/image/uploadImage.do',
-	       	cache: false,
-	       	contentType: false,
-	       	enctype: 'multipart/form-data',
-	       	dataType : "json",
-	       	processData: false,
-	       	success: function(image) {
-	      		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
-	      			var imageUrl = image.filePath + image.fileName
-	         		$(el).summernote('editor.insertImage', imageUrl);
-	      			console.log("서버 업로드 성공");
-	      			/* console.log(image);
-	      			console.log(image.filePath);
-	      			console.log(image.fileName); */
-	       	}
-	     	});
-  } 
+					$.ajax({
+		       	data: form_data,
+		       	type: "POST",
+		       	url: '${contextPath}/image/uploadImage.do',
+		       	cache: false,
+		       	contentType: false,
+		       	enctype: 'multipart/form-data',
+		       	dataType : "json",
+		       	processData: false,
+		       	success: function(image) {
+		      		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
+		      			var imageUrl = image.filePath + image.fileName
+		         		$(el).summernote('editor.insertImage', imageUrl);
+		      			console.log("서버 업로드 성공");
+		      			/* console.log(image);
+		      			console.log(image.filePath);
+		      			console.log(image.fileName); */
+		       	}
+		     	});
+  			} 
+        
         
     });//ready 함수 끝
 	
@@ -215,6 +217,8 @@
 			//이미지 없을 때 검사...?
 			
 		}
+    
+    
     
 	</script>
 	

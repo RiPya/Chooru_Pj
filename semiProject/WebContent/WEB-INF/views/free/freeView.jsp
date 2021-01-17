@@ -157,7 +157,7 @@
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
 	<c:if test="${!empty param.cd}">
-		<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
+		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
 	</c:if>
 
 
@@ -172,58 +172,35 @@
 			<div id="board-area">
 
 				<h3>
-				<!--Category ${free.freeCode} -->
-				<span class="mt-4 cd-color inline-block" id="code">일상</span>
+				<span class="mt-4 cd-color inline-block" id="code">${free.code}</span>
 				
-				<!--Title ${free.freeTitle} -->
-				<span class="mt-4 inline-block">나만 고양이 없다.....</span>
+				<span class="mt-4 inline-block">${free.brdTitle}</span>
 				</h3>
 				<br>
 				
 				<p id="brd-second-area">
-				<!-- Writer ${free.nickName} -->
-					<span class="inline-block brd-second" id="writer">닉네임</span>
+					<span class="inline-block brd-second" id="writer">${free.nickName}</span>
 					
 					<!-- Date -->
 					<span class="brd-second inline-block">
-						2021-01-06 23:41:75
-						
-						<%-- <fmt:formatDate value="${free.brdCrtDt}" 
-														pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
-						<!-- 수정일을 굳이 상세 조회 때 출력해야하나? -->
-						<%--<br>
-						 마지막 수정일 : <fmt:formatDate value="${free.brdModify}" 
-																									pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
+						작성일 <fmt:formatDate value="${free.brdCrtDt}" pattern="yy-MM-dd HH:mm"/>
+						<c:if test="${!empty free.brdModify}">
+						 ┃ 수정일 <fmt:formatDate value="${free.brdModify}" pattern="yy-MM-dd HH:mm"/>
+						</c:if>
 					</span>
 					
 					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-					<!-- 댓글 ${free.replyCount} -->
-					<span class="float-right brd-second">댓글 3</span>
+					<span class="float-right brd-second">댓글  추가</span>
 					
-					<!-- 조회 ${free.readCount}-->
-			 		<span class="float-right brd-second">조회 104</span>
+			 		<span class="float-right brd-second">조회 ${free.readCount}</span>
 				</p>
 
 				<hr>
 
-<%-- 				
-				<p>
-					입양/분양, 입양 후기의 경우 필수 항목 출력할 때 여기에 하면 됨
-				</p>
-				<hr>
- --%>
 				<!-- 썸머노트를 사용하면 content에 img파일에 <img>태그로 연결되기 때문에 
 						별도의 이미지 영역 필요 없음 -->
-				<!-- Content ${free.freeContent} -->
 				<div id="board-content">
-					나만 고양이 없어 <br>
-					나만 고양이 없어 <br>
-					나만 고양이 없어 <br>
-					나만 고양이 없어 <br>
-					나만 고양이 없어 <br>
-					나만 고양이 없어 <br>
-					<img src="https://cdn.pixabay.com/photo/2014/04/13/20/49/cat-323262_960_720.jpg" width="60%"/>
-					<h1 style="color : tomato;">나만~~~~~~~~~~~~~~~~~~~~</h1>
+					${free.brdContent}
 				</div>
 				
 
@@ -232,43 +209,50 @@
 				<!-- 목록으로/수정/삭제/블라인드 버튼 -->				
 				<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
-					<%-- <c:if test="${!empty loginMember && (loginMember.grade == 0)}"> --%>
-						<a href="#블라인드처리.do?${tpCdStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
-					<%-- </c:if> --%>
+					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
+						<!-- tpNoStr == tp와 no을 같이 보냄 : 해당 글을 블라인드하도록 -->
+						<a href="${contextPath}/admin/blindBrd.do?${tpCpNoStr}${searchStr}" 
+								class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
+					</c:if>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
-					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
+					<c:if test="${!empty loginMember && (free.nickName == loginMember.nickName)}">
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-						<a href="#" class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
-					<%-- </c:if> --%>
+						<a href="${contextPath}/free/updateForm.do?${tpCpNoStr}${searchStr}" 
+							class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
+					</c:if>
 					
 					
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
-					<%-- <c:choose> 
-						<c:when test="${!empty param.sk && !empty param.sv }"> --%>
+					 <c:choose> 
+						<c:when test="${!empty param.sk && !empty param.sv }">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨
 								ex) wsp/board/search.do(X), wsp/search.do(O)
 								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
-							<%-- <c:url var="goToList" value="../search.do">
+							 <c:url var="goToList" value="../search.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>
-								<c:param name="cd">${param.cd}</c:param>
+								<c:if test="${!empty param.cd}">
+									<c:param name="cd">${param.cd}</c:param>
+								</c:if>
 								<c:param name="tp">${param.tp}</c:param>
-							</c:url> --%>
-						<%-- </c:when> --%>
+							</c:url>
+					 	</c:when> 
 						
 						<%-- 이전 목록이 일반 게시글 목록일 때 --%>
 						<%-- c:url를 통해 목록으로 돌아가는 주소를 만들고 그 안에 파라미터 cp(현재페이지)에 지정하면 
 									목록으로 돌아갈 때 cp가 같이 전달됨 --%>
-<%-- 						<c:otherwise>--%>
+						<c:otherwise>
 							<c:url var="goToList" value="list.do">
+								<c:if test="${!empty param.cd}">
+									<c:param name="cd">${param.cd}</c:param>
+								</c:if>
 								<c:param name="cp">${param.cp}</c:param>
-								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
-						<%--</c:otherwise>
-					</c:choose> --%>
+						</c:otherwise>
+					</c:choose> 
 					
 					<a href="${goToList}" class="btn btn-teal float-right" style="width: 75px;">목록</a>
 				</div>
@@ -328,7 +312,15 @@
 	
 	
 	<script>
-		//게시글의 카테고리 색상 정하는 즉시 실행 함수: 해당 td의 클래스 ="cd-color 
+	$(document).ready(function(){
+		//삭제 버튼 클릭
+		$("#deleteBtn").on("click", function(){
+			if(confirm("정말 삭제하시겠습니까?")) {
+				location.href = "${contextPath}/free/delete.do?${tpCpNoStr}";
+			}
+		});
+		
+	//게시글의 카테고리 색상 정하는 즉시 실행 함수: 해당 td의 클래스 ="cd-color 
 		(function(){
 			$(".cd-color").each(function(index, item){
 				if($(item).text() == "일상" ){
@@ -340,6 +332,7 @@
 				}
 			});
 		})();
+	});
 	</script>
 </body>
 </html>

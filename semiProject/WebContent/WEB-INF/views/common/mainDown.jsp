@@ -75,38 +75,7 @@
                           <%-- </c:if> --%>
                         </th>
                     </tr>
-                
-               <%--  <c:choose>
-                    <c:when test="${empty reviewList}">
-                    <tr>
-                        <th class="empty-main" colspan="3">존재하는 입양후기가 없습니다.</th>
-                    </tr>
-                    </c:when>
-
-                    <c:otherwise> --%>
-                        <c:forEach var="i" begin="0" end="2">
-                            <tr>
-	                            <td colspan="2" class="review-card">
-	                                <div class="card mb-3 row" style="max-width: 1000px;">
-                                       <div class="review-thumb">
-                                           <img src="https://i2.pickpik.com/photos/714/11/745/golden-retriever-animal-shelter-dog-pension-kennels-preview.jpg"
-                                            alt="입양후기 썸네일">
-                                       </div>
-                                       <div class="review-text">
-                                            <h5 class="card-title">뛰어노는 인절미</h5>
-                                            	<%--${review.reviewTitle}--%>
-                                            <p class="card-date">
-                                            		입양 날짜 : 2021.01.04.</p>
-                                            	<%--<fmt:formatDate var="createDate" 
-																						value="${review.adoptDate}" pattern="yyyy-MM-dd"/> --%>
-                                       </div>
-	                                </div>
-	                            </td>
-	                            <td class="sr-only review-no">글번호</td> <%-- 안보임 ${review.reviewNo} --%>
-                            </tr>
-                        </c:forEach>
-                    <%-- </c:otherwise>
-                </c:choose>  --%>
+                		<!-- 입양 후기 최신 글 3개 추가됨 (ajax) -->
                 </table>
             
             </div>
@@ -115,48 +84,105 @@
 	   /* 메인 공지사항 박스  */
 	   
     /* 클릭한 공지사항 글 조회로 이동 */
-    $("#main-notice td").on("click", function(){
+    function clickNotice(brdNo){
     	
-				var noticeNo = $(this).parent().children().eq(2).text();
-				/* 글번호 = 부모의 모든 자식들 중에서 인덱스 2번째의 내용 */
-				console.log(noticeNo);
+				console.log(brdNo);
 											
 				//얻어온 공지사항 글번호를 쿼리스트링으로 작성하여 상세조회 요청
-				location.href = "${contextPath}/notice/view.do?tp=b1&no=" + noticeNo;
+				location.href = "${contextPath}/notice/view.do?tp=b1&cp=1&no=" + brdNo;
 				/* location : 주소창과 관련된 객체. */
     	
-		});
+		}
 		
 		
 
 		/* 메인 입양 후기 박스  */
 		
-    /* 클릭한 공지사항 글 조회로 이동 */
-    $("#main-review td").on("click", function(){
-    	
-/*     	if(${loginMember} != null){ */
-					var	reviewNo = $(this).parent().children().eq(1).text();
-					/* 글번호 = 부모의 모든 자식들 중에서 인덱스 1번째의 내용 */
-					console.log(reviewNo);
+    /* 클릭한 입양 후기 글 조회로 이동하게 하는 함수 */
+ 		function clickReview(brdNo){
+					console.log(brdNo);
 												
 					//얻어온 공지사항 글번호를 쿼리스트링으로 작성하여 상세조회 요청
-					location.href = "${contextPath}/review/view.do?tp=b3&no=" + reviewNo;
-				/* location : 주소창과 관련된 객체. */
-/*     	} else {
-    		swal({icon : "warning", title:"로그인 후 사용해주세요."});
-    	} */
-		});
+					location.href = "${contextPath}/review/view.do?tp=b3&cp=1&no=" + brdNo;
+		}
 		
 		/* 입양 후기 리스트 가져오는 함수 */
 		
 		function selectReviewList(){
 			$.ajax ({
-				url: "${contextPath}/mainpage/selectReview.do",
-				data: {"brdType" : "b3"}, //입양 후기 게시판 타입을 보내기
+				url: "${contextPath}/main/selectReview.do",
+				/* data: {"brdType" : "b3"}, */ //입양 후기 게시판 타입을 보내기
 				type: "post",
 				dataType : "JSON",
-				success : function(rList, iList){
+				success : function(map){
 					
+					var rList = map.rList;
+					var iList = map.iList;
+					
+					if(rList == null){ //rList가 없을 때
+					/* <tr>
+                   <th class="empty-main" colspan="3">존재하는 입양후기가 없습니다.</th>
+               </tr> */
+						var tr = $("<tr>");
+            var th = $("<th>").addClass("empty-main").attr("colspan", "3").text("존재하는 입양 후기가 없습니다.");
+            tr.append(th);
+            $("#main-review").append(tr);//추가
+					}
+					
+					else { //rList가 있을 때 == 입양 후기 게시글이 있을 때
+						$.each(rList, function(index, item){
+								<%--<tr>
+									 		<td colspan="3" class="review-card">
+	                        <div class="card mb-3 row" style="max-width: 1000px;">
+	                           <div class="review-thumb">
+	                               <img src="" alt="입양 후기">
+	                           </div>
+	                           <div class="review-text">
+	                                <h5 class="card-title">item.brdTitle</h5>
+	                                <p class="card-date">item.adtDate</p>
+	                           </div>
+	                        </div>
+	                        <div class="sr-only review-no">item.brdNo</div>
+	                    </td> 
+	                   </tr>--%>
+	              
+	            var tr = $("<tr>");
+							
+							var td = $("<td>").addClass("review-card").attr("colspan", "3")
+										.attr("onclick", "clickReview("+item.brdNo+")" );//td
+							
+							var card = $("<div>").addClass("card mb-3 row").css("max-width", "1000px");
+												
+							
+							var cardThumb = $("<div>").addClass("review-thumb");
+							
+							$.each(iList, function(i, image){
+								if(item.brdNo == image.brdNo){
+									var url = "resources/uploadImages/" + image.fileName;
+									var thumbnail = $("<img>").attr("alt", "입양 후기").attr("src", url);
+									cardThumb.append(thumbnail);	
+								}
+							});
+							
+							var cardText = $("<div>").addClass("review-text");
+							
+							var cardTitle = $("<h5>").addClass("card-title").text(item.brdTitle);
+							var cardDate = $("<p>").addClass("card-date").text("입양 날짜: "+ item.adtDate);
+							
+							cardText.append(cardTitle).append(cardDate);
+							
+							card.append(cardThumb).append(cardText);
+							
+							var reviewNo = $("<div>").addClass("sr-only review-no").text(item.brdNo);
+							
+							td.append(card).append(reviewNo);
+							
+							tr.append(td)
+							
+							//입양 게시글 추가
+							$("#main-review").append(tr);
+						});
+					}
 				},
 				error : function(){
 					console.log("입양 후기 최신글 조회 실패");
@@ -164,6 +190,12 @@
 				
 			});
 		}
+		
+		//ready 함수
+		$(document).ready(function(){
+			//입양 후기 가져오는 함수
+			selectReviewList();
+		});
 		
 			
 	</script>

@@ -116,7 +116,7 @@ public class ReviewController extends HttpServlet {
 
 			//입양 후기 상세 조회 Controller----------------------------------------------
 			else if(command.equals("/view.do")) {
-				errorMsg = "게시글 조회 과정에서 오류 발생";
+				errorMsg = "게시글 상세 조회 과정에서 오류 발생";
 				
 				int brdNo = Integer.parseInt(request.getParameter("no"));
 				
@@ -145,9 +145,6 @@ public class ReviewController extends HttpServlet {
 				errorMsg = "게시글 작성 페이지 연결 과정에서 오류 발생";
 				
 				path = "/WEB-INF/views/review/reviewInsertForm.jsp";
-				
-				//request.setAttribute("fList", fList);
-				//request.setAttribute("pInfo", pInfo);
 				
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
@@ -392,6 +389,33 @@ public class ReviewController extends HttpServlet {
 			}
 			
 			
+			//입양 후기 글 삭제 control--------------
+			else if(command.equals("/delete.do")) {
+				
+				int brdNo = Integer.parseInt(request.getParameter("no"));
+						
+				int result = service.updateBrdStatus(brdNo);
+				
+				if(result > 0) {
+					//삭제 성공 시 : 게시글 목록 조회
+					swalIcon = "success";
+					swalTitle = "게시글 삭제 성공";
+					path = "list.do";
+					
+				} else {
+					//삭제 실패 시 : 삭제 시도한 게시글의 상세 조회 페이지로 redirect
+					swalIcon = "success";
+					swalTitle = "게시글 삭제 실패";
+					
+					//이전 페이지의 상세 주소 
+					path = request.getHeader("referer");
+				}
+						
+				request.getSession().setAttribute("swalIcon", swalIcon);
+	            request.getSession().setAttribute("swalTitle", swalTitle);
+
+				response.sendRedirect(path);
+			}
 			
 			
 		} catch (Exception e) {
