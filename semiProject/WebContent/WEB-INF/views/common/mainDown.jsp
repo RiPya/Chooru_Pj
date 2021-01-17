@@ -113,11 +113,6 @@
 				</div>
 	<script>
 	   /* 메인 공지사항 박스  */
-	   /* 메인 공지사항 박스 글 가져오기  : ajax를 이용 */
-	   /* (function(){
-		   location.href = "${contextPath}/notice/mainList.do";
-	   })(); */
-	   /* 메인페이지와 연결되는 servlet을 작성 후 게시글의 모든 부분을 해당 servlet에서 전부 처리 */
 	   
     /* 클릭한 공지사항 글 조회로 이동 */
     $("#main-notice td").on("click", function(){
@@ -135,10 +130,6 @@
 		
 
 		/* 메인 입양 후기 박스  */
-		/* 메인 입양후기 박스 글 가져오기 */
-	   /* (function(){
-		   location.href = "${contextPath}/review/mainList.do";
-	   })(); */
 		
     /* 클릭한 공지사항 글 조회로 이동 */
     $("#main-review td").on("click", function(){
@@ -155,6 +146,25 @@
     		swal({icon : "warning", title:"로그인 후 사용해주세요."});
     	} */
 		});
+		
+		/* 입양 후기 리스트 가져오는 함수 */
+		
+		function selectReviewList(){
+			$.ajax ({
+				url: "${contextPath}/mainpage/selectReview.do",
+				data: {"brdType" : "b3"}, //입양 후기 게시판 타입을 보내기
+				type: "post",
+				dataType : "JSON",
+				success : function(rList, iList){
+					
+				},
+				error : function(){
+					console.log("입양 후기 최신글 조회 실패");
+				}
+				
+			});
+		}
+		
 			
 	</script>
 

@@ -108,7 +108,7 @@
 				</div>
 	
 	        <div id="form-wrapper">
-            <form action="${contextPath}/review/reviewInsert.do?${tpStr}" method="post" onsubmit="return boardValidate()">
+            <form action="${contextPath}/review/insert.do?${tpStr}" method="post" onsubmit="return boardValidate()">
                 <div class="form-size">
                     <input type="text" name="title" id="titleInput" class="form-control"
                          placeholder="제목을 입력해 주세요.">

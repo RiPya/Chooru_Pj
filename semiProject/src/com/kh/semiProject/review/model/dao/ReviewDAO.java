@@ -350,6 +350,132 @@ public class ReviewDAO {
 
 
 
+	/**입양 후기 BOARD(공통 부분) 수정 dao
+	 * @param conn
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBoard(Connection conn, Map<String, Object> map) throws Exception {
+		
+		int result = 0;
+		
+		String query = prop.getProperty("updateBoard");
+		/*UPDATE BOARD SET TITLE = ?, CONTENT = ?, BRD_MODIFY = SYSDATE WHERE BRD_NO = ? */
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, (String)map.get("title"));
+			pstmt.setString(2, (String)map.get("content"));
+			pstmt.setInt(3, (int)map.get("brdNo"));
+			
+			result = pstmt.executeUpdate();
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	/**입양 후기 REVIEW(입양 후기 부분) 수정 dao
+	 * @param conn
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateReview(Connection conn, Map<String, Object> map) throws Exception{
+		
+		int result = 0;
+		
+		String query = prop.getProperty("updateReview");
+		/*UPDATE ADT_REVIEW SET ADT_DATE = ?, ADT_LINK = ? WHERE BRD_NO = ? */
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setDate(1, (Date)map.get("adtDate"));
+			pstmt.setString(2, (String)map.get("adtLink"));
+			pstmt.setInt(3, (int)map.get("brdNo"));
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+
+	/**입양 후기 수정: 특정 게시물의 기존 이미지 목록 가져오기
+	 * @param conn
+	 * @param i
+	 * @return oldImages
+	 * @throws Exception
+	 */
+	public List<Image> selectOldImages(Connection conn, int brdNo) throws Exception{
+		
+		List<Image> oldImages = null;
+		
+		String query = prop.getProperty("selectOldImages");
+		/*	SELECT FILE_NUMBER, FILE_NAME, FILE_PATH, FILE_LEVEL, BRD_NO 
+			FROM IMAGE WHERE BRD_NO = ?
+		 */
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, brdNo);
+			
+			rset = pstmt.executeQuery();
+			
+			oldImages = new ArrayList<Image>();
+			
+			while(rset.next()) {
+				Image img = new Image();
+				img.setFileNo(rset.getInt("FILE_NUMBER"));
+				img.setFileName(rset.getString("FILE_NAME"));
+				img.setFilePath(rset.getString("FILE_PATH"));
+				img.setFileLevel(rset.getInt("FILE_LEVEL"));
+				img.setBrdNo(rset.getInt("BRD_NO"));
+				
+				oldImages.add(img);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return oldImages;
+	}
+
+
+	/**입양 후기 수정: 수정 전 이미지 목록(oldImages) DB에서 삭제
+	 * @param conn
+	 * @param brdNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int deleteOldImages(Connection conn, int brdNo) throws Exception {
+		int result = 0;
+		
+		String query = prop.getProperty("deleteOldImages");
+		/*DELETE FROM IMAGE WHERE BRD_NO = ?*/
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, brdNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+
+
+
+
 
 
 

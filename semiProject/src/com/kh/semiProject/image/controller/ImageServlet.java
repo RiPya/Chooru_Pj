@@ -46,6 +46,7 @@ public class ImageServlet extends HttpServlet {
 					
 					//2) 서버에 업로드된 파일을 저장할 경로 지정
 					String root = request.getSession().getServletContext().getRealPath("/");
+					
 					//배포되고 있는 최상위 경로의 실제 경로(WebContent)
 					//화면에 보여지는 주소는 .....semiProject/
 					String filePath = root + "resources/uploadImages/";

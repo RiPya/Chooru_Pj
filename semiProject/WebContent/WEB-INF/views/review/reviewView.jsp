@@ -216,7 +216,7 @@
 					<span class="brd-second inline-block">
 						작성일 <fmt:formatDate value="${review.brdCrtDt}" pattern="yy-MM-dd HH:mm"/>
 						<c:if test="${!empty review.brdModify}">
-						 | 수정일 <fmt:formatDate value="${review.brdModifiy}" pattern="yy-MM-dd HH:mm"/>
+						 ┃ 수정일 <fmt:formatDate value="${review.brdModify}" pattern="yy-MM-dd HH:mm"/>
 						</c:if>
 					</span>
 					
@@ -336,7 +336,7 @@
 							</td>
 							<td class="deleteReply">
 <%-- 								<c:if test="${!empty loginMember && loginMember.nNm == reply.replyWriter }"> --%>
-									<a href="${contentPath}/reply/delete.do?${tpStr}&cp=${param.cp}&no=${param.no}">
+									<a href="${contentPath}/reply/delete.do?${tpNoStr}&cp=${param.cp}">
 										<i class="fas fa-times"></i></a>
 <%-- 								</c:if> --%>
 							</td>
@@ -360,6 +360,14 @@
 				var url = $(".adoptUrl").text();
 				$(".adoptUrl").attr("href", url);
 			})();
+			
+			//삭제 버튼 클릭
+			$("#deleteBtn").on("click", function(){
+				if(confirm("정말 삭제하시겠습니까?")) {
+					location.href = "${contextPath}/review/delete.do?${tpNoStr}";
+				}
+			});
+			
 			
 		});
 	
