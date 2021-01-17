@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+<!-- 입양/분양 게시글 번호 조회 -->
+<entry key="selectNextNo">
+SELECT SEQ_BNO.NEXTVAL FROM DUAL
+</entry>
+
+<!-- Board 부분 삽입 -->
+<entry key="insertBoard">
+INSERT INTO BOARD(BRD_NO, TITLE, CONTENT, MEM_NO, BRD_TYPE)
+			VALUES(?, ?, ?, ?, ?)
+</entry>
+
+<!-- Adoption 부분 삽입 -->
+<entry key="insertAdoption">
+INSERT INTO ADOPTION(BRD_NO, ADT_CODE, ADT_BREED, ADT_GENDER, ADT_AGE,
+	ADDRESS, ADT_VACCINATION, ADT_NOTE, ADT_TIME, ADT_YN)
+			VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+</entry>
+
+<!-- 입양후기 IMAGE 이미지 삽입 -->
+<entry key="insertImage">
+INSERT INTO IMAGE VALUES(SEQ_INO.NEXTVAL, ?, ?, ?, SYSDATE, ?)
+</entry>
+
+</properties>

@@ -199,14 +199,14 @@
 					<!-- adAll adDog adCat adEtc adTemp -->
 					<li><button class="btn btn-light adoption <c:if test="${empty param.cd || param.cd == 'adAll'}">menu-active</c:if>"
 							 	type="button">전체</button></li>
-					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adDog'}">menu-active</c:if>" 
+					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adtDog'}">menu-active</c:if>" 
 								type="button">입양 개</button></li>
-					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adCat'}">menu-active</c:if>" 
+					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adtCat'}">menu-active</c:if>" 
 								type="button">입양 고양이</button></li>
-					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adEtc'}">menu-active</c:if>" 
+					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adtEtc'}">menu-active</c:if>" 
 								type="button">입양 기타</button></li>
-					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adTemp'}">menu-active</c:if>" 
-								type="button">임시보호</button></li>
+					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'temp'}">menu-active</c:if>" 
+								type="button">임시 보호</button></li>
 				</ul>
 			</div>
 			
@@ -272,10 +272,10 @@
 			</div><!-- 카드형 목록 리스트 div 끝 -->
 			
 						<%-- 로그인이 되어있는 경우 --%>
-	<%--c:if test="${!empty loginMember}" --%>
+			<c:if test="${!empty loginMember}">
 				<button type="button" class="btn btn-teal float-right" id="insertBtn" 
 						  onclick="location.href='${contextPath}/adoption/insertForm.do?${tpStr}'">글쓰기</button>
-	<%--/c:if --%>
+			</c:if>
 			
 			
 			<%---------------------- Pagination ----------------------%>
@@ -304,7 +304,7 @@
 							<a class="page-link" href="#">&gt;</a>
 						</li>
 						<li> <!-- 마지막 페이지로 이동(>>) -->
-							<a class="page-link" href="#}">&gt;&gt;</a>
+							<a class="page-link" href="#">&gt;&gt;</a>
 						</li>
 				</ul>
 			</div>
@@ -317,11 +317,11 @@
 																																id="searchForm">
 					<!-- cd -->
 					<select name="cd" class="form-control sf-margin" style="width: 120px; display: inline-block;">
-						<option value="adAll">전체</option>
-						<option value="adDog">입양 개</option>
-						<option value="adCat">입양 고양이</option>
-						<option value="adEtc">입양 기타</option>
-						<option value="adTemp">임시보호</option>
+						<option value="adtAll">전체</option>
+						<option value="adtDog">입양 개</option>
+						<option value="adtCat">입양 고양이</option>
+						<option value="adtEtc">입양 기타</option>
+						<option value="temp">임시 보호</option>
 					</select> 
 					<select name="sk" class="form-control sf-margin" style="width: 110px; display: inline-block;">
 						<option value="title">제목</option>
@@ -361,11 +361,11 @@
 				var adoptionCode = "";
 				
 				switch(category){
-				case "전체" : adoptionCode = "adAll"; break;
-				case "입양 개" : adoptionCode = "adDog"; break;
-				case "입양 고양이" : adoptionCode = "adCat"; break;
-				case "입양 기타" : adoptionCode = "adEtc"; break;
-				case "임시보호" : adoptionCode = "adTemp"; break;
+				case "전체" : adoptionCode = "adtAll"; break;
+				case "입양 개" : adoptionCode = "adtDog"; break;
+				case "입양 고양이" : adoptionCode = "adtCat"; break;
+				case "입양 기타" : adoptionCode = "adtEtc"; break;
+				case "임시보호" : adoptionCode = "temp"; break;
 				}
 				
 				//해당 카테고리(freeCode)를 가지는 게시글 목록만 다시 출력하도록 요청
