@@ -113,26 +113,26 @@
 				</div>
 	
 	        <div id="form-wrapper">
-            <form action="${contextPath}/review/reviewUpdate.do?${tpNoStr}${searchStr}" 
+            <form action="${contextPath}/review/update.do?${tpNoStr}${searchStr}" 
             															method="post" onsubmit="return boardValidate()">
                 <div class="form-size">
                     <input type="text" name="title" id="titleInput" class="form-control"
-                         <%-- value="${review.reviewTitle}" --%>>
+                         value="${review.brdTitle}">
                 </div>
                 <div class="form-size">
                     <label for="adtDateInput" class="inputLabel">입양 날짜</label>
                     <input type="date" name="adtDate" id="adtDateInput" class="inputContent form-control"
-                    	<%-- value="${review.adtDate }" --%>>
+                    		 value="${review.adtDate}">
                 </div>
                 <div class="form-size">
                     <label for="adtLinkInput" class="inputLabel">입양/분양 글</label>
                     <input type="url" name="adtLink" id="adtLinkInput" class="inputContent form-control" 
-                       <%--  value="${review.adtLink }" --%>>
+                         value="${review.adtLink}">
                 </div>
             
                 <div class="form-size">
                     <textarea name="content" id="summernote">
-                    <%-- ${review.content} --%>
+                    ${review.brdContent}
                     </textarea>
                 </div>
                 <div id="form-btn" class="form-size">
@@ -150,43 +150,51 @@
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 	
 	<script>
-	 $(document).ready(function() {
-	/* 써머노트 스타일 지정 */
-        $("#summernote").summernote({
-        	minHeight: 500, //최소높이
-        	maxHeight: null, //최대높이
-        	lang: "ko-KR",
-        	placeholder: "사진과 함께 입양 후기를 작성해 주세요.",
-        	
-        	/* 이미지 삽입 후 서버에 저장을 위한 callback */
-        	/* callbacks: function(files, editor, welEditable) {
-	            for (var i = files.length - 1; i >= 0; i--) {
-	            	sendFile(files[i], this);
-	            }
-					} */
-        });
-        
-      /* 이미지 서버 저장 후 url 반환 받는 함수 */  
-/*    		function sendFile(file, el) {
-   			var form_data = new FormData();
-   			form_data.append('file', file);
-        
-   			$.ajax({
-           	data: form_data,
-           	type: "POST",
-           	url: '${contextPath}/file/uploadFile.do',
-           	cache: false,
-           	contentType: false,
-           	enctype: 'multipart/form-data',
-           	processData: false,
-           	success: function(file) {
-          		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
-             		$(el).summernote('editor.insertImage', file.filePath, file.fileName);
-           	}
-         	});
-      } */
-        
-    });//ready 함수 끝
+	$(document).ready(function() {
+		/* 써머노트 스타일 지정 */
+	        $("#summernote").summernote({
+	        	minHeight: 500, //최소높이
+	        	maxHeight: null, //최대높이
+	        	lang: "ko-KR",
+	        	placeholder: "사진과 함께 입양 후기를 작성해 주세요.",
+	        
+	         /* 이미지 삽입 후 서버에 저장을 위한 callback */
+	        	callbacks: {
+	        			onImageUpload : function(files, editor, welEditable) {
+			            for (var i = files.length - 1; i >= 0; i--) {
+			            	sendFile(files[i], this);
+			            }
+								} 
+	        	}
+	        });
+	        
+	        /* 이미지 서버 저장 후 url 반환 받는 함수 */  
+					function sendFile(file, el) {
+					var form_data = new FormData();
+					form_data.append('file', file);
+		    
+					$.ajax({
+		       	data: form_data,
+		       	type: "POST",
+		       	url: '${contextPath}/image/uploadImage.do',
+		       	cache: false,
+		       	contentType: false,
+		       	enctype: 'multipart/form-data',
+		       	dataType : "json",
+		       	processData: false,
+		       	success: function(image) {
+		      		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
+		      			var imageUrl = image.filePath + image.fileName
+		         		$(el).summernote('editor.insertImage', imageUrl);
+		      			console.log("서버 업로드 성공");
+		      			/* console.log(image);
+		      			console.log(image.filePath);
+		      			console.log(image.fileName); */
+		       	}
+		     	});
+	  } 
+	        
+	    });//ready 함수 끝
 	
 	
 	/* 유효성 검사 */
@@ -211,8 +219,16 @@
 				swal({icon:"warning", title:"내용을 입력해 주세요."});
 				$("#summernote").focus();
 				return false;
+				
+			} /* else {
+				
+				if($("#summernote > p").children("img").length == 0){
+					swal({icon:"warning", title:"최소 한 장 이상의 사진을 첨부해 주세요."});
+					$("#summernote").focus();
+					return false;
+				}
 			}
-			
+			 */
 			/* img태그가 있는지 확인 후 없으면 img 추가하는 경고창 필요 → 썸네일이 필요하기 때문 */
 		}
     

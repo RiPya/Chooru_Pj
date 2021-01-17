@@ -70,8 +70,50 @@ WHERE BRD_NO IN
 AND FILE_LEVEL = 0
 </entry>
 
+<!-- 입양 후기 수정 board 부분 업데이트 -->
+<entry key="updateBoard">
+UPDATE BOARD SET 
+TITLE = ?, 
+CONTENT = ?, 
+BRD_MODIFY = SYSDATE 
+WHERE BRD_NO = ? 
+</entry>
 
+<!-- 입양 후기 수정 review 부분 업데이트  -->
+<entry key="updateReview">
+UPDATE ADT_REVIEW SET 
+ADT_DATE = ?, 
+ADT_LINK = ?
+WHERE BRD_NO = ? 
+</entry>
+
+<!-- 입양 후기 수정 시 기존 이미지 가져오기 -->
+<entry key="selectOldImages">
+SELECT FILE_NUMBER, FILE_NAME, FILE_PATH, FILE_LEVEL, BRD_NO 
+FROM IMAGE WHERE BRD_NO = ?
+</entry>
+
+<!-- 입양 후기 수정 시 기존 이미지(수정 전이미지) 삭제하기 -->
+<entry key="deleteOldImages">
+DELETE FROM IMAGE WHERE BRD_NO = ?
+</entry>
 
 
 </properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
