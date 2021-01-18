@@ -145,6 +145,19 @@
 		list-style-type: none;
 	}
 	
+.form-adoption {
+	font-size: 20px;
+	font-weight: bolder;
+	padding-right: 20px;
+}
+		
+	.form-hr>hr {
+		height: 8px;
+		margin-bottom: .1rem;
+		display: inline-block;
+		background-color: teal;
+		border-radius: 1rem;
+	}
 </style>
 </head>
 <body>
@@ -155,14 +168,16 @@
 	
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
 	<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
-	
-	<!-- 검색을 통해 온 경우 -->
-	<c:if test="${!empty param.sk && !empty param.sv }">
-		<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
-	</c:if>
 
 
 	<jsp:include page="../common/header.jsp"></jsp:include>
+	<div class="container  my-5">
+		<div class="header-adoption">
+			<span class="form-adoption">입양/분양</span> 
+			<span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
+		</div>
+	</div>
+		
 	<div class="container  my-5">
 
 		<div>
@@ -265,7 +280,9 @@
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>
+								<c:if test="${!empty param.cd}">
 								<c:param name="cd">${param.cd}</c:param>
+								</c:if>
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
 						 </c:when>
@@ -275,14 +292,15 @@
 									목록으로 돌아갈 때 cp가 같이 전달됨 --%>
  						<c:otherwise>
 							<c:url var="goToList" value="list.do">
-								<c:param name="cp">${param.cp}</c:param>
+								<c:if test="${!empty param.cd}">
+									<c:param name="cp">${param.cp}</c:param>
+								</c:if>
 								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
 						</c:otherwise>
 					</c:choose>
 					
-					<!-- 전체 검색 후 어떻게 처리할까? -->
 					<a href="${goToList}" class="btn btn-teal float-right" style="width: 75px;">목록</a>
 				</div>
 			</div>

@@ -23,22 +23,46 @@ public class AdoptionService {
 	
 	/** 페이징 처리를 위한 계산 service
 	 * @param cp
+	 * @param freeCode 
 	 * @return pInfo
 	 * @throws Exception
 	 */
-	public PageInfo getPageInfo(String cp) throws Exception{
+	public PageInfo getPageInfo(String cp, String adtCode) throws Exception{
 		Connection conn = getConnection();
 		
-		// 삼항연산자 : cp가 null일 경우 참(1), 거짓(parseInt()를 사용해 cp 대입)
-		int currentPage = (cp == null) ? 1 : Integer.parseInt(cp);
+		//cp가 null일 경우 참(1), 거짓(parseInt()를 사용해 cp 대입)
+		int currentPage = 0;
 		
-		// db에서 전체 게시글 수 조회하여 반환 받기(select count 사용)
-		int listCount = dao.getListCount(conn);
+		if(cp == null) currentPage = 1;
+		else currentPage = Integer.parseInt(cp);
+		
+		//코드(카테고리)에 따라 전체 게시글 수 바뀌기 때문에 코드 condition 구해야함
+		String condition = createCondition(adtCode);
+		
+		//db에서 전체 게시글 수 조회하여 반환 받기(select count 사용)
+		int listCount = dao.getListCount(conn, condition);
 		
 		close(conn);
 		
-		// 얻어온 현재 페이지와 DB에서 조회한 전체 게시글 수를 이용해 PageInfo 객체 생성해 반환
+		//얻어온 현재 페이지와 DB에서 조회한 전체 게시글 수를 이용해 PageInfo 객체 생성해 반환
 		return new PageInfo(currentPage, listCount);
+	}
+	
+	/**입양분양 코드에 따른 condition 생성
+	 * @param adtCode
+	 * @return condition
+	 */
+	private String createCondition(String adtCode) {
+		
+		String condition = null;
+		
+		if(!adtCode.equals("adtAll")) {
+			condition = " AND ADT_CODE = '" + adtCode + "'";
+		} else {
+			condition = " ";
+		}
+		
+		return condition;
 	}
 	
 	/** 게시글 목록 조회 service
@@ -46,27 +70,32 @@ public class AdoptionService {
 	 * @return rList
 	 * @throws Exception
 	 */
-	public List<Adoption> selectAdoptionList(PageInfo pInfo) throws Exception {
+	public List<Adoption> selectAdoptionList(PageInfo pInfo, String adtCode) throws Exception {
 		
 		Connection conn = getConnection();
 		
-		List<Adoption> rList = dao.selectAdoptionList(conn, pInfo);
+		String condition = createCondition(adtCode);
+		
+		List<Adoption> aList = dao.selectAdoptionList(conn, pInfo, condition);
 		
 		close(conn);
 		
-		return rList;
+		return aList;
 	}
 	
 	/** 입양 후기 썸네일 목록 조회 service 
 	 * @param pInfo
+	 * @param adtCode
 	 * @return iList
 	 * @throws Exception
 	 */
-	public List<Image> selectThumbnails(PageInfo pInfo) throws Exception{
+	public List<Image> selectThumbnails(PageInfo pInfo, String adtCode) throws Exception{
 		
 		Connection conn = getConnection();
 		
-		List<Image> iList = dao.selectThumbnails(conn, pInfo);
+		String condition = createCondition(adtCode);
+		
+		List<Image> iList = dao.selectThumbnails(conn, pInfo, condition);
 		
 		close(conn);
 		
