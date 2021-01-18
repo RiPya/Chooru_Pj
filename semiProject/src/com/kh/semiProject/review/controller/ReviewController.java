@@ -258,8 +258,8 @@ public class ReviewController extends HttpServlet {
 				
 				//수정 화면에 기존 내용 작성
 				int brdNo = Integer.parseInt(request.getParameter("no"));
-				
-				Board review = service.selectReview(brdNo);
+										
+				Board review = service.updateView(brdNo);
 				//개행 문자 처리가 필요 없기 때문에 그냥 기존의 상세 조회 시 사용한 service 재활용
 				//이미지는 따로 가져올 필요 없음 이미 content에 있음
 				
@@ -302,16 +302,12 @@ public class ReviewController extends HttpServlet {
 				
 				//1-4. 게시판 타입 위에서 가져옴
 				
-				//2.로그인 정보에서 회원번호 가져오기
-				Member loginMember = (Member)request.getSession().getAttribute("loginMember");
-				int memNo = loginMember.getMemNo();
 				
-				
-				//3. content에 있는 img 태그 내 src를 선택해 image url 목록 반환 받기
+				//2. content에 있는 img 태그 내 src를 선택해 image url 목록 반환 받기
 				List<String> imgUrl = service.getImageList(content);
 				
 				
-				//4. imgUrl을 사용하여 DB에 저장할 이미지 데이터 목록 만들기
+				//3. imgUrl을 사용하여 DB에 저장할 이미지 데이터 목록 만들기
 				List<Image> iList = new ArrayList<Image>(); 
 
 				if(!imgUrl.isEmpty()) {//imgUrl 있을 때 == 이미지가 첨부되었을 때
@@ -342,17 +338,16 @@ public class ReviewController extends HttpServlet {
 					} 
 				} 
 				
-				//4-1. 사진 삽입 실패 시 사진 삭제할 기본 주소 추가
+				//3-1. 사진 삽입 실패 시 사진 삭제할 기본 주소 추가
 				String root = request.getSession().getServletContext().getRealPath("/");
 
-				//5. 입력 내용 + 이미지 List Map에 담아서 service로 호출 수정 결과 반환
+				//4. 입력 내용 + 이미지 List Map에 담아서 service로 호출 수정 결과 반환
 				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("brdNo", brdNo);//게시글 확인하고 update해야 하니까 필요함
 				map.put("title", title);
 				map.put("adtDate", adtDate);
 				map.put("adtLink", adtLink);
 				map.put("content", content);
-				//map.put("memNo", memNo);//회원번호 == 작성자
 				map.put("iList", iList);
 				map.put("root", root);
 				//게시판 타입을 바뀔 필요 없음 → 보내지 않음...

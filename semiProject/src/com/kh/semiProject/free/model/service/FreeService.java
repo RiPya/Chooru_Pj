@@ -189,6 +189,7 @@ public class FreeService {
 		return new PageInfo(currentPage, listCount);
 	}
 
+	
 	/**자유 코드에 따른 condition 생성
 	 * @param freeCode
 	 * @return condition
@@ -206,6 +207,8 @@ public class FreeService {
 		return condition;
 	}
 
+	
+	
 	/**게시글 목록 조회 service
 	 * @param pInfo
 	 * @param freeCode 
@@ -260,6 +263,231 @@ public class FreeService {
 		close(conn);
 		
 		return commCounts;
+	}
+
+	
+	
+	/**자유게시판 수정 폼 정보 출력용
+	 * @param brdNo
+	 * @return free
+	 * @throws Exception
+	 */
+	public Board updateView(int brdNo) throws Exception{
+		Connection conn = getConnection();
+		
+		Board free = dao.selectFree(conn, brdNo);
+		
+		close(conn);
+		
+		return free;
+	}
+
+	/**자유 게시판 수정(update) service
+	 * @param map
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateFree(Map<String, Object> map) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int result = 0;
+		
+		List<Image> deleteImages = new ArrayList<Image>();
+		//서버에서 삭제될 파일 저장 List
+		
+		try {
+			//1. 공통 게시글 부분 수정(BOARD 제목, 내용)
+			result = dao.updateBoard(conn, map);
+			
+			if(result > 0) {
+				//공통 게시글 부분 수정 성공 시
+				//2. 자유게시판 부분(FREE 자유 카테고리)
+				result = 0;//초기화
+				result = dao.updateFree(conn, map);
+				
+		//-----------------게시글 내용 수정 후 이미지 목록 수정 처리---------------------------------------------------------		
+				
+				if(result > 0) {
+					//자유게시판 부분 수정 성공 시
+					
+					//map에서 iList를 가져와 newImages에 저장
+					List<Image> newImages = (List<Image>)map.get("iList");
+					
+					//기존의 IMAGE 테이블에서 해당 brdNo의 이미지 목록(oldImages) 가져오기
+					int brdNo = (int)map.get("brdNo");
+					List<Image> oldImages = dao.selectOldImages(conn, brdNo);
+					
+					boolean newFlag = false;//newImages가 있을 때 newImages를 삽입하기 위한 flag
+					
+					//3. oldImages(수정 전 이미지 목록)이 있으면
+					if(!oldImages.isEmpty()) {
+						
+						result = 0;//초기화 재활용2
+						
+						//3-1. oldImages 목록 DB에서 지우기
+						//→ newImages가 있으나 없으나 지움
+						result = dao.deleteOldImages(conn, brdNo);
+						
+						//확인용
+						//System.out.println("이전 이미지 수: " + oldImages.size());
+						//System.out.println("삭제 데이터 개수 : " + result);//삭제 데이터 개수 확인
+					
+						//3-2. oldImages가 삭제되었을 때 수정 후 이미지(newImages)가 있으면 
+						if(result > 0 && !newImages.isEmpty()) {
+							
+							newFlag = true;//newImages가 있다는 flag를 true로 (후에 진행)
+							
+							//3-3. newImages의 파일명 vs oldImages의 파일명 비교
+							//같은 이름이 없으면 deleteImages에 oldImg 추가(삭제 파일)
+							for(Image oldImg : oldImages) {
+								boolean flag = true;
+								//같은 이름이 있을 때 false → deleteImages에 추가X								
+								
+								for(Image newImg : newImages) {
+									if(oldImg.getFileName().equals(newImg.getFileName())) {
+										flag = false;
+										break; //같은 이름 있으면 for문 중단
+									}
+								}
+								System.out.println(flag);//확인용
+								
+								//같은 이름이 없을 때 oldImg 추가
+								if(flag) deleteImages.add(oldImg);
+								
+								System.out.println(deleteImages);//확인용
+							}
+						}//newImages, oldImages 둘 다 있는 경우 if문 끝
+						
+						//3-4. oldImages가 삭제되었고, newImages는 없을 때
+						// → deleteImages에 oldImages 넣기
+						else if(result > 0 && newImages.isEmpty()) {
+							deleteImages = oldImages;
+						}
+						//System.out.println(deleteImages);//확인용
+						//oldImages 삭제에 실패했을 때 result == 0
+						
+						//----oldImages가 있을 때 코드 종료	
+					} else { 
+						
+					//4. 수정 전 이미지(oldImages)가 없고 수정 후 이미지(newImages)가 있으면
+						if(!newImages.isEmpty()) {
+							newFlag = true;//newImages가 있다는 flag를 true로 (후에 진행)
+						} 
+						//newImages가 없을 때 따로 수행할 코드X
+						
+					}//oldImages가 있을 때, 없을 때 코드 끝
+				
+				
+					//5. newImages가 있고 oldImages를 DB에서 삭제 성공했을 때
+					//IMAGE 테이블에 삽입(등록 시 작성한 insertImage() 재사용)
+					if(newFlag && result > 0) {
+						result = 0;//초기화 재활용3
+						
+						for(Image img : newImages) {
+							//Image 객체에 글번호 추가
+							img.setBrdNo(brdNo);
+							
+							result = dao.insertImage(conn, img);
+							
+							if(result == 0) {
+								//삽입 실패 시 강제로 예외를 발생 시켜 
+								//catch문에서 파일 삭제를 진행해야함
+								throw new FileInsertFailedException("이미지 정보 삽입 실패");
+								//밑에 있는 catch문에서 잡음
+							}
+						}
+					}//newImages IMAGE에 삽입 끝
+					
+				}//입양 후기 게시글 수정 성공했을 때 코드 끝
+			}
+			
+		} catch (Exception e) {
+			
+			//글 정보(BOARD/REVIEW) 오류 발생 시 or 파일 정보(IMAGE) 업로드 실패 시
+			//→ 서버에 저장된 파일을 삭제
+			List<Image> iList = (List<Image>)map.get("iList");
+			
+			if(!iList.isEmpty()) {
+				for(Image img : iList) {
+					
+					//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
+					//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
+					//→ 이미지 삭제를 위해 필요한 주소는 C:\workspace\semi\Chooru_Pj\semiProject\WebContent\resources/uploadImages
+					//→ 바꿔줘야 함
+					String filePath = (String)map.get("root");
+					filePath += img.getFilePath().substring(3);
+					
+					String fileName = img.getFileName();
+					
+					File deleteFile = new File(filePath + fileName);
+					//해당 파일의 전체 주소 : filePath + fileName
+					//File 객체는 전체 주소에 있는 파일 객체를 선택할 때 사용함
+					// → filePath+fileName인 파일이 없다면 deleteFile은 null 값.
+					
+					if(deleteFile.exists()) {
+						deleteFile.delete();
+					}
+				}
+			}
+			
+			throw e; //현재 발생해서 처리한 에러도 다시 controller로 전달
+		}
+		//-------try-catch문 끝---------------------------------
+		
+		//모든 과정이 성공했을 때 commit + deleteImages 삭제
+		if(result > 0) {
+			commit(conn);
+
+			//deleteImages가 있을 때 삭제 진행
+			if(!deleteImages.isEmpty()) {
+				
+				for(Image img : deleteImages) {
+					
+					//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
+					//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
+					//→ 이미지 삭제를 위해 필요한 주소는 C:\workspace\semi\Chooru_Pj\semiProject\WebContent\resources/uploadImages
+					//→ 바꿔줘야 함
+					String filePath = (String)map.get("root");
+					filePath += img.getFilePath().substring(3);
+					
+					String fileName = img.getFileName();
+					
+					File deleteFile = new File(filePath + fileName);
+					
+					System.out.println(deleteFile);
+					
+					if(deleteFile.exists()) {
+						deleteFile.delete();
+					}
+				}
+			}
+			
+		} else { //과정 중 실패가 있었을 때 rollback
+			rollback(conn);
+		}
+		
+		close(conn);
+		
+		return result;
+	}
+
+	/**자유게시판 삭제(상태 변경) service
+	 * @param brdNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBrdStatus(int brdNo) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.updateBrdStatus(conn, brdNo);
+		
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		
+		close(conn);
+		
+		return result;
 	}
 	
 

@@ -1,6 +1,7 @@
 package com.kh.semiProject.free.controller;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -237,6 +238,152 @@ public class FreeController extends HttpServlet {
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 				
+			}
+			
+			//자유 게시판 수정 폼 연결-----------------------------------
+			else if(command.equals("/updateForm.do")) {
+				errorMsg = "게시글 수정 페이지 연결 과정에서 오류 발생";
+				
+				//수정 화면에 기존 내용 작성
+				int brdNo = Integer.parseInt(request.getParameter("no"));
+				
+				Board free = service.updateView(brdNo);
+				//개행 문자 처리가 필요 없기 때문에 그냥 기존의 상세 조회 시 사용한 service 재활용
+				//이미지는 따로 가져올 필요 없음 이미 content에 있음
+				
+				if(free != null) {
+					request.setAttribute("free", free);
+					path = "/WEB-INF/views/free/freeUpdate.jsp";
+					
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+				} else {
+					request.getSession().setAttribute("swalIcon", "error");
+					request.getSession().setAttribute("swalTitle", "게시글 수정 화면 전환 실패");
+					response.sendRedirect(request.getHeader("referer"));
+				}
+			
+			}
+	
+			//자유 게시판 수정 controller--------------------------------
+			else if(command.equals("/update.do")) {
+				errorMsg = "게시글 수정 과정에서 오류 발생";
+				
+				//service로 보낼 데이터를 변수에 저장하는건 글 등록과 거의 유사 
+				
+				//1. 게시글 작성 파라미터에서 얻어오기
+				int brdNo = Integer.parseInt(request.getParameter("no"));
+				String title = request.getParameter("title");
+				String content = request.getParameter("content");
+				
+				String code = request.getParameter("category");
+				
+				//2. content에 있는 img 태그 내 src를 선택해 image url 목록 반환 받기
+				List<String> imgUrl = service.getImageList(content);
+				
+				
+				//3. imgUrl을 사용하여 DB에 저장할 이미지 데이터 목록 만들기
+				List<Image> iList = new ArrayList<Image>(); 
+
+				if(!imgUrl.isEmpty()) {//imgUrl 있을 때 == 이미지가 첨부되었을 때
+
+					int level = 0; //사진 레벨 -> 사진 순서(레벨 0은 썸네일)
+	
+					for(String url : imgUrl){
+						int slash = url.lastIndexOf('/'); 
+						//src에서 뒤에서부터 첫번째 '/'인 index 뽑기 
+						// => '경로 / 파일명.확장자' 의 경계선인 '/'의 index 확인 가능
+		
+						Image temp = new Image(); 
+		
+						//문자열.substring() 사용해서 url에서 파일명, 파일경로 분리하기
+						//substring(start) ~ start인덱스부터 마지막 인덱스까지 잘라내서 저장
+						//substring(start, end) ~ start인덱스부터 end인덱스 전까지 잘라내서 저장
+		
+						temp.setFileName(url.substring(slash+1)); 
+								//ex) uploadImages/image1.jpg → image1.jpg
+						temp.setFilePath(url.substring(0, slash+1)); 
+								//ex) uploadImages/image1.jpg → uploadImages/
+						temp.setFileLevel(level++); 
+//						System.out.println(temp.getFileName()); //확인용
+//						System.out.println(temp.getFilePath()); //확인용
+//						System.out.println(temp.getFileLevel()); //확인용
+
+						iList.add(temp); 
+					} 
+				} 
+				
+				//3-1. 사진 삽입 실패 시 사진 삭제할 기본 주소 추가
+				String root = request.getSession().getServletContext().getRealPath("/");
+
+				//4. 입력 내용 + 이미지 List Map에 담아서 service로 호출 수정 결과 반환
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("brdNo", brdNo);//게시글 확인하고 update해야 하니까 필요함
+				map.put("title", title);
+				map.put("content", content);
+				map.put("freeCode", code);//자유 코드
+				map.put("iList", iList);
+				map.put("root", root);
+				//게시판 타입을 바뀔 필요 없음 → 보내지 않음...
+				
+				int result = service.updateFree(map);
+				
+				path = "view.do?tp=b4&cp=" + cp + "&no=" + brdNo;
+				
+				//검색어, 검색 조건이 있는 경우 sk, sv도 path에 추가해야하므로
+				//if문 조건을 만들기 위해 sk, sv를 파라미터에서 받아와 저장
+				String sk = request.getParameter("sk");
+				String sv = request.getParameter("sv");
+				
+				//검색어, 검색 조건이 있는 경우 path에 sk, sv 추가
+				if(sk != null && sv != null) {
+					path += "&sk=" + sk + "&sv=" + sv;
+				}
+				
+				//swalIcon, swalTitle 지정
+				if(result > 0) {
+					swalIcon = "success";
+					swalTitle = "게시글 수정 성공";
+					
+				} else {
+					swalIcon = "error";
+					swalTitle = "게시글 수정 실패";
+					
+				}
+				
+				request.getSession().setAttribute("swalIcon", swalIcon);
+	            request.getSession().setAttribute("swalTitle", swalTitle);
+
+				response.sendRedirect(path);
+			}
+			
+			
+			//자유게시판 글 삭제 control--------------------
+			else if(command.equals("/delete.do")) {
+				
+				int brdNo = Integer.parseInt(request.getParameter("no"));
+						
+				int result = service.updateBrdStatus(brdNo);
+				
+				if(result > 0) {
+					//삭제 성공 시 : 게시글 목록 조회
+					swalIcon = "success";
+					swalTitle = "게시글 삭제 성공";
+					path = "list.do";
+					
+				} else {
+					//삭제 실패 시 : 삭제 시도한 게시글의 상세 조회 페이지로 redirect
+					swalIcon = "success";
+					swalTitle = "게시글 삭제 실패";
+					
+					//이전 페이지의 상세 주소 
+					path = request.getHeader("referer");
+				}
+						
+				request.getSession().setAttribute("swalIcon", swalIcon);
+	            request.getSession().setAttribute("swalTitle", swalTitle);
+
+				response.sendRedirect(path);
 			}
 			
 			
