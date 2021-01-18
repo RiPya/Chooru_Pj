@@ -35,6 +35,18 @@ public class Member {
 	}
 
 	
+	// 회원가입용 생성자
+	public Member(String memId, String memPw, String memNm, String phone, String nickName, String email, char petYn) {
+		super();
+		this.memId = memId;
+		this.memPw = memPw;
+		this.memNm = memNm;
+		this.phone = phone;
+		this.nickName = nickName;
+		this.email = email;
+		this.petYn = petYn;
+	}
+
 	// 로그인용 생성자
 	public Member(int memNo, char grade, String memId, String memNm, String phone, String nickName, String email,
 			char petYn) {

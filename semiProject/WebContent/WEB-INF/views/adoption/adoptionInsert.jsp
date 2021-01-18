@@ -45,7 +45,7 @@
 	line-height: 60px;
 }
 
-.category {
+.adtCode {
 	width: 128px !important;
 	display: inline-block !important;
 }
@@ -87,8 +87,11 @@
 	<%-- url 작성 시 붙여야 하는 str --%>
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
   <c:set var="tpStr" value="tp=${param.tp}"/>
+
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
+	<c:if test="${!empty param.cd}">
+		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
+	</c:if>
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -101,11 +104,11 @@
 	</div>
 	
 	<div class="container my-5">
-		<form action="${contextPath}/adoption/insert.do?${tpStr}" method="post" onsubmit="return boardValidate();">
+		<form action="${contextPath}/adoption/insert.do?${tpCdStr}" method="post" onsubmit="return boardValidate();">
 	
 			<div class="form-container">
 				<label class="form-label mr-3">카테고리</label> 
-				<select name="category" class="form-control mr-3 category">
+				<select name="category" class="form-control mr-3 adtCode">
 					<option value="adtDog">입양 개</option>
 					<option value="adtCat">입양 고양이</option>
 					<option value="adtEtc">입양 기타</option>
@@ -133,7 +136,7 @@
 					<input type="text" name="adtAge" id="adtAge" class="form-control ml-1 mr-3" size="9" placeholder="개월 / 살">
 		
 					<label class="form-label mr-3">성별</label> 
-					<select name="adtGender" class="form-control mr-4 gender">
+					<select name="adtGender" class="form-control mr-4 adtGender">
 						<option value="boy">수컷</option>
 						<option value="girl">암컷</option>
 						<option value="ntrBoy">수컷 (중성화)</option>
