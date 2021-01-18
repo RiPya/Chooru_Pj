@@ -16,6 +16,10 @@ import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.review.model.dao.ReviewDAO;
 
+/**
+ * @author Younghyun
+ *
+ */
 public class ReviewService {
 	
 	private ReviewDAO dao = new ReviewDAO();
@@ -448,6 +452,21 @@ public class ReviewService {
 		return result;
 	}
 
+
+	/**입양 후기 수정 폼 정보 출력용
+	 * @param brdNo
+	 * @return review
+	 * @throws Exception
+	 */
+	public Board updateView(int brdNo) throws Exception{
+		Connection conn = getConnection();
+		
+		Board review = dao.selectReview(conn, brdNo);
+		
+		close(conn);
+		
+		return review;
+	}
 
 
 

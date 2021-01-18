@@ -156,9 +156,7 @@
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:if test="${!empty param.cd}">
-		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
-	</c:if>
+	<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"></c:set>
 
 
 	<jsp:include page="../common/header.jsp"></jsp:include>
