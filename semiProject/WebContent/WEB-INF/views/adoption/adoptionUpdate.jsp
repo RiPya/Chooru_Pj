@@ -80,9 +80,8 @@
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:if test="${!empty param.cd}">
-		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
-	</c:if>
+	<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
+
 	
 	<!-- 검색을 통해 온 경우 -->
 	<c:if test="${!empty param.sk && !empty param.sv }">
@@ -101,7 +100,7 @@
 	</div>
 	
 	<div class="container my-5">
-		<form action="${contextPath}/adoption/update.do?${tpNoStr}${searchStr}" 
+		<form action="${contextPath}/adoption/update.do?${tpCpNoStr}${searchStr}" 
 					method="post" onsubmit="return boardValidate();">
 	
 			<div class="form-container">
@@ -113,7 +112,7 @@
 					<option value="temp">임시 보호</option>
 				</select>
 
-				<input type="text" name="title" id="title" class="form-control adtTitle" value="${board.title}">
+				<input type="text" name="title" id="title" class="form-control adtTitle" value="${adoption.adtBrdTitle}">
 
 			<div class="form-inline">
 				<label for="address" class="form-label mr-5">주소</label> 
@@ -144,7 +143,7 @@
 		
 				<div class="form-inline">
 					<label for="adtDate" class="form-label mr-3">공고 기간</label> 
-		 			<input type="date" name="adtDate" id="adtDate" class="form-control mr-3">				
+		 			<input type="date" name="adtDate" id="adtDate" class="form-control mr-3" value="${adoption.adtTime}">				
 
 					<label class="form-label mr-3">입양 여부</label>
 					<select name="adtYn" class="form-control mr-4 adtYn">
@@ -156,11 +155,10 @@
 				<div class="form-inline">
 					<label class="form-label mr-3">예방 접종 여부</label> 
 					
-					<input type="radio" name="adtVaccination" id="vaccYes" class="form-check-input mr-3" value="Y">
-					
+					<input type="radio" name="adtVaccination" id="vaccYes" class="form-check-input mr-3 adtVaccination" value="Y">
 					<label for="vaccYes" class="form-label mr-3">유</label> 		
 		
-					<input type="radio" name="adtVaccination" id="vaccNo" class="form-check-input mr-3" value="N">
+					<input type="radio" name="adtVaccination" id="vaccNo" class="form-check-input mr-3 adtVaccination" value="N">
 					<label for="vaccNo" class="form-label mr-3">무</label> 		
 				</div>
 			</div>
@@ -186,6 +184,37 @@
 		
 		
 <script>
+
+// 카테고리 초기값 지정
+(function(){
+	$("#category > option").each(function(index, item){
+		if($(item).val() == "${adoption.adtCode}"){
+			$(item).prop("selected", true);
+		}
+	})
+	
+	// 성별  초기값 지정
+	$(".adtGender > option").each(function(index, item){
+		if($(item).val() == "${adoption.adtGender}"){
+			$(item).prop("selected", true);
+		}
+	})
+	
+	// 입양 여부  초기값 지정
+	$(".adtYn > option").each(function(index, item){
+		if($(item).val() == "${adoption.adtYn}"){
+			$(item).prop("selected", true);
+		}
+	});
+	
+	// 예방 접종 여부  초기값 지정
+	$(".adtVaccination").each(function(index, item){
+		   if( $(item).val() == "${adoption.adtVaccination}" )	
+		     $(item).prop("checked", true); 
+		});
+	
+})();
+
 
 /* Postcodify 주소창  */	
 	$(function(){
@@ -270,17 +299,9 @@ $(document).ready(function() {
 			return false;
 		}
 			
-			// 카테고리 초기값 지정
-			(function(){
-				$("#category > option").each(function(index, item){
-					if($(item).text() == "${adoption.adtCode}"){
-						$(item).prop("selected", true);
-					}
-				})
-			})();
-			
 			/* img태그가 있는지 확인 후 없으면 img 추가하는 경고창 필요 → 썸네일이 필요하기 때문 */
 		}
+	
 	</script>
 </body>
 </html>

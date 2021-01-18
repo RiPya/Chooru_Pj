@@ -213,8 +213,25 @@ public class AdoptionService {
 		
 		return result;
 	}
+	
+	
+	/** 입양/분양 수정 폼 정보 출력용
+	 * @param brdNo
+	 * @return free
+	 * @throws Exception
+	 */
+	public Adoption updateView(int brdNo) throws Exception{
+		Connection conn = getConnection();
+		
+		Adoption adoption = dao.selectAdoption(conn, brdNo);
+		
+		close(conn);
+		
+		return adoption;
+	}
 
-	/** 입양/분양 후기 수정 Service
+
+	/** 입양/분양 수정 Service
 	 * @param map
 	 * @return result
 	 * @throws Exception
@@ -231,7 +248,7 @@ public class AdoptionService {
 		// 크로스 사이트 스크립팅 방지, 개행문자 처리 하면 안됨 → content는 html 형식
 		
 		try {
-			//1. 공통 게시글 부분(Adoption에 제목, 내용) 수정
+			//1. 공통 게시글 부분  수정
 			result = dao.updateBoard(conn, map);
 			
 			if(result > 0) {//공통 게시글 부분 수정 성공 시
@@ -301,8 +318,7 @@ public class AdoptionService {
 							deleteImages = oldImages;
 						}
 						
-						System.out.println(deleteImages);//확인용
-						
+						// System.out.println(deleteImages);//확인용
 						//oldImages 삭제에 실패했을 때 result == 0
 						
 					//----oldImages가 있을 때 코드 종료	
@@ -372,9 +388,7 @@ public class AdoptionService {
 			throw e; //현재 발생해서 처리한 에러도 다시 controller로 전달
 		}
 		//-------try-catch문 끝---------------------------------
-		
-		
-		
+	
 		//모든 과정이 성공했을 때 commit + deleteImages 삭제
 		if(result > 0) {
 			commit(conn);

@@ -154,10 +154,8 @@
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 	
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:if test="${!empty param.cd}">
-		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
-	</c:if>
-
+	<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
+	
 	<!-- 검색을 통해 온 경우 -->
 	<c:if test="${!empty param.sk && !empty param.sv }">
 		<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
@@ -172,7 +170,7 @@
 			<div id="board-area">
 
 				<h3>
-				<span class="mt-4 cd-color inline-block" id="code" style="color:teal;">${adoption.adtCode}</span>
+				<span class="mt-4 cd-color inline-block category" id="code" style="color:teal;">${adoption.adtCode}</span>
 				
 				<span class="mt-4 inline-block">${adoption.adtBrdTitle}</span>
 				</h3>
@@ -213,12 +211,12 @@
 						</tr>
 						<tr>
 							<td class="detailMenu">나이</td>
-							<td class="detailContent">${adoption.adtAge} (추정)</td> <!-- -->
+							<td class="detailContent">${adoption.adtAge} (추정)</td>
 							<td></td>
 						</tr>
 						<tr>
 							<td class="detailMenu">주소</td>
-							<td class="detailContent">${adoption.address}</td> <!-- -->
+							<td class="detailContent">${adoption.address}</td>
 							<td></td>
 						</tr>
 						<tr>
@@ -245,7 +243,7 @@
 				<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
-						<a href="#블라인드처리.do?${tpCdStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
+						<a href="#블라인드처리.do?${tpCpNoStr}${searchStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
 					</c:if>
 					
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
@@ -309,7 +307,7 @@
 <%-- 					<c:forEach var="reply" items="${replyList}" > --%>
 				<c:forEach var="r" begin="0" end="1">
 						<tr>
-							<td class="replyNo sr-only">${reply.replyNo}</td> 
+							<td class="replyNo sr-only"><%-- ${reply.replyNo} --%></td> 
 							<td class="rWriter" >댓글을써요써요써요요</td> <%-- ${reply.replyWriter} --%>
 							<td class="rContent"><%-- ${reply.replyCotent} --%>
 								입양 원합니다.
@@ -319,7 +317,7 @@
 							</td>
 							<td class="deleteReply">
 <%-- 								<c:if test="${!empty loginMember && loginMember.nNm == reply.replyWriter }"> --%>
-									<a href="${contentPath}/reply/delete.do?${tpCdStr}&cp=${param.cp}&no=${param.no}">
+									<a href="${contentPath}/reply/delete.do?${tpCpNoStr}&cp=${param.cp}&no=${param.no}">
 										<i class="fas fa-times"></i></a>
 <%-- 								</c:if> --%>
 							</td>
@@ -340,8 +338,23 @@
 	<script>
 	
 		$(function(){
+
+			// 글 목록 카테고리 출력 문자를 변화하는 즉시 실행 함수
+			(function(){
+				$(".category").each(function(index, item){
+					if($(item).text() == "adtDog"){
+						$(item).text("입양 개");
+					} else if($(item).text() == "adtCat"){
+						$(item).text("입양 고양이");
+					} else if($(item).text() == "adtEtc"){
+						$(item).text("입양 기타");
+					} else if($(item).text() == "temp"){
+						$(item).text("임시 보호");
+					}
+				});
+			})();
 			
-			// 글 목록의 카테고리의 출력 문자를 변환하는 즉시 실행 함수
+			// 글 목록의 성별 출력 문자를 변환하는 즉시 실행 함수
 			(function(){
 				$(".adtGender").each(function(index, item){
 					if($(item).text() == "boy"){
@@ -359,10 +372,10 @@
 			// 글 목록의 입양 진행 여부 글+색상 정하는 즉시 실행 함수
 			(function(){
 				$(".adopt-yn span").each(function(index, item){
-					if($(item).text() == "N" ){
+					if($(item).text() == "Y" ){
 						$(item).text("진행 중");
 						$(item).css({"background-color":"tomato",  "color":"white"});
-					} else if($(item).text() == "Y"){
+					} else if($(item).text() == "N"){
 						$(item).text("완료");
 						$(item).css({"background-color":"yellowgreen",  "color":"white"});
 					}

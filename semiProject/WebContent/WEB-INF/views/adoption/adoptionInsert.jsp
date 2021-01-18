@@ -89,9 +89,8 @@
   <c:set var="tpStr" value="tp=${param.tp}"/>
 
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:if test="${!empty param.cd}">
-		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
-	</c:if>
+	<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
+	
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -104,7 +103,7 @@
 	</div>
 	
 	<div class="container my-5">
-		<form action="${contextPath}/adoption/insert.do?${tpCdStr}" method="post" onsubmit="return boardValidate();">
+		<form action="${contextPath}/adoption/insert.do?${tpStr}&cp=1" method="post" onsubmit="return boardValidate();">
 	
 			<div class="form-container">
 				<label class="form-label mr-3">카테고리</label> 
@@ -149,7 +148,7 @@
 		 			<input type="date" name="adtDate" id="adtDate" class="form-control mr-3">				
 
 					<label class="form-label mr-3">입양 여부</label>
-					<select name="adtYn" class="form-control mr-4 adtYn">
+					<select name="adtYn" id="adtYn" class="form-control mr-4">
 						<option value="Y">진행 중</option>
 						<option value="N">완료</option>
 					</select>
@@ -158,11 +157,11 @@
 				<div class="form-inline">
 					<label class="form-label mr-3">예방 접종 여부</label> 
 					
-					<input type="radio" name="adtVaccination" value="Y" id="vaccYes" class="form-check-input mr-2">
-					<label for="vaccYes" class="form-label mr-3">유</label> 		
+					<input type="radio" name="adtVaccination" value="Y" id="vaccYes" class="form-check-input mr-2 adtVaccination">
+					<label for="vaccYes" class="form-label mr-3 adtVaccination">유</label> 		
 		
-					<input type="radio" name="adtVaccination" value="N" id="vaccNo" class="form-check-input mr-2">
-					<label for="vaccNo" class="form-label mr-3">무</label> 		
+					<input type="radio" name="adtVaccination" value="N" id="vaccNo" class="form-check-input mr-2 adtVaccination">
+					<label for="vaccNo" class="form-label mr-3 adtVaccination">무</label> 		
 				</div>
 			</div>
 			
@@ -174,7 +173,8 @@
 
        <div class="form-btn">
            <button type="submit" class="btn btn-teal float-right btn-lg">등록</button>
-           <button type="button" class="btn btn-secondary float-right btn-lg">취소</button>
+           <button type="button" class="btn btn-secondary float-right btn-lg"
+           				 onclick="location.href='${header.referer}'">취소</button>
        </div>
 		</form>
 	</div>
@@ -267,6 +267,30 @@
 			if ($("#adtAge").val().trim().length == 0) {
 				swal({icon:"warning", title:"나이 입력해 주세요."});
 				$("#adtAge").focus();
+				return false;
+			}
+
+			if ($(".adtGender").val().trim().length == 0) {
+				swal({icon:"warning", title:"성별 선택해 주세요."});
+				$(".adtGender").focus();
+				return false;
+			}
+
+			if ($("#adtDate").val().trim().length == 0) {
+				swal({icon:"warning", title:"공고 기간을 입력해 주세요."});
+				$("#adtDate").focus();
+				return false;
+			}
+			
+			if ($("#adtYn").val().trim().length == 0) {
+				swal({icon:"warning", title:"입양 여부를 선택 입력해 주세요."});
+				$("#adtYn").focus();
+				return false;
+			}
+			
+			if ($(".adtVaccination").val().trim().length == 0) {
+				swal({icon:"warning", title:"예방 접종 여부를 선택해 주세요."});
+				$(".adtVaccination").focus();
 				return false;
 			}
 			
