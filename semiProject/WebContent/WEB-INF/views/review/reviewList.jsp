@@ -334,8 +334,8 @@
 				//글번호를 얻어와 해당 주소로 전달
 				var reviewNo = $(this).children().children(".review-no").text();
 				
-				var url = "${contextPath}/review/view.do?${tpStr}&cp=${pInfo.currentPage}&no="  + reviewNo;
-										//tdCdStr == tp=_&cd=_ / cp 추가하기 ${param.cp}
+				var url = "${contextPath}/review/view.do?tp=b3&cp=${pInfo.currentPage}&no="  + reviewNo + "${searchStr}";
+										//tdCdStr == tp=_&cd=_ /
 				location.href = url;
 			});		
 			

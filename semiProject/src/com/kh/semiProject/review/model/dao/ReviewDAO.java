@@ -211,7 +211,7 @@ public class ReviewDAO {
 		return review;
 	}
 
-	/**입양 후기 상세 조회 시 조회수 증가
+	/**입양 후기 상세 조회 시 조회수 증가 dao
 	 * @param conn
 	 * @param brdNo
 	 * @return result
@@ -459,6 +459,33 @@ public class ReviewDAO {
 		String query = prop.getProperty("deleteOldImages");
 		/*DELETE FROM IMAGE WHERE BRD_NO = ?*/
 		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, brdNo);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+
+	/**입양 후기 삭제(상태 변경) dao
+	 * @param conn
+	 * @param brdNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBrdStatus(Connection conn, int brdNo) throws Exception{
+		
+		int result = 0;
+		
+		String query = prop.getProperty("updateBrdStatus");
+		/*UPDATE BOARD SET BRD_STATUS = 'N' WHERE BRD_NO = ?*/
+
 		try {
 			pstmt = conn.prepareStatement(query);
 			pstmt.setInt(1, brdNo);

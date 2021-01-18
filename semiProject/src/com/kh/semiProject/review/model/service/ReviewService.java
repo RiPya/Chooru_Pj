@@ -45,7 +45,7 @@ public class ReviewService {
 	
 	
 	/**게시글 목록 조회 service
-	 * @param map
+	 * @param pInfo
 	 * @return rList
 	 * @throws Exception
 	 */
@@ -301,12 +301,12 @@ public class ReviewService {
 										break; //같은 이름 있으면 for문 중단
 									}
 								}
-								System.out.println(flag);
+								System.out.println(flag);//확인용
+								
 								//같은 이름이 없을 때 oldImg 추가
 								if(flag) deleteImages.add(oldImg);
 								
-								System.out.println(deleteImages);
-								//확인용
+								System.out.println(deleteImages);//확인용
 							}
 							
 						}//newImages, oldImages 둘 다 있는 경우 if문 끝
@@ -422,6 +422,26 @@ public class ReviewService {
 		} else { //과정 중 실패가 있었을 때 rollback
 			rollback(conn);
 		}
+		
+		close(conn);
+		
+		return result;
+	}
+
+
+	/** 입양 후기 삭제(상태 변경) service
+	 * @param brdNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBrdStatus(int brdNo) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int result = dao.updateBrdStatus(conn, brdNo);
+		
+		if(result > 0) commit(conn);
+		else rollback(conn);
 		
 		close(conn);
 		
