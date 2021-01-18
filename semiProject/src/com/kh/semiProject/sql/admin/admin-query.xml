@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+
+<!-- 게시판 블라인드(상태 변경 B) -->
+<entry key="blindBrdStatus">
+UPDATE BOARD SET
+BRD_STATUS = 'B'
+WHERE BRD_NO = ?
+</entry>
+
+
+</properties>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

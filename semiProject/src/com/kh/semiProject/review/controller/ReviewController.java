@@ -399,7 +399,7 @@ public class ReviewController extends HttpServlet {
 					
 				} else {
 					//삭제 실패 시 : 삭제 시도한 게시글의 상세 조회 페이지로 redirect
-					swalIcon = "success";
+					swalIcon = "error";
 					swalTitle = "게시글 삭제 실패";
 					
 					//이전 페이지의 상세 주소 

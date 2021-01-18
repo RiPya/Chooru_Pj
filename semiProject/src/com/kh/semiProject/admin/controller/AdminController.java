@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kh.semiProject.admin.model.service.AdminService;
+
 @WebServlet("/admin/*")
 public class AdminController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -44,7 +46,7 @@ public class AdminController extends HttpServlet {
 		RequestDispatcher view = null; //요청 위임 객체
 		
 		//sweet alert로 메시지 전달하는 용도
-		String swalICon = null;
+		String swalIcon = null;
 		String swalTitle = null;
 		String swalText = null;
 		
@@ -53,7 +55,7 @@ public class AdminController extends HttpServlet {
 	
 		
 		try {
-			// informationService service = new information();
+			AdminService service = new AdminService();
 			
 			//현재 페이지를 얻어옴
 			String cp = request.getParameter("cp");
@@ -62,7 +64,7 @@ public class AdminController extends HttpServlet {
 			//입양/분양, 자유, 고객센터, 마이페이지는 cd도 꼭 전달해야 함!!
 			//게시판 타입 : b1(공지) b2(입양) b3(후기) b4(자유) b5(고객센터) 
 			//mypage(마이페이지) adminMem(회원관리)
-			String boardType = request.getParameter("tp");
+			String brdType = request.getParameter("tp");
 			
 			
 			//회원 관리 목록 ------------------------
@@ -73,6 +75,44 @@ public class AdminController extends HttpServlet {
 	            view = request.getRequestDispatcher(path);
 	            view.forward(request, response);
 	         }
+			
+			
+			//게시글 블라인드 controller ---------------------------------
+			else if (command.equals("/blindBrd.do")) {
+				int brdNo = Integer.parseInt(request.getParameter("no"));
+				
+				int result = service.blindBrdStatus(brdNo);
+				
+				if(result>0) {
+					//블라인드 성공 시
+					swalIcon = "success";
+					swalTitle = "게시글 블라인드 성공";
+					
+					//공지사항, 고객센터는 블라인드가 필요 없을 듯?
+					switch(brdType) {
+					case "b2" : path = "/semiProject/adoption/"; break;//입양/분양
+					case "b3" : path = "/semiProject/review/"; break;//입양 후기
+					case "b4" : path = "/semiProject/free/"; break;//자유
+					}
+					
+					path += "list.do";
+
+				} else {
+					//삭제 실패 시 : 삭제 시도한 게시글의 상세 조회 페이지로 redirect
+					swalIcon = "error";
+					swalTitle = "게시글 블라인드 실패";
+					
+					//이전 페이지의 상세 주소 
+					path = request.getHeader("referer");
+				}
+				
+				request.getSession().setAttribute("swalIcon", swalIcon);
+	            request.getSession().setAttribute("swalTitle", swalTitle);
+
+				response.sendRedirect(path);
+			}
+			
+			
 			
 			
 		} catch (Exception e) {

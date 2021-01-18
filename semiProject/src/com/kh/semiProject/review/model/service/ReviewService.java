@@ -199,22 +199,26 @@ public class ReviewService {
 			
 			if(!iList.isEmpty()) {
 				for(Image img : iList) {
-					
-					//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
-					//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
-					//→ 이미지 삭제를 위해 필요한 주소는 C:/workspace/semi/Chooru_Pj\semiProject\WebContent\resources/uploadImages
-					//→ 바꿔줘야 함
-					String filePath = (String)map.get("root");
-					filePath += img.getFilePath().substring(3);
-					
-					String fileName = img.getFileName();
-					
-					File deleteFile = new File(filePath + fileName);
-					//해당 파일의 전체 주소 : filePath + fileName
-					//File 객체는 전체 주소에 있는 파일 객체를 선택할 때 사용함
-					// → filePath+fileName인 파일이 없다면 deleteFile은 null 값.
-					
-					if(deleteFile.exists()) deleteFile.delete();
+						
+					if(!img.getFilePath().contains("http")) {//복붙하거나 인터넷에서 주소로 가져온 이미지일 때
+						
+						//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
+						//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
+						//→ 이미지 삭제를 위해 필요한 주소는 C:/workspace/semi/Chooru_Pj\semiProject\WebContent\resources/uploadImages
+						//→ 바꿔줘야 함
+						String filePath = (String)map.get("root");
+						
+						filePath += img.getFilePath().substring(3);
+						
+						String fileName = img.getFileName();
+						
+						File deleteFile = new File(filePath + fileName);
+						//해당 파일의 전체 주소 : filePath + fileName
+						//File 객체는 전체 주소에 있는 파일 객체를 선택할 때 사용함
+						// → filePath+fileName인 파일이 없다면 deleteFile은 null 값.
+						
+						if(deleteFile.exists()) deleteFile.delete();
+					}
 				}
 			}
 			
@@ -369,22 +373,25 @@ public class ReviewService {
 			if(!iList.isEmpty()) {
 				for(Image img : iList) {
 					
-					//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
-					//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
-					//→ 이미지 삭제를 위해 필요한 주소는 C:\workspace\semi\Chooru_Pj\semiProject\WebContent\resources/uploadImages
-					//→ 바꿔줘야 함
-					String filePath = (String)map.get("root");
-					filePath += img.getFilePath().substring(3);
+					if(!img.getFilePath().contains("http")) {
 					
-					String fileName = img.getFileName();
-					
-					File deleteFile = new File(filePath + fileName);
-					//해당 파일의 전체 주소 : filePath + fileName
-					//File 객체는 전체 주소에 있는 파일 객체를 선택할 때 사용함
-					// → filePath+fileName인 파일이 없다면 deleteFile은 null 값.
-					
-					if(deleteFile.exists()) {
-						deleteFile.delete();
+						//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
+						//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
+						//→ 이미지 삭제를 위해 필요한 주소는 C:\workspace\semi\Chooru_Pj\semiProject\WebContent\resources/uploadImages
+						//→ 바꿔줘야 함
+						String filePath = (String)map.get("root");
+						filePath += img.getFilePath().substring(3);
+						
+						String fileName = img.getFileName();
+						
+						File deleteFile = new File(filePath + fileName);
+						//해당 파일의 전체 주소 : filePath + fileName
+						//File 객체는 전체 주소에 있는 파일 객체를 선택할 때 사용함
+						// → filePath+fileName인 파일이 없다면 deleteFile은 null 값.
+						
+						if(deleteFile.exists()) {
+							deleteFile.delete();
+						}
 					}
 				}
 			}
@@ -404,21 +411,23 @@ public class ReviewService {
 				
 				for(Image img : deleteImages) {
 					
-					//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
-					//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
-					//→ 이미지 삭제를 위해 필요한 주소는 C:\workspace\semi\Chooru_Pj\semiProject\WebContent\resources/uploadImages
-					//→ 바꿔줘야 함
-					String filePath = (String)map.get("root");
-					filePath += img.getFilePath().substring(3);
-					
-					String fileName = img.getFileName();
-					
-					File deleteFile = new File(filePath + fileName);
-					
-					System.out.println(deleteFile);
-					
-					if(deleteFile.exists()) {
-						deleteFile.delete();
+					if(!img.getFilePath().contains("http")) {
+						//현재 썸머 노트를 통해 저장된 이미지의 주소는 ../resource/uploadImages 
+						//(썸머노트에서 src에 하려면 이 주소만 되어서 상대주소로 작성..)
+						//→ 이미지 삭제를 위해 필요한 주소는 C:\workspace\semi\Chooru_Pj\semiProject\WebContent\resources/uploadImages
+						//→ 바꿔줘야 함
+						String filePath = (String)map.get("root");
+						filePath += img.getFilePath().substring(3);
+						
+						String fileName = img.getFileName();
+						
+						File deleteFile = new File(filePath + fileName);
+						
+						System.out.println(deleteFile);
+						
+						if(deleteFile.exists()) {
+							deleteFile.delete();
+						}
 					}
 				}
 			}

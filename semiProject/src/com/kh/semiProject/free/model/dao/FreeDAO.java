@@ -28,7 +28,7 @@ import com.kh.semiProject.review.model.dao.ReviewDAO;
 	
 	public FreeDAO(){
 		String fileName
-		 = ReviewDAO.class.getResource("/com/kh/semiProject/sql/free/free-query.xml").getPath();
+		 = FreeDAO.class.getResource("/com/kh/semiProject/sql/free/free-query.xml").getPath();
 		
 		try {
 			prop = new Properties();

@@ -73,7 +73,7 @@
 	min-width : 400px;
 }
 .freeWriter{
-	min-width : 80px;
+	min-width : 120px;
 }
 
 /*제목 부분을 제외한 부분 가운데 정렬*/
@@ -207,7 +207,7 @@
 							<c:forEach var="free" items="${fList}">
 								<tr>
 									<td>${free.brdNo}</td>
-									<td class="cd-color">${free.code}</td>
+									<td class="cd-color" width="120px">${free.code}</td>
 									<td class="freeTitle">
 										${free.brdTitle}
 										
@@ -226,7 +226,7 @@
 										
 									</td>
 									<td class="freeWriter">${free.nickName}</td>
-									<td> 
+									<td width="140px"> 
 									<%-- 날짜 출력 모양 지정 변수 선언 --%>
 										<%-- *조건 확인용 오늘 날짜 --%>
 							 			<fmt:formatDate var="today" 
@@ -281,7 +281,7 @@
 				
 					<%-- 비어있을 때 --%>
 				<c:otherwise>
-					<c:url var="pageUrl" value="/review/list.do"/>
+					<c:url var="pageUrl" value="/free/list.do"/>
 				</c:otherwise>
 			</c:choose>
 			
