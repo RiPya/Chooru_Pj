@@ -263,8 +263,7 @@
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
 						<!-- tpNoStr == tp와 no을 같이 보냄 : 해당 글을 블라인드하도록 -->
-						<a href="${contextPath}/admin/blindBrd.do?${tpCpNoStr}${searchStr}" 
-								class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
+						<button id="blindBtn" class="btn btn-danger float-right ml-1 mr-1">블라인드</button>
 					</c:if>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
 					<c:if test="${!empty loginMember && (review.nickName == loginMember.nickName)}">
@@ -368,6 +367,12 @@
 				}
 			});
 			
+			//블라인드 클릭
+			$("#blindBtn").on("click", function(){
+				if(confirm("해당 글을 블라인드하시겠습니까?")){
+					location.href="${contextPath}/admin/blindBrd.do?${tpCpNoStr}";
+				}
+			});
 			
 		});
 	

@@ -156,13 +156,30 @@
 							
 							var cardThumb = $("<div>").addClass("review-thumb");
 							
+							var flag = true;//로고 이미지 삽입 필요 여부 확인용(true:이미지 없음으로 로고 삽입, false:이미지 있음)
+							
 							$.each(iList, function(i, image){
 								if(item.brdNo == image.brdNo){
-									var url = "resources/uploadImages/" + image.fileName;
+									var url;
+									
+									if(image.filePath == "../resources/uploadImages/"){
+										url = "resources/uploadImages/" + image.fileName;
+									} else {
+										url = image.filePath + image.fileName;
+									}
+										console.log(url);
 									var thumbnail = $("<img>").attr("alt", "입양 후기").attr("src", url);
 									cardThumb.append(thumbnail);	
-								}
+									flag = false;//이미지 있음 → 로고 대체 필요 없음
+								} 
 							});
+							
+							if(flag){ //이미지 없으면 로고 삽입
+								var url = "${pageContext.request.contextPath}/css/yamung_logo_2.png";
+								var thumbnail = $("<img>").attr("alt", "입양 후기").attr("src", url);
+								cardThumb.append(thumbnail);	
+								flag = false;//이미지 있음 → 로고 대체 필요 없음
+							}
 							
 							var cardText = $("<div>").addClass("review-text");
 							
@@ -195,6 +212,8 @@
 		$(document).ready(function(){
 			//입양 후기 가져오는 함수
 			selectReviewList();
+			
+			
 		});
 		
 			
