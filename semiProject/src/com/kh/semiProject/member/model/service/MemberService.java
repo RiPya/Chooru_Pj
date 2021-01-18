@@ -117,5 +117,18 @@ public class MemberService {
 	}
 
 
+	/** 닉네임 중복 Service
+	 * @param nickName
+	 * @return result
+	 * @throws Exception
+	 */
+	public int nickNameDupCheck(String nickName) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.nickNameDupCheck(conn, nickName);
+		
+		close(conn);
+		return result;
+	}
 
 }

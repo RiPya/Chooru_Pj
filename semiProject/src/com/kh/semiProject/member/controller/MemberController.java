@@ -82,6 +82,8 @@ public class MemberController extends HttpServlet {
 			
 			// 회원가입 Controller------------------------------
 			else if(command.equals("/signUp.do")) {
+				errorMsg = "회원가입 진행 중 오류 발생";
+				
 				// 전달받은 파라미터 변수에 저장
 				String memId = request.getParameter("id");
 				String memPw = request.getParameter("pwd1");
@@ -92,8 +94,6 @@ public class MemberController extends HttpServlet {
 				
 				char petYn = request.getParameter("petYn").charAt(0);
 				
-				// 아이디 중복검사용 파라미터
-				String id = request.getParameter("id");
 				
 				// Member 객체에 파라미터 모두 저장
 				Member member = new Member(memId, 
@@ -108,7 +108,6 @@ public class MemberController extends HttpServlet {
 				// 비즈니스 로직
 				int result = service.signUp(member);
 				
-				int idDup = service.idDupCheck(id);
 				
 				if(result > 0) {
 					swalIcon = "success";
@@ -126,8 +125,29 @@ public class MemberController extends HttpServlet {
 				session.setAttribute("swalTitle", swalTitle);
 				session.setAttribute("swalText", swalText);
 				
-				response.getWriter().print(idDup);
 				response.sendRedirect(request.getContextPath());
+			}
+			
+			// 아이디 중복검사 Controller ------------------
+			else if(command.equals("/idDupCheck.do")) {
+				// 아이디 중복검사용 파라미터
+				String id = request.getParameter("id");
+				
+				int result = service.idDupCheck(id);
+				
+				response.getWriter().print(result);
+				// System.out.println(result);
+			}
+			
+			// 닉네임 중복검사 Controller ---------------------
+			else if(command.equals("/nickNameDupCheck.do")) {
+				// 닉네임 중복검사용 파라미터
+				String nickName = request.getParameter("nickName");
+				
+				int result = service.nickNameDupCheck(nickName);
+				
+				response.getWriter().print(result);
+				//System.out.println(result);
 			}
 
 			// 로그인 작업을 위한 Controller ----------------------
