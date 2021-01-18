@@ -36,6 +36,36 @@ public class MemberDAO {
 	}
 
 	
+	/** 회원가입용 DAO
+	 * @param conn
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int signUp(Connection conn, Member member) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("signUp");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, member.getMemId());
+			pstmt.setString(2, member.getMemPw());
+			pstmt.setString(3, member.getMemNm());
+			pstmt.setString(4, member.getPhone());
+			pstmt.setString(5, member.getNickName());
+			pstmt.setString(6, member.getEmail());
+			pstmt.setString(7, member.getPetYn()+"");
+			
+			result = pstmt.executeUpdate();
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+	
+	
 	/** 로그인 용 DAO
 	 * @param conn
 	 * @param member
@@ -126,5 +156,60 @@ public class MemberDAO {
 		}
 		return result;
 	}
+
+
+	/** 회원 탈퇴용 DAO
+	 * @param conn
+	 * @param memNo
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateStatus(Connection conn, int memNo) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("updateStatus");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, memNo);
+			
+			result = pstmt.executeUpdate();
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+
+	/** 아이디 중복 DAO
+	 * @param conn
+	 * @param id
+	 * @return result
+	 * @throws Exception
+	 */
+	public int idDupCheck(Connection conn, String id) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("idDupCheck");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, id);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return result;
+	}
+
+
 
 }

@@ -57,7 +57,8 @@
 							<label for="id">* 아이디</label>
 						</div>
 						<div class="col-md-6">
-							<input type="text" class="form-control" name="id" id="id" maxlength="12" placeholder="아이디" autocomplete="off" required>
+							<input type="text" class="form-control" name="id" id="id"
+								maxlength="12" placeholder="아이디" autocomplete="off" required>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkId">&nbsp;</span>
@@ -109,7 +110,7 @@
 							<label for="phone">* 전화번호</label>
 						</div>
 						<div class="col-md-6">
-							<input type="text" class="form-control phone" id="phone" name="phone" placeholder="전화번호 '-' 포함" required>
+							<input type="text" class="form-control phone" id="phone" name="phone" placeholder="전화번호 '-' 제외" required>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkPhone">&nbsp;</span>
@@ -131,10 +132,10 @@
 					
 					<div class="row mb-3 form-row">
 						<div class="col-md-4">
-							<label for="email">닉네임</label>
+							<label for="nickName">닉네임</label>
 						</div>
 						<div class="col-md-6">
-							<input type="email" class="form-control" id="nickName" name="nickName" autocomplete="off" placeholder="닉네임" required>
+							<input type="nickName" class="form-control" id="nickName" name="nickName" autocomplete="off" placeholder="닉네임" required>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkNickName">&nbsp;</span>
@@ -146,13 +147,13 @@
 							<label>반려동물 유무</label>
 						</div>
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="animal" id="y">
+						<input class="form-check-input" type="radio" name="petYn" id="y">
 						<label class="form-check-label" for="flexRadioDefault1">
 							유 &nbsp;&nbsp;&nbsp;&nbsp;
 						</label>
 					</div>
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="animal" id="n" checked>
+						<input class="form-check-input" type="radio" name="petYn" id="n" checked>
 						<label class="form-check-label" for="flexRadioDefault2">
 							무
 						</label>
@@ -168,7 +169,7 @@
 		<br><br>		
 		
 		<!-- 회원 관련 Javascript 코드를 모아둘 wsp_member.js 파일을 작성 -->
-		<script src="${contextPath}/resources/js/wsp_member.js"></script>
+		<script src="${contextPath}/resources/js/semi_member.js"></script>
 
 		
 	</div>

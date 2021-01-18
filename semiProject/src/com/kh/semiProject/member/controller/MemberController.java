@@ -1,6 +1,7 @@
 package com.kh.semiProject.member.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -79,7 +80,56 @@ public class MemberController extends HttpServlet {
 				view.forward(request, response);
 			} 
 			
-			
+			// 회원가입 Controller------------------------------
+			else if(command.equals("/signUp.do")) {
+				// 전달받은 파라미터 변수에 저장
+				String memId = request.getParameter("id");
+				String memPw = request.getParameter("pwd1");
+				String memNm = request.getParameter("name");
+				String phone = request.getParameter("phone");
+				String nickName = request.getParameter("nickName");
+				String email = request.getParameter("email");
+				
+				char petYn = request.getParameter("petYn").charAt(0);
+				
+				// 아이디 중복검사용 파라미터
+				String id = request.getParameter("id");
+				
+				// Member 객체에 파라미터 모두 저장
+				Member member = new Member(memId, 
+										   memPw, 
+										   memNm, 
+										   phone, 
+										   nickName, 
+										   email, 
+										   petYn);
+				
+				
+				// 비즈니스 로직
+				int result = service.signUp(member);
+				
+				int idDup = service.idDupCheck(id);
+				
+				if(result > 0) {
+					swalIcon = "success";
+					swalTitle = "회원가입 되셨습니다.";
+					swalText = nickName + "님의 회원가입을 환영합니다.";
+				}else {
+					swalIcon = "error";
+					swalTitle = "회원가입에 실패하셨습니다.";
+					swalText = "적절하지않은 정보가 포함되어 있습니다.";
+				}
+				
+				HttpSession session = request.getSession();
+				
+				session.setAttribute("swalIcon", swalIcon);
+				session.setAttribute("swalTitle", swalTitle);
+				session.setAttribute("swalText", swalText);
+				
+				response.getWriter().print(idDup);
+				response.sendRedirect(request.getContextPath());
+			}
+
 			// 로그인 작업을 위한 Controller ----------------------
 			else if(command.equals("/login.do")) {
 				errorMsg = "로그인 작업 중 오류 발생";
@@ -290,8 +340,55 @@ public class MemberController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
-			//마이페이지: 탈퇴 비번 확인 후 탈퇴으로 연결 -------------
-			
+			//마이페이지: 탈퇴  Controller-------------
+			else if(command.equals("/updateStatus.do")) {
+				errorMsg = "탈퇴 과정 중 오류 발생";
+				
+				// 현재 비밀번호 얻어오기
+				String currentPwd = request.getParameter("currentPwd");
+				
+				// 세션에 로그인 되어있는 내 정보 가져오기
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				// loginMember 객체에 현재 비밀번호 세팅
+				loginMember.setMemPw(currentPwd);
+				
+				// 비즈니스 로직 수행
+				int result = service.updateStatus(loginMember);
+				
+				if(result > 0) {
+					swalIcon = "success";
+					swalTitle = "탈퇴되었습니다.";
+					
+					// 탈퇴 성공 시 (로그아웃 후 메인페이지 이동)
+					session.invalidate();
+					
+					// 세션 무효화 시 현재 얻어온 세션을 사용할 수 없으므로
+					// 새로운 세션 얻어오기
+					session = request.getSession();
+					
+					path = request.getContextPath();
+
+				}else if(result == 0) {
+					swalIcon = "error";
+					swalTitle = "회원 탈퇴에 실패하셨습니다.";
+					
+					// 탈퇴 페이지 유지
+					path = "updateStatusForm.do";
+				
+				}else {
+					swalIcon = "warning";
+					swalTitle = "현재 비밀번호가 일치하지 않습니다.";
+					
+					path = "updateStatusForm.do";
+				}
+				
+				session.setAttribute("swalIcon", swalIcon);
+				session.setAttribute("swalTitle", swalTitle);
+				
+				response.sendRedirect(path);
+			}
 		
 			
 			
