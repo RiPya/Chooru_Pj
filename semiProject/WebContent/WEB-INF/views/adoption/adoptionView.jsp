@@ -70,21 +70,7 @@
 	width : 60px;
 	border-radius : 5px;
 	text-align : center;
-}
-
-
-/*  썸머노트에서 필요함?
-	.boardImg{
-		width : 100%;
-		height: 100%;
-		
-		max-width : 1280px;
-		max-height: 1280px;
-		
-		margin : auto;
-	}
-*/	
-	
+}	
 	
 /* 댓글 */	
 /* 	.replyWrite > table{
@@ -159,19 +145,22 @@
 		list-style-type: none;
 	}
 	
-
-
-	
 </style>
 </head>
 <body>
 
-		<%-- url 작성 시 붙여야 하는 str --%>
+	<%-- url 작성 시 붙여야 하는 str --%>
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
+	
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
 	<c:if test="${!empty param.cd}">
-		<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
+		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
+	</c:if>
+
+	<!-- 검색을 통해 온 경우 -->
+	<c:if test="${!empty param.sk && !empty param.sv }">
+		<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
 	</c:if>
 
 
@@ -183,76 +172,61 @@
 			<div id="board-area">
 
 				<h3>
-				<!--Category ${adoption.adoptCode} -->
-				<span class="mt-4 cd-color inline-block" id="code" style="color:teal;">입양 개</span>
+				<span class="mt-4 cd-color inline-block" id="code" style="color:teal;">${adoption.adtCode}</span>
 				
-				<!--Title ${adoption.adoptTitle} -->
-				<span class="mt-4 inline-block">활발한 성격인 인절미가 가족을 기다려요</span>
+				<span class="mt-4 inline-block">${adoption.adtBrdTitle}</span>
 				</h3>
 				<br>
 				
 				<p id="brd-second-area">
-				<!-- Writer ${adoption.nickName} -->
-					<span class="inline-block brd-second" id="writer">닉네임도길수도있죠</span>
+
+					<span class="inline-block brd-second" id="writer">닉네임 : ${adoption.nickName}</span>
+					 					
+					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
+					<span class="float-right brd-second">댓글 <%-- ${adoption.replyCount} --%></span>
 					
+					<!-- 조회 -->
+			 		<span class="float-right brd-second">조회 ${adoption.readCount}</span>
+					<br>
+
 					<!-- Date -->
 					<span class="brd-second inline-block">
-						2021-01-06 23:41:75
-						
-						<%-- <fmt:formatDate value="${adoption.brdCrtDt}" 
-														pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
-						<!-- 수정일을 굳이 상세 조회 때 출력해야하나? -->
-						<%--<br>
-						 마지막 수정일 : <fmt:formatDate value="${adoption.brdModify}" 
-																									pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
+						작성일 : <fmt:formatDate value="${adoption.adtBrdCrtDt}" pattern="yy-MM-dd HH:mm"/>
 					</span>
-					
-					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-					<!-- 댓글 ${adoption.replyCount} -->
-					<span class="float-right brd-second">댓글 2</span>
-					
-					<!-- 조회 ${adoption.readCount}-->
-			 		<span class="float-right brd-second">조회 202</span>
 				</p>
 
 				<hr>
 
-				
 				<div id="brd-third-area">
 					<table id="brd-detail">
 						<tr>
 							<td class="detailMenu">품종</td>
-							<td class="detailContent">리트리버믹스(추정)</td> <!-- ${adoption.adoptBreed}-->
+							<td class="detailContent">${adoption.adtBreed} (추정)</td>
 							<td class="detailMenu">예방 접종</td>
-							<td class="detailContent">유</td> <!-- ${adoption.adoptVacc}-->
+							<td class="detailContent">${adoption.adtVaccination}</td>
 						</tr>
 						<tr>
 							<td class="detailMenu">성별</td>
-							<td class="detailContent">수컷(중성화)</td> <!-- ${adoption.adoptGender}-->
+							<td class="adtGender">${adoption.adtGender}</td>
 							<td class="detailMenu">특이사항</td>
-							<td class="detailContent" rowspan="3"> <!-- ${adoption.adoptNote}-->
-								당신은 날 설레게 만들어<br>
-								조용한 내 마음 자꾸만 춤추게 해<br>
-								얼마나 얼마나 날 떨리게 하는지<br>
-								당신이 이 밤을 항상 잠 못 들게 해<br>
-							</td>
+							<td class="detailContent" rowspan="3">${adoption.adtNote}</td>
 						</tr>
 						<tr>
 							<td class="detailMenu">나이</td>
-							<td class="detailContent">2살(추정)</td> <!-- ${adoption.adoptAge}-->
+							<td class="detailContent">${adoption.adtAge} (추정)</td> <!-- -->
 							<td></td>
 						</tr>
 						<tr>
 							<td class="detailMenu">주소</td>
-							<td class="detailContent">서울특별시 동대문구</td> <!-- ${adoption.adoptAddress}-->
+							<td class="detailContent">${adoption.address}</td> <!-- -->
 							<td></td>
 						</tr>
 						<tr>
 							<td class="detailMenu">공고 기간</td>
-							<td class="detailContent">2021.02.28.까지</td> <!-- ${adoption.adoptTime}-->
+							<td class="detailContent">${adoption.adtTime}</td>
 							<td class="detailMenu">입양 여부</td>
-							<td class="detailContent adopt-yn"><span>Y</span></td> 
-													<!-- ${adoption.adoptYn} → 완료/진행 중으로 바꾸는 건 script에서 진행-->
+							<td class="detailContent adopt-yn"><span>${adoption.adtYn}</span></td> 
+													  
 						</tr>
 					
 					</table>
@@ -261,59 +235,56 @@
  
 				<!-- 썸머노트를 사용하면 content에 img파일에 <img>태그로 연결되기 때문에 
 						별도의 이미지 영역 필요 없음 -->
-				<!-- Content ${free.freeContent} -->
 				<div id="board-content">
-					
-					<img src="https://i2.pickpik.com/photos/714/11/745/golden-retriever-animal-shelter-dog-pension-kennels-preview.jpg" 
-						width="60%"/>
-					<p>입양 원하시는 분 댓글 남겨 주세요</p> <!-- ${adoption.adoptContent}-->
-					
+					${adoption.adtBrdContent}
 				</div>
 				
-
 				<hr>
 				 
 				<!-- 목록으로/수정/삭제/블라인드 버튼 -->				
 				<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
-					<%-- <c:if test="${!empty loginMember && (loginMember.grade == 0)}"> --%>
+					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
 						<a href="#블라인드처리.do?${tpCdStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
-					<%-- </c:if> --%>
+					</c:if>
+					
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
-					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
+					<c:if test="${!empty loginMember && (adoption.nickName == loginMember.nickName)}">
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-						<a href="${contextPath}/adoption/updateForm.do?${tpNoStr}${searchStr}" class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
-					<%-- </c:if> --%>
+						<a href="${contextPath}/adoption/updateForm.do?${tpCpNoStr}${searchStr}" 
+							 class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
+					</c:if>
 					
 					
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
-					<%-- <c:choose> 
-						<c:when test="${!empty param.sk && !empty param.sv }"> --%>
+					<c:choose> 
+						<c:when test="${!empty param.sk && !empty param.sv }">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨
 								ex) wsp/board/search.do(X), wsp/search.do(O)
 								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
-							<%-- <c:url var="goToList" value="../search.do">
+							 <c:url var="goToList" value="../search.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>
 								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
-							</c:url> --%>
-						<%-- </c:when> --%>
+							</c:url>
+						 </c:when>
 						
 						<%-- 이전 목록이 일반 게시글 목록일 때 --%>
 						<%-- c:url를 통해 목록으로 돌아가는 주소를 만들고 그 안에 파라미터 cp(현재페이지)에 지정하면 
 									목록으로 돌아갈 때 cp가 같이 전달됨 --%>
-<%-- 						<c:otherwise>--%>
+ 						<c:otherwise>
 							<c:url var="goToList" value="list.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
-						<%--</c:otherwise>
-					</c:choose> --%>
+						</c:otherwise>
+					</c:choose>
 					
+					<!-- 전체 검색 후 어떻게 처리할까? -->
 					<a href="${goToList}" class="btn btn-teal float-right" style="width: 75px;">목록</a>
 				</div>
 			</div>
@@ -367,8 +338,25 @@
 	
 	
 	<script>
+	
 		$(function(){
-			//글 목록의 입양 진행 여부 글+색상 정하는 즉시 실행 함수
+			
+			// 글 목록의 카테고리의 출력 문자를 변환하는 즉시 실행 함수
+			(function(){
+				$(".adtGender").each(function(index, item){
+					if($(item).text() == "boy"){
+						$(item).text("수컷");
+					} else if($(item).text() == "girl"){
+						$(item).text("암컷");
+					} else if($(item).text() == "ntrBoy"){
+						$(item).text("수컷(중성화)");
+					} else if($(item).text() == "ntrGirl"){
+						$(item).text("암컷(중성화)");
+					}
+				});
+			})();
+			
+			// 글 목록의 입양 진행 여부 글+색상 정하는 즉시 실행 함수
 			(function(){
 				$(".adopt-yn span").each(function(index, item){
 					if($(item).text() == "N" ){
@@ -380,6 +368,13 @@
 					}
 				});
 			})();
+			
+			//삭제 버튼 클릭
+			$("#deleteBtn").on("click", function(){
+				if(confirm("정말 삭제하시겠습니까?")) {
+					location.href = "${contextPath}/adoption/delete.do?${tpCpNoStr}";
+				}
+			});
 			
 		});
 	</script>
