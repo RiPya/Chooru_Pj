@@ -201,7 +201,7 @@
 	<div class="container my-5">
 			<div class="menu-wrapper">
 				<ul class="menu">
-					<li>입양/분양</li> <!-- on이벤트로 script에 작성하기 id 구분 필요 myPage는 클래스로-->
+					<li>입양/후기</li> <!-- on이벤트로 script에 작성하기 id 구분 필요 myPage는 클래스로-->
 					<li><button class="btn btn-light adoption <c:if test="${empty param.cd || param.cd == 'adtAll'}">menu-active</c:if>"
 							 	type="button">전체</button></li>
 					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adtDog'}">menu-active</c:if>" 
@@ -294,13 +294,13 @@
 			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
 			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
 			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
-			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${cdStr}${searchStr}"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${searchStr}"/>
 			
 			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
 			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
 			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
 			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
-			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${cdStr}${searchStr}"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${searchStr}"/>
 			
 			<div class="my-5">
 				<ul class="pagination">
@@ -325,7 +325,7 @@
 						</c:when>
 						<c:otherwise>
 							<li>
-								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${cdStr}${searchStr}">${page}</a>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${searchStr}">${page}</a>
 							</li>
 						</c:otherwise>
 						</c:choose>
@@ -389,7 +389,7 @@
 				controller에서 cd를 꺼내서 쓰고 ★request로 다시 전달 받음★
 				→ 메뉴 버튼 활성화(menu-active 추가 요소 태그에서 c:if 사용)*/
 			$(".adoption").on("click", function(){
-				//해당 요소의 내용(카테고리 adtCode)을 가져오기
+				//해당 요소의 내용(카테고리 freeCode)을 가져오기
 				var category = $(this).text(); 
 				
 				var adtCode = "";
@@ -404,7 +404,7 @@
 				
 				//해당 카테고리를 가지는 게시글 목록만 다시 출력하도록 요청
 				//해당 카테고리의 1페이지로 리셋해야 하기 때문에 cp=1
-				var url = "${contextPath}/adoption/list.do?${tpStr}${cdStr}&cp=1&cd=" + adtCode;
+				var url = "${contextPath}/adoption/list.do?${tpStr}&cp=1&cd=" + adtCode;
 								//cp(페이지), tp(게시판타입 b1 b2 b3 b4 adminMem b5 mypage), cd(카테고리)
 								//tpStr = tp=_
 				location.href = url;

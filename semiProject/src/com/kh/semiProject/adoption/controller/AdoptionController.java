@@ -78,8 +78,8 @@ public class AdoptionController extends HttpServlet {
 			
 			// 입양/분양 게시판의 메뉴 카테고리를 얻어옴
 			// adtAll, adtDog, adtCat, adtEtc, temp
-			String adtCode = request.getParameter("cd");
-			if(adtCode == null) adtCode = "adtAll";
+			String adoptionCode = request.getParameter("cd");
+			if(adoptionCode == null) adoptionCode = "adtAll";
 			
 			
 			// 입양/분양 목록 조회 Controller ---------------
@@ -87,19 +87,17 @@ public class AdoptionController extends HttpServlet {
 				errorMsg = "게시판 목록 조회 과정에서 오류 발생";
 				
 				// 1. 페이징 처리를 위한 값 계산 Service 호출
-				PageInfo pInfo = service.getPageInfo(cp, adtCode);
+				PageInfo pInfo = service.getPageInfo(cp);
 				
 				// pInfo의 limit을 9로 바꿔주기 → 입양/분양은 한 페이지 조회 게시글 수 9
 				pInfo.setLimit(9);
 				
 				// 2. 게시글 목록 조회 비즈니스 로직 수행
-				List<Adoption> aList = service.selectAdoptionList(pInfo, adtCode);
-				//pInfo에 있는 currentPage, limit을 사용해야지만
-				//현재 페이지에 맞는 게시글 목록만 조회할 수 있음
+				List<Adoption> aList = service.selectAdoptionList(pInfo);
 				
 				// 3. 게시글 목록이 조회 되었을 때 썸네일 목록 조회 비즈니스 로직
 				if(aList != null) {
-					List<Image> iList = service.selectThumbnails(pInfo, adtCode);
+					List<Image> iList = service.selectThumbnails(pInfo);
 
 					// 썸네일 목록이 비어있지 않은 경우
 					if(!iList.isEmpty()) {
@@ -237,6 +235,7 @@ public class AdoptionController extends HttpServlet {
 					map.put("iList", iList);
 					map.put("root", root);
 					
+						
 					
 					// 6. 게시글 등록 비즈니스 로직 수행 후 결과 반환 받기
 					int result = service.insertAdoption(map);
