@@ -147,13 +147,13 @@
 							<label>반려동물 유무</label>
 						</div>
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="petYn" id="y">
+						<input class="form-check-input" type="radio" name="petYn" id="y" value = 'Y'>
 						<label class="form-check-label" for="flexRadioDefault1">
 							유 &nbsp;&nbsp;&nbsp;&nbsp;
 						</label>
 					</div>
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="petYn" id="n" checked>
+						<input class="form-check-input" type="radio" name="petYn" id="n"  value='N' checked>
 						<label class="form-check-label" for="flexRadioDefault2">
 							무
 						</label>
@@ -169,9 +169,7 @@
 		<br><br>		
 		
 		<!-- 회원 관련 Javascript 코드를 모아둘 wsp_member.js 파일을 작성 -->
-		<script src="${contextPath}/resources/js/semi_member.js"></script>
-
-		
+		<script src="${contextPath}/resources/js/semi_member.js?ver=350"></script>
 	</div>
 		<!-- footer -->
 		<jsp:include page="../common/footer.jsp"></jsp:include>

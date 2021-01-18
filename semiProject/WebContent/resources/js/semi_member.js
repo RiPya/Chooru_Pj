@@ -21,12 +21,12 @@ $("#id").on("input", function(){
     }else{
         // $("#checkId").text("유효한 아이디 형식입니다.").css("color", "green");
         $.ajax({
-            url: "signUp.do",
+            url: "idDupCheck.do",
             data: {"id": value},
             type: "post",
-            success: function(idDup){
-                if(idDup == 0){ // 중복되지 않는 경우
-                    $("#chekId").text("사용 가능한 아이디입니다.").css("color", "green");
+            success: function(result){
+                if(result == 0){ // 중복되지 않는 경우
+                    $("#checkId").text("사용 가능한 아이디입니다.").css("color", "green");
                     validateCheck.id = true;
                 }else{
                     $("#checkId").text("이미 사용중인 아이디입니다.").css("color", "red");
@@ -132,11 +132,27 @@ $("#nickName").on("input", function(){
 
     var value = $("#nickName").val();
     if(!regExp.test(value)){
-        $("#checknickName").text("닉네임 형식이 유효하지 않습니다.").css("color", "red");
+        $("#checkNickName").text("닉네임 형식이 유효하지 않습니다.").css("color", "red");
         validateCheck.nickName = false;
     }else{
-        $("#checknickName").text("닉네임 이름 형식입니다.").css("color", "green");
-        validateCheck.nickName = true;
+        // $("#checkNickName").text("닉네임 이름 형식입니다.").css("color", "green");
+		$.ajax({
+			url: "nickNameDupCheck.do",
+			data: {"nickName": value},
+			type: "post",
+			success: function(result){
+				if(result == 0){
+					$("#checkNickName").text("사용 가능한 닉네임입니다.").css("color", "green");
+			        validateCheck.nickName = true;
+				}else{
+					$("#checkNickName").text("이미 사용중인 닉네임입니다.").css("color", "red");
+					validateCheck.nickName = false;
+				}
+			},
+			error: function(){
+				console.log("닉네임 중복 검사 실패");
+			}
+		})
     }
 });
 
