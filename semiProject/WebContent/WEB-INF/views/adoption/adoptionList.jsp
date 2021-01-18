@@ -66,7 +66,7 @@
 	width : 100%;
 	min-height : 900px;
 	padding : 5px;
-	text-align : center;
+/* 	text-align : center; 한 페이지에 게시글이 9개 미만일 때 하면 이상해짐 */
 }
 
 #noneList {
@@ -76,7 +76,12 @@
 	line-height: 260px;
 	border-top: 1px solid #EAEAEA;
 	border-bottom: 1px solid #EAEAEA;
+	text-align: center; /*추가*/
 }
+
+#adoptionList .list-card:nth-of-type(3n+1){ margin-left:30px;}
+/* 한 페이지에 게시글이 9개 미만일 때 리스트가 가운데에 있는 것처럼 하기 위해
+ 맨 왼쪽에 있는 list-card에 추가 margin 주기 */
 
 #adoptionList .list-card {
 	display : inline-block !important;
@@ -101,13 +106,13 @@
 .card-body > p { margin:0; }
 
 .card-body > .adoptTitle,
-.card-body > .adoptCode {
+.card-body > .adtCode {
 	color : teal;
 	font-weight : bold;
 	text-align : center;
 }
 
-.card-body > .adoptCode { font-size : 14px;}
+.card-body > .adtCode { font-size : 14px;}
 .card-body > .adoptTitle { font-size : 18px;}
 .card-body > .card-text { 
 	font-size : 14px; 
@@ -188,9 +193,7 @@
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:if test="${!empty param.cd}">
-		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
-	</c:if>
+	<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -199,7 +202,6 @@
 			<div class="menu-wrapper">
 				<ul class="menu">
 					<li>입양/후기</li> <!-- on이벤트로 script에 작성하기 id 구분 필요 myPage는 클래스로-->
-					<!-- adAll adDog adCat adEtc adTemp -->
 					<li><button class="btn btn-light adoption <c:if test="${empty param.cd || param.cd == 'adtAll'}">menu-active</c:if>"
 							 	type="button">전체</button></li>
 					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adtDog'}">menu-active</c:if>" 
@@ -234,7 +236,7 @@
 						  	</c:forEach>
 						  </div>
 						  <div class="card-body">
-						  	<p class="card-title adoptCode">[${adoption.adtCode}]</p>
+						  	<p class="card-title adtCode">[${adoption.adtCode}]</p>
 						    <p class="card-title adoptTitle" style="height:60px;">${adoption.adtBrdTitle}</p>
 						    <p class="card-text adopt-yn" style="text-align : right;"><span>${adoption.adtYn}</span></p>
 						    <p class="card-text adopt-breed">품종 : ${adoption.adtBreed}</p>
@@ -275,7 +277,7 @@
 				
 					<%-- 비어있을 때 --%>
 				<c:otherwise>
-					<c:url var="pageUrl" value="/review/list.do"/>
+					<c:url var="pageUrl" value="/adoption/list.do"/>
 				</c:otherwise>
 			</c:choose>
 						
@@ -407,8 +409,23 @@
 								//tpStr = tp=_
 				location.href = url;
 			});
+			
+			// 글 목록 카테고리 출력 문자를 변화하는 즉시 실행 함수
+			(function(){
+				$(".adtCode").each(function(index, item){
+					if($(item).text() == "[adtDog]"){
+						$(item).text("입양 개");
+					} else if($(item).text() == "[adtCat]"){
+						$(item).text("입양 고양이");
+					} else if($(item).text() == "[adtEtc]"){
+						$(item).text("입양 기타");
+					} else if($(item).text() == "[temp]"){
+						$(item).text("임시 보호");
+					}
+				});
+			})();
 
-			// 글 목록의 카테고리의 출력 문자를 변환하는 즉시 실행 함수
+			// 글 목록 성별 출력 문자를 변환하는 즉시 실행 함수
 			(function(){
 				$(".adopt-gender").each(function(index, item){
 					if($(item).text() == "성별 : boy" ){
@@ -426,10 +443,10 @@
 			//글 목록의 입양 진행 여부 색상 정하는 즉시 실행 함수
 			(function(){
 				$(".adopt-yn span").each(function(index, item){
-					if($(item).text() == "N" ){
+					if($(item).text() == "Y" ){
 						$(item).text("진행 중");
 						$(item).css({"background-color":"tomato",  "color":"white"});
-					} else if($(item).text() == "Y"){
+					} else if($(item).text() == "N"){
 						$(item).text("완료");
 						$(item).css({"background-color":"yellowgreen",  "color":"white"});
 					}
@@ -441,7 +458,7 @@
 				//글번호를 얻어와 해당 주소로 전달
 				var adtBrdNo = $(this).children().children(".adopt-no").text();
 				
-				var url = "${contextPath}/adoption/view.do?${tpCdStr}&cp=1&no=" + adtBrdNo;
+				var url = "${contextPath}/adoption/view.do?${tpStr}${cdStr}&cp=${pInfo.currentPage}&no=" + adtBrdNo;
 										//tdCdStr == tp=_&cd=_ // cp 추가하기 ${param.cp}
 				location.href = url;
 			});		

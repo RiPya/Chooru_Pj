@@ -93,7 +93,7 @@ public class AdoptionDAO {
 				Adoption adoption = new Adoption();
 				
 				adoption.setAdtBrdTitle(rset.getString("TITLE"));
-				adoption.setAdtCode(rset.getString("ADT_TYPE"));
+				adoption.setAdtCode(rset.getString("ADT_CODE"));
 				adoption.setAdtBreed(rset.getString("ADT_BREED"));
 				adoption.setAdtGender(rset.getString("ADT_GENDER"));
 				adoption.setAdtAge(rset.getString("ADT_AGE"));
@@ -175,7 +175,7 @@ public class AdoptionDAO {
 				adoption = new Adoption();
 				
 				adoption.setAdtBrdNo(rset.getInt("BRD_NO"));
-				adoption.setAdtCode(rset.getString("ADT_TYPE"));
+				adoption.setAdtCode(rset.getString("ADT_CODE"));
 				adoption.setAdtBrdTitle(rset.getString("TITLE"));
 				adoption.setAddress(rset.getString("ADDRESS"));
 				adoption.setAdtNote(rset.getString("ADT_NOTE"));
@@ -268,7 +268,7 @@ public class AdoptionDAO {
 			pstmt.setString(2, (String)map.get("title"));;
 			pstmt.setString(3, (String)map.get("content"));
 			pstmt.setInt(4, (int)map.get("memNo")); // 회원번호
-			pstmt.setString(5, (String)map.get("boardType")); // 게시판 타입(B2)
+			pstmt.setString(5, (String)map.get("brdType")); // 게시판 타입(B2)
 			
 			result = pstmt.executeUpdate();
 			
@@ -405,7 +405,7 @@ public class AdoptionDAO {
 
 	/** 입양/분양 수정: 특정 게시물의 기존 이미지 목록 가져오기
 	 * @param conn
-	 * @param i
+	 * @param brdNo
 	 * @return oldImages
 	 * @throws Exception
 	 */
@@ -414,9 +414,6 @@ public class AdoptionDAO {
 		List<Image> oldImages = null;
 		
 		String query = prop.getProperty("selectOldImages");
-		/*	SELECT FILE_NUMBER, FILE_NAME, FILE_PATH, FILE_LEVEL, BRD_NO 
-			FROM IMAGE WHERE BRD_NO = ?
-		 */
 		
 		try {
 			pstmt = conn.prepareStatement(query);
@@ -454,7 +451,6 @@ public class AdoptionDAO {
 		int result = 0;
 		
 		String query = prop.getProperty("deleteOldImages");
-		/*DELETE FROM IMAGE WHERE BRD_NO = ?*/
 		
 		try {
 			pstmt = conn.prepareStatement(query);

@@ -74,12 +74,13 @@ public class AdoptionController extends HttpServlet {
 			
 			// 게시판 타입 : b1(공지) b2(입양/분양) b3(후기) b4(자유) b5(고객센터) 
 			// 			 mypage(마이페이지) adminMem(회원관리)
-			String boardType = request.getParameter("tp");
+			String brdType = request.getParameter("tp");
 			
 			// 입양/분양 게시판의 메뉴 카테고리를 얻어옴
 			// adtAll, adtDog, adtCat, adtEtc, temp
 			String adoptionCode = request.getParameter("cd");
 			if(adoptionCode == null) adoptionCode = "adtAll";
+			
 			
 			// 입양/분양 목록 조회 Controller ---------------
 			if(command.equals("/list.do")) {
@@ -172,7 +173,7 @@ public class AdoptionController extends HttpServlet {
 				// 써머노트 오픈 소스의 content는 html 코드로 되어 있음
 				String content = request.getParameter("content"); 
 				
-				// 게시판 타입 및 메뉴 카테고리는 위에서 가져옴
+				// 게시판 타입은 위에서 가져옴
 				
 				// 2. 세션에서 로그인 회원의 회원번호 가져오기
 				Member loginMember = (Member)request.getSession().getAttribute("loginMember");
@@ -230,10 +231,11 @@ public class AdoptionController extends HttpServlet {
 					map.put("adtVaccination", adtVaccination);					
 					map.put("content", content);
 					map.put("memNo", memNo); // 회원번호
-					map.put("boardType", boardType); // 게시판타입(B#)
+					map.put("brdType", brdType); // 게시판타입(B#)
 					map.put("iList", iList);
 					map.put("root", root);
 					
+						
 					
 					// 6. 게시글 등록 비즈니스 로직 수행 후 결과 반환 받기
 					int result = service.insertAdoption(map);
@@ -266,10 +268,9 @@ public class AdoptionController extends HttpServlet {
 					// 기존 내용 작성
 					int brdNo = Integer.parseInt(request.getParameter("no"));
 					
-					Adoption adoption = service.selectAdoption(brdNo);
+					Adoption adoption = service.updateView(brdNo);
 					//개행 문자 처리가 필요 없기 때문에 그냥 기존의 상세 조회 시 사용한 service 재활용
 					//이미지는 따로 가져올 필요 없음 이미 content에 있음
-					System.out.println(adoption);
 					
 					if(adoption != null) {
 						request.setAttribute("adoption", adoption);
@@ -284,7 +285,7 @@ public class AdoptionController extends HttpServlet {
 				}
 			}
 			
-			// 입양/분양 후기 수정 Controller ---------------
+			// 입양/분양 수정 Controller ---------------
 			else if(command.equals("/update.do")) {
 				errorMsg = "게시글 수정 과정에서 오류 발생";
 				
