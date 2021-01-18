@@ -19,8 +19,24 @@ $("#id").on("input", function(){
         $("#checkId").text("아이디 형식이 유효하지 않습니다.").css("color", "red");
         validateCheck.id = false;
     }else{
-        $("#checkId").text("유효한 아이디 형식입니다.").css("color", "green");
-        validateCheck.id = true;
+        // $("#checkId").text("유효한 아이디 형식입니다.").css("color", "green");
+        $.ajax({
+            url: "signUp.do",
+            data: {"id": value},
+            type: "post",
+            success: function(idDup){
+                if(idDup == 0){ // 중복되지 않는 경우
+                    $("#chekId").text("사용 가능한 아이디입니다.").css("color", "green");
+                    validateCheck.id = true;
+                }else{
+                    $("#checkId").text("이미 사용중인 아이디입니다.").css("color", "red");
+                    validateCheck.id = false;
+                }
+            },
+            error: function(){
+                console.log("아이디 중복검사 실패");
+            }
+        });
     }
 });
 
@@ -97,7 +113,7 @@ $("#phone").on("input", function(){
         $(this).val($(this).val().slice(0,11));
     }
 
-    /^(\d{10,11})|(01[016789]{1})-?\d{3,4}-?\d{4}$/;
+    var regExp = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
 
     var v1 = $("#phone").val();
 
@@ -112,7 +128,7 @@ $("#phone").on("input", function(){
 
 // 닉네임 유효성 검사
 $("#nickName").on("input", function(){
-    var regExp = /^[가-힇a-zA-Z\d]{2,}$/;
+    var regExp = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
 
     var value = $("#nickName").val();
     if(!regExp.test(value)){
@@ -169,6 +185,32 @@ function validate(){
 
             $("#" + key).focus();
 
+            return false;
+        }
+    }
+}
+
+
+// 회원 정보 수정 
+function memberUpdateValidate(){
+    // 각 유효성 검사를 저장할 객체
+    var updateCheck = { "name": false,
+                        "phone": false,
+                        "nickName": false,
+                        "email": false}
+
+    // 이름 유효성 검사
+    var regExp1 = /^[가-힇]{2,10}$/;
+    if(!regExp1.test($("#name").val())){
+        updateCheck.name = false;
+    }else{
+        updateCheck.name = true;
+    }
+
+    // updateCheck 내부에 저장된 값 검사
+    for(var key in updateCheck){
+        if(!updateCheck[key]){ // false인 경우
+            swal("일부 값이 유효하지 않습니다.");
             return false;
         }
     }

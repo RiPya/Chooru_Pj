@@ -12,6 +12,24 @@ public class MemberService {
 	private MemberDAO dao = new MemberDAO();
 
 	
+	/** 회원가입용 Service
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int signUp(Member member) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.signUp(conn, member);
+		
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
+		
+		close(conn);
+		return result;
+	}
+	
+	
 	/** 로그인 용 Service
 	 * @param member
 	 * @return loginMember
@@ -56,5 +74,48 @@ public class MemberService {
 		}
 		return result;
 	}
+
+
+	/** 회원탈퇴용 Service
+	 * @param loginMember
+	 * @return result 
+	 * @throws Exception
+	 */
+	public int updateStatus(Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		// 현재 비밀번호 일치 여부
+		int result = dao.checkCurrentPwd(conn, loginMember);
+		
+		// 현재 비밀번호 일치 시 탈퇴 진행
+		if(result > 0) {
+			result = dao.updateStatus(conn, loginMember.getMemNo());
+			
+			if(result > 0)	commit(conn);
+			else			rollback(conn);
+		}else {
+			result = -1;
+		}
+		
+		close(conn);
+		return result;
+	}
+
+	/** 아이디 중복 Service
+	 * @param id
+	 * @return result
+	 * @throws Exception
+	 */
+	public int idDupCheck(String id) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.idDupCheck(conn, id);
+		
+		close(conn);
+		
+		return result;
+	}
+
+
 
 }

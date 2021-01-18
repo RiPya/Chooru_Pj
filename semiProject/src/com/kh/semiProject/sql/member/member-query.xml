@@ -2,6 +2,12 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 
+<!-- 회원가입 -->
+<entry key="signUp">
+INSERT INTO MEMBER
+VALUES(SEQ_MNO.NEXTVAL, DEFAULT, ?, ?, ?, ?, ?, ?, DEFAULT, DEFAULT)
+</entry>
+
 <!-- 로그인 -->
 <entry key="loginMember">
 SELECT MEM_NO, GRADE, MEM_ID, MEM_NM, PHONE,
@@ -27,4 +33,17 @@ MEM_PW = ?
 WHERE MEM_NO = ?
 </entry>
 
+<!-- 회원 탈퇴 -->
+<entry key="updateStatus">
+UPDATE MEMBER SET
+GRADE = '9'
+WHERE MEM_NO = ?
+</entry>
+
+<!-- 아이디 중복 -->
+<entry key="idDupCheck">
+SELECT COUNT(*) FROM MEMBER
+WHERE MEM_ID = ?
+AND (GRADE = '1' OR GRADE = '8')
+</entry>
 </properties>
