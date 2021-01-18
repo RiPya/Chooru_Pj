@@ -40,15 +40,14 @@ public class AdoptionDAO {
 	
 	/** pageInfo 객체를 위한 전체 게시글 수 반환 DAO
 	 * @param conn
-	 * @param condition 
 	 * @return listCount
 	 * @throws Exception
 	 */
-	public int getListCount(Connection conn, String condition) throws Exception {
+	public int getListCount(Connection conn) throws Exception {
 		
 		int listCount = 0;
 		
-		String query = "SELECT COUNT(*) FROM V_ADOPTION WHERE BRD_STATUS = 'Y'" + condition;
+		String query = prop.getProperty("getListCount");
 		
 		try {
 			stmt = conn.createStatement();
@@ -71,17 +70,11 @@ public class AdoptionDAO {
 	 * @return rList
 	 * @throws Exception
 	 */
-	public List<Adoption> selectAdoptionList(Connection conn, PageInfo pInfo, String condition) throws Exception{
+	public List<Adoption> selectAdoptionList(Connection conn, PageInfo pInfo) throws Exception{
 		
 		List<Adoption> aList = null;
 		
-		String query =
-				"SELECT RNUM, TITLE, ADT_CODE, ADT_BREED, ADT_GENDER, ADT_AGE, ADT_YN, N_NM, BRD_NO "
-			    		+ "FROM (SELECT ROWNUM RNUM, V.* "
-			 	       		+ "FROM(SELECT * FROM V_ADOPTION "
-			 	       			+ "WHERE BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
-	 	       			+ "WHERE RNUM BETWEEN ? AND ? " + condition;
-				
+		String query = prop.getProperty("selectAdoptionList");	
 		
 		try {
 			// sql 구문 조건절에 대입할 변수 생성
@@ -124,18 +117,11 @@ public class AdoptionDAO {
 	 * @return iList
 	 * @throws Exception
 	 */
-	public List<Image> selectThumbnails(Connection conn, PageInfo pInfo, String condition) throws Exception{
+	public List<Image> selectThumbnails(Connection conn, PageInfo pInfo) throws Exception{
 		
 		List<Image> iList = null;
 		
-		String query = "";
-		query = "SELECT * FROM IMAGE "
-		 		 + "WHERE BRD_NO IN "
-			 		+ "(SELECT BRD_NO "
-			 			+ "FROM (SELECT ROWNUM RNUM, V.* "
-			 				 	    + "FROM(SELECT * FROM V_ADOPTION WHERE BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
-			 			+ "WHERE RNUM BETWEEN ? AND ? " + condition + ") "
-		 		+ "AND FILE_LEVEL = 0 ";
+		String query = prop.getProperty("selectThumbnails");
 		
 		try {
 			//sql 구문 조건절에 대입할 변수 생성

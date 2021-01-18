@@ -20,7 +20,7 @@
 		<script src="https://kit.fontawesome.com/2dd9466b88.js" crossorigin="anonymous"></script>
 	
 		<!-- header의 css + btn-teal 버튼 -->
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerStyle.css?ver=1.4">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerStyle.css?ver=1.5">
 
 		<!-- Postcodify 오픈 소스 -->
 		<script src="//d1p7wdleee1q2z.cloudfront.net/post/search.min.js"></script>
@@ -139,8 +139,8 @@
 	                  </c:if>
 	              </ul>
 	          </div>
-	          <div class="header-right" id="bs-example-navbar-collapse-2">
-	              <form class="form-inline" action="${contextPath}/search/search.do" method="GET" >
+	          <div class="header-right" id="searchInput">
+	              <form class="form-inline" action="${contextPath}/search/search.do" method="GET" onsubmit="return searchValidate();" >
 	                  <input class="search-input" id="search-input" type="text" name="sv" /> <!-- searchValue -->
 	                  <button class="btn search-btn" type="submit">
 	                      <i class="fas fa-search search-icon"></i><!--찾기아이콘-->
@@ -297,6 +297,15 @@
     			$(".header-right").removeAttr("style");
     		}
     	});
+    	
+ /*--------------------------------------------------------*/
+ 			function searchValidate() {
+				if ($("#search-input").val().trim().length == 0) {
+					swal({icon:"warning", title:"검색어를 입력해 주세요."});
+					$("#search-input").focus();
+					return false;
+				}
+			}
     
     </script>
 

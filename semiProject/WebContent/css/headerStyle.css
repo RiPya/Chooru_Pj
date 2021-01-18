@@ -64,6 +64,10 @@ div { box-sizing: border-box; }
     height : 150px;
 }      
 
+#searchInput{
+	width : 230px;
+}
+
 .icon-text {
     width : 40px;
     height : 60px;
@@ -148,13 +152,19 @@ div { box-sizing: border-box; }
         line-height: 0;
     }    
 
-    /* .header-right > ul { display : inline-block; }
+/*  .header-right > ul { display : inline-block !important; }
     .header-right > ul > li { 
-        float : left;
+    		display : inline-block !important;
         margin-right : 10px;
         margin-left : 10px;
         padding : 0;
     } */
+    
+    .header-right > ul { display : inline-block !important; }
+    .header-right-users { 
+    	float: left !important; 
+    	margin-left : 16px;
+    }
     .header-right-users #mypage, #login { margin-top : 5px; }
     #nickname, #login>span { margin-top : 5px; }
     .header-right-users #cs-page, #logout { margin-right : 3px; }
