@@ -186,8 +186,11 @@
 	<%-- url 작성 시 붙여야 하는 str --%>
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
+
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
+	<c:if test="${!empty param.cd}">
+		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
+	</c:if>
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -197,7 +200,7 @@
 				<ul class="menu">
 					<li>입양/후기</li> <!-- on이벤트로 script에 작성하기 id 구분 필요 myPage는 클래스로-->
 					<!-- adAll adDog adCat adEtc adTemp -->
-					<li><button class="btn btn-light adoption <c:if test="${empty param.cd || param.cd == 'adAll'}">menu-active</c:if>"
+					<li><button class="btn btn-light adoption <c:if test="${empty param.cd || param.cd == 'adtAll'}">menu-active</c:if>"
 							 	type="button">전체</button></li>
 					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adtDog'}">menu-active</c:if>" 
 								type="button">입양 개</button></li>
@@ -211,67 +214,44 @@
 			</div>
 			
 			<div id="adoptionList">
-<%-- 			<c:choose>
-				<c:when test="${empty fList}">  
+ 			<c:choose>
+				<c:when test="${empty aList}">  
 					<p id="noneList">존재하는 게시글이 없습니다.</p>
 				</c:when>
-				<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> --%>
-					<c:forEach var="i" begin="0" end="2">
-		<%-- 			<c:forEach var="adoption" items="${adoptList}"> --%>
+				
+				<%-- 게시글이 있을 때 모두 출력 --%>
+				<c:otherwise>
+					<c:forEach var="adoption" items="${aList}">
+
 						<div class="card list-card">
-						  <div class="card-image"> <!-- c:forEach 사용해서 해당 게시글 번호에 맞는 첫번째 이미지 붙여넣기 -->
-						 		<img src="https://i1.pickpik.com/photos/135/49/188/cat-cute-yellow-animal-preview.jpg" 
-						  		class="card-img-top" alt="${adoption.adoptTitle}}">
+						  <div class="card-image"> 
+						  	<!-- c:forEach 사용해서 해당 게시글 번호에 맞는 첫번째 이미지 붙여넣기 -->
+ 						  	<c:forEach var="thumbnail" items="${iList}">
+							 		<c:if test="${adoption.adtBrdNo == thumbnail.brdNo}">	
+							 			<img src="${thumbnail.filePath}${thumbnail.fileName}" 
+							  			class="card-img-top" alt="${adoption.adtBrdTitle}}">
+									</c:if>
+						  	</c:forEach>
 						  </div>
 						  <div class="card-body">
-						  	<p class="card-title adoptCode">[입양 고양이]</p> <!-- ${adoption.adoptCode}} -->
-						    <p class="card-title adoptTitle" style="height:60px;">치즈냥 가족 찾아요</p> <!-- ${adoption.adoptTitle}} -->
-						    <p class="card-text adopt-yn" style="text-align : right;"><span>N</span></p><!-- ${adoption.adoptYn}} -->
-						    <p class="card-text adopt-breed">품종 : 코숏</p><!-- 품종 : ${adoption.adoptBreed}} -->
-						    <p class="card-text adopt-gender">성별 : 수컷</p><!-- 성별 : ${adoption.adoptGender}} -->
-						    <p class="card-text adopt-age">나이 : 6개월(추정)</p><!-- 나이 : ${adoption.adoptAge}} -->
-						    <p class="adopt-no sr-only">123</p><!-- sr-only : 안보이게하는 클래스 --> <!-- ${adoption.adoptBrdNo}} -->
+						  	<p class="card-title adoptCode">[${adoption.adtCode}]</p>
+						    <p class="card-title adoptTitle" style="height:60px;">${adoption.adtBrdTitle}</p>
+						    <p class="card-text adopt-yn" style="text-align : right;"><span>${adoption.adtYn}</span></p>
+						    <p class="card-text adopt-breed">품종 : ${adoption.adtBreed}</p>
+						    <p class="card-text adopt-gender">성별 : ${adoption.adtGender}</p>
+						    <p class="card-text adopt-age">나이 : ${adoption.adtAge}(추정)</p>
+						    <p class="adopt-no sr-only">${adoption.adtBrdNo}</p><!-- sr-only : 안보이게하는 클래스 -->
 						  </div>
 						</div>
-						<div class="card list-card">
-						  <div class="card-image">
-						  	<img src="https://i2.pickpik.com/photos/743/719/777/dogs-sun-summer-cute-preview.jpg" 
-						  		class="card-img-top" alt="${adoption.adoptBrdTitle}}">
-						  </div>
-						  <div class="card-body">
-						  	<p class="card-title adoptCode">[입양 개]</p>
-						    <p class="card-title adoptTitle" style="height:60px;">부산 하양이</p>
-						    <p class="card-text adopt-yn" style="text-align : right;"><span>N</span></p>
-						    <p class="card-text adopt-breed">품종 : 믹스견</p>
-						    <p class="card-text adopt-gender">성별 : 암컷</p>
-						    <p class="card-text adopt-age">나이 : 1살</p>
-						    <p class="adopt-no sr-only">123</p>
-						  </div>
-						</div>
-						<div class="card list-card">
-						  <div class="card-image">
-						  	<img src="https://i2.pickpik.com/photos/714/11/745/golden-retriever-animal-shelter-dog-pension-kennels-preview.jpg" 
-						  		class="card-img-top" alt="${adoption.adoptBrdTitle}}">
-						  </div>
-						  <div class="card-body">
-						  	<p class="card-title adoptCode">[입양 개]</p>
-						    <p class="card-title adoptTitle" style="height:60px;">활발한 성격인 인절미가 가족을 기다려요</p>
-						    <p class="card-text adopt-yn" style="text-align : right;"><span>Y</span></p>
-						    <p class="card-text adopt-breed">품종 : 리트리버믹스(추정)</p>
-						    <p class="card-text adopt-gender">성별 : 수컷(중성화)</p>
-						    <p class="card-text adopt-age">나이 : 2살</p>
-						    <p class="adopt-no sr-only">123</p>
-						  </div>
-						</div>
+	
 					</c:forEach> 
-<%-- 		</c:otherwise> 
-			</c:choose> --%>
-			
+	 		</c:otherwise> 
+			</c:choose>
 			
 			
 			</div><!-- 카드형 목록 리스트 div 끝 -->
 			
-						<%-- 로그인이 되어있는 경우 --%>
+			<%-- 로그인이 되어있는 경우 --%>
 			<c:if test="${!empty loginMember}">
 				<button type="button" class="btn btn-teal float-right" id="insertBtn" 
 						  onclick="location.href='${contextPath}/adoption/insertForm.do?${tpStr}'">글쓰기</button>
@@ -283,35 +263,87 @@
 			<!-- cd가 없다면 href의 url 뒤에 -->
 			
 			
-			<!-- 임시 확인용 Pagination -->
+			<%-- 파라미터의 sk(searchKey)와 sv(searchValue)가 비어있지 않을 때
+					 == 검색 후 페이징바 클릭 --%>
+			<c:choose>
+				<c:when test="${!empty param.sk && !empty param.sv}">
+				 	<c:url var="pageUrl" value="/search.do"/>
+				 	
+				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
+				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
+				</c:when>
+				
+					<%-- 비어있을 때 --%>
+				<c:otherwise>
+					<c:url var="pageUrl" value="/review/list.do"/>
+				</c:otherwise>
+			</c:choose>
+						
+			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
+			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${searchStr}"/>
+
+			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
+				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
+				integerOnly="true" : 정수로만 숫자를 표현(소수점 버림)
+			--%>
+			<%-- pInfo.pageSize : 10 --%>
+			<!-- < 화살표를 눌렀을 때 이전 페이징의 endPage가 prev가 되도록 -->
+			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
+			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${searchStr}"/>
+			
+			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
+			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
+			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${searchStr}"/>
+			
 			<div class="my-5">
 				<ul class="pagination">
+				
+					<%-- 현재 페이지가 10페이지 초과인 경우 --%>
+					<c:if test="${pInfo.currentPage > pInfo.pageSize}">
 						<li> <!-- 첫 페이지로 이동(<<) -->
-							<a class="page-link" href="#">&lt;&lt;</a>
+							<a class="page-link" href="${firstPage}">&lt;&lt;</a>
 						</li>
 						<li> <!-- 이전 페이지로 이동(<) -->
-							<a class="page-link" href="#">&lt;</a>
+							<a class="page-link" href="${prevPage}">&lt;</a>
 						</li>
-						
-						<c:forEach var='i' begin="1" end="10">
-							<li>
-								<a class="page-link <c:if test="${param.cp==i}">pag-active</c:if>" 
-									href="#">${i}</a>
+					</c:if>
+					
+					<!-- 페이지 목록 -->
+					<c:forEach var='page' begin="${pInfo.startPage}" end="${pInfo.endPage}">
+						<c:choose>
+						<c:when test="${pInfo.currentPage == page}">
+							<li> <!-- 현재 페이지인 경우 활성화 -->
+								<a class="page-link pag-active">${page}</a>
 							</li>
-						</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<li>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${searchStr}">${page}</a>
+							</li>
+						</c:otherwise>
+						</c:choose>
+					</c:forEach>
 						
+					<%-- 다음 페이징의 첫번째 페이지가 마지막 페이지 미만일 경우 --%>	
+					<c:if test="${next <= pInfo.maxPage}">
 						<li> <!-- 이전 페이지로 이동(>>) -->
-							<a class="page-link" href="#">&gt;</a>
+							<a class="page-link" href="${nextPage}">&gt;</a>
 						</li>
 						<li> <!-- 마지막 페이지로 이동(>>) -->
-							<a class="page-link" href="#">&gt;&gt;</a>
+							<a class="page-link" href="${lastPage}">&gt;&gt;</a>
 						</li>
+					</c:if>
 				</ul>
 			</div>
-						
-		
-				<!-- 검색창 : type:게시판코드(자유는 b4), cd:자유카테고리(검색창에서 설정)-->
-				<!-- 게시판코드를 파라미터로 넘겨야 할까? -->
+								
+								
+			<!-- 검색창 : type:게시판코드(입양/분양은 b2), cd:자유카테고리(검색창에서 설정)-->
+			<!-- 게시판코드를 파라미터로 넘겨야 할까? -->
 			<div class="my-5">
 				<form action="${contextPath}/adoptionSearch.do?${tpStr}" method="GET" class="text-center " 
 																																id="searchForm">
@@ -323,6 +355,7 @@
 						<option value="adtEtc">입양 기타</option>
 						<option value="temp">임시 보호</option>
 					</select> 
+					
 					<select name="sk" class="form-control sf-margin" style="width: 110px; display: inline-block;">
 						<option value="title">제목</option>
 						<option value="titcont">제목+내용</option>
@@ -338,7 +371,6 @@
 
 				</form>
 			</div>
-			
 			
 	</div>
 	
@@ -358,23 +390,38 @@
 				//해당 요소의 내용(카테고리 freeCode)을 가져오기
 				var category = $(this).text(); 
 				
-				var adoptionCode = "";
+				var adtCode = "";
 				
 				switch(category){
-				case "전체" : adoptionCode = "adtAll"; break;
-				case "입양 개" : adoptionCode = "adtDog"; break;
-				case "입양 고양이" : adoptionCode = "adtCat"; break;
-				case "입양 기타" : adoptionCode = "adtEtc"; break;
-				case "임시보호" : adoptionCode = "temp"; break;
+				case "전체" : adtCode = "adtAll"; break;
+				case "입양 개" : adtCode = "adtDog"; break;
+				case "입양 고양이" : adtCode = "adtCat"; break;
+				case "입양 기타" : adtCode = "adtEtc"; break;
+				case "임시 보호" : adtCode = "temp"; break;
 				}
 				
-				//해당 카테고리(freeCode)를 가지는 게시글 목록만 다시 출력하도록 요청
+				//해당 카테고리를 가지는 게시글 목록만 다시 출력하도록 요청
 				//해당 카테고리의 1페이지로 리셋해야 하기 때문에 cp=1
-				var url = "${contextPath}/adoption/list.do?${tpStr}&cp=1&cd=" + adoptionCode;
+				var url = "${contextPath}/adoption/list.do?${tpStr}&cp=1&cd=" + adtCode;
 								//cp(페이지), tp(게시판타입 b1 b2 b3 b4 adminMem b5 mypage), cd(카테고리)
 								//tpStr = tp=_
 				location.href = url;
 			});
+
+			// 글 목록의 카테고리의 출력 문자를 변환하는 즉시 실행 함수
+			(function(){
+				$(".adopt-gender").each(function(index, item){
+					if($(item).text() == "성별 : boy" ){
+						$(item).text("성별 : 수컷");
+					} else if($(item).text() == "성별 : girl"){
+						$(item).text("성별 : 암컷");
+					} else if($(item).text() == "성별 : ntrBoy"){
+						$(item).text("성별 : 수컷(중성화)");
+					} else if($(item).text() == "성별 : ntrGirl"){
+						$(item).text("성별 : 암컷(중성화)");
+					}
+				});
+			})();
 			
 			//글 목록의 입양 진행 여부 색상 정하는 즉시 실행 함수
 			(function(){
@@ -389,42 +436,32 @@
 				});
 			})();
 			
-			//페이징바 활성화(현재 페이지 부분 색바꾸기) 진행?
-			
-					
 			//입양/분양 카드가 클릭되었을 때
 			$(".list-card").on("click", function(){
 				//글번호를 얻어와 해당 주소로 전달
-				var adoptNo = $(this).children().children(".adopt-no").text();
+				var adtBrdNo = $(this).children().children(".adopt-no").text();
 				
-				var url = "${contextPath}/adoption/view.do?${tpCdStr}&cp=1&no=" + adoptNo;
+				var url = "${contextPath}/adoption/view.do?${tpCdStr}&cp=1&no=" + adtBrdNo;
 										//tdCdStr == tp=_&cd=_ // cp 추가하기 ${param.cp}
 				location.href = url;
 			});		
-					
-					
-		
-		});
-	
-
-/* 		// 게시글 상세보기 기능 (jquery를 통해 작업)
-		$("#list-table td").on("click", function(){
-			//게시글 번호 얻어오기
-			var freeBrdNo = $(this).parent().children().eq(0).text();
 			
-			var url = "${contextPath}/adoption/view.do?${tpCdStr}&cp=${pInfo.currentPage}&no=" + freeBrdNo; 
-																	//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
-																	//tpCdStr : "tp=_&cd=_"
-			location.href = url;     
+			//입양 후기 썸네일이 없을 때 야멍 로고 넣기 즉시 함수
+			(function(){
+				//카드 이미지에 반복 접근해 해당 카드 이미지 자식 요소 중 <img>가 없을 때 <img>태그 추가
+				$(".card-image").each(function(index, item){
+					if($(item).children("img").length == 0){
+						var img = $("<img>").addClass("card-img-top").attr("src", "${pageContext.request.contextPath}/css/yamung_logo.png");
+						
+						$(item).html(img);
+				}
+				});
+				
+			})();//썸네일 추가 즉시 함수 끝
+					
 		});
-	 */
-	
-	
+		
 	</script>
-
-
-
-
 
 </body>
 </html>

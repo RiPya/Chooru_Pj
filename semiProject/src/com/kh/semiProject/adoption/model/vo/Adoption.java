@@ -21,7 +21,7 @@ public class Adoption {
 	private String adtBreed;// 품종
 	private String adtGender;
 	private String adtAge;
-	private String adderss; //주소 ex) 서울특별시 종로구
+	private String address; //주소 ex) 서울특별시 종로구
 	private char adtVaccination;//예방접종 여부 y/n
 	private String adtNote; //특이사항
 	private Date adtTime;//공고기간
@@ -34,7 +34,7 @@ public class Adoption {
 	//매개변수 생성자
 	public Adoption(int adtBrdNo, String adtBrdTitle, String adtBrdContent, String nickName, Timestamp adtBrdCrtDt,
 			Timestamp adtBrdModify, char adtBrdStatus, int readCount, String brdType, String adtCode, String adtBreed,
-			String adtGender, String adtAge, String adderss, char adtVaccination, String adtNote, Date adtTime,
+			String adtGender, String adtAge, String address, char adtVaccination, String adtNote, Date adtTime,
 			char adtYn) {
 		super();
 		this.adtBrdNo = adtBrdNo;
@@ -50,7 +50,7 @@ public class Adoption {
 		this.adtBreed = adtBreed;
 		this.adtGender = adtGender;
 		this.adtAge = adtAge;
-		this.adderss = adderss;
+		this.address = address;
 		this.adtVaccination = adtVaccination;
 		this.adtNote = adtNote;
 		this.adtTime = adtTime;
@@ -163,12 +163,12 @@ public class Adoption {
 		this.adtAge = adtAge;
 	}
 
-	public String getAdderss() {
-		return adderss;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAdderss(String adderss) {
-		this.adderss = adderss;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public char getAdtVaccination() {
@@ -208,8 +208,8 @@ public class Adoption {
 		return "Adoption [adtBrdNo=" + adtBrdNo + ", adtBrdTitle=" + adtBrdTitle + ", adtBrdContent=" + adtBrdContent
 				+ ", nickName=" + nickName + ", adtBrdCrtDt=" + adtBrdCrtDt + ", adtBrdModify=" + adtBrdModify
 				+ ", adtBrdStatus=" + adtBrdStatus + ", readCount=" + readCount + ", brdType=" + brdType + ", adtCode="
-				+ adtCode + ", adtBreed=" + adtBreed + ", adtGender=" + adtGender + ", adtAge=" + adtAge + ", adderss="
-				+ adderss + ", adtVaccination=" + adtVaccination + ", adtNote=" + adtNote + ", adtTime=" + adtTime
+				+ adtCode + ", adtBreed=" + adtBreed + ", adtGender=" + adtGender + ", adtAge=" + adtAge + ", address="
+				+ address + ", adtVaccination=" + adtVaccination + ", adtNote=" + adtNote + ", adtTime=" + adtTime
 				+ ", adtYn=" + adtYn + "]";
 	}
 	

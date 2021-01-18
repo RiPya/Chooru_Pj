@@ -54,7 +54,7 @@
 	display: inline-block !important;
 }
 
-#adtAddress, #adtNotes {
+#address, #adtNote {
 	width: 90% !important;
 }
 
@@ -78,8 +78,11 @@
 	<%-- url 작성 시 붙여야 하는 str --%>
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
+
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
+	<c:if test="${!empty param.cd}">
+		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
+	</c:if>
 	
 	<!-- 검색을 통해 온 경우 -->
 	<c:if test="${!empty param.sk && !empty param.sv }">
@@ -103,60 +106,61 @@
 	
 			<div class="form-container">
 				<label class="form-label mr-3">카테고리</label> 
-				<select id="adtCategory" class="form-control mr-3 adtCategory">
+				<select id="category" name="category" class="form-control mr-3 adtCategory">
 					<option value="adtDog">입양 개</option>
 					<option value="adtCat">입양 고양이</option>
 					<option value="adtEtc">입양 기타</option>
-					<option value="shelter">임시 보호소</option>
+					<option value="temp">임시 보호</option>
 				</select>
 
-				<input type="text" id="adtTitle" class="form-control adtTitle" value="">
+				<input type="text" name="title" id="title" class="form-control adtTitle" value="${board.title}">
 
 			<div class="form-inline">
-				<label for="adtAddress" class="form-label mr-5">주소</label> 
-				<input type="text" id="adtAddress" class="form-control ml-1" value="">
+				<label for="address" class="form-label mr-5">주소</label> 
+				<input type="text" name="address"  id="address" class="form-control ml-1" value="${adoption.address}">
 				
 			</div>
 
 			<div class="form-inline">
-				<label for="adtNotes" class="form-label mr-3">특이 사항</label> 
-				<input type="text" id="adtNotes" class="form-control" value="">
+				<label for="adtNote" class="form-label mr-3">특이 사항</label> 
+				<input type="text" name="adtNote" id="adtNote" class="form-control" value="${adoption.adtNote}">
 			</div>
 				
-							<div class="form-inline">
-					<label for="adtKind" class="form-label mr-5">품종</label> 
-					<input type="text" id="adtKind" class="form-control ml-1 mr-3" size="17">
-		
-					<label for="adtAge" class="form-label mr-5">나이</label> 
-					<input type="text" id="adtAge" class="form-control ml-1 mr-3" size="9">
-		
-					<label class="form-label mr-3">성별</label> 
-					<select class="form-control mr-4 adtGender">
-						<option value="boy">수컷</option>
-						<option value="girl">암컷</option>
-						<option value="boy1">수컷 (중성화)</option>
-						<option value="girl1">암컷 (중성화)</option>
-					</select>				
-				</div>
+			<div class="form-inline">
+				<label for="adtBreed" class="form-label mr-5">품종</label> 
+				<input type="text" name="adtBreed" id="adtBreed" class="form-control ml-1 mr-3" size="17" value="${adoption.adtBreed}">
+	
+				<label for="adtAge" class="form-label mr-5">나이</label> 
+				<input type="text" name="adtAge" id="adtAge" class="form-control ml-1 mr-3" size="9" value="${adoption.adtAge}">
+	
+				<label class="form-label mr-3">성별</label> 
+				<select name="adtGender" class="form-control mr-4 adtGender">
+					<option value="boy">수컷</option>
+					<option value="girl">암컷</option>
+					<option value="ntrBoy">수컷 (중성화)</option>
+					<option value="ntrGirl">암컷 (중성화)</option>
+				</select>				
+			</div>
 		
 				<div class="form-inline">
 					<label for="adtDate" class="form-label mr-3">공고 기간</label> 
-		 			<input type="date" id="adtDate" class="form-control mr-3">				
+		 			<input type="date" name="adtDate" id="adtDate" class="form-control mr-3">				
 
 					<label class="form-label mr-3">입양 여부</label>
-					<select class="form-control mr-4 adtYn">
-						<option value="adtYes">진행 중</option>
-						<option value="adtNo">완료</option>
+					<select name="adtYn" class="form-control mr-4 adtYn">
+						<option value="Y">진행 중</option>
+						<option value="N">완료</option>
 					</select>
 				</div>
 
 				<div class="form-inline">
 					<label class="form-label mr-3">예방 접종 여부</label> 
 					
-					<input type="radio" id="vaccYes" name="vacc" class="form-check-input mr-3">
+					<input type="radio" name="adtVaccination" id="vaccYes" class="form-check-input mr-3" value="Y">
+					
 					<label for="vaccYes" class="form-label mr-3">유</label> 		
 		
-					<input type="radio" name="vacc" id="vaccNo" class="form-check-input mr-3">
+					<input type="radio" name="adtVaccination" id="vaccNo" class="form-check-input mr-3" value="N">
 					<label for="vaccNo" class="form-label mr-3">무</label> 		
 				</div>
 			</div>
@@ -164,8 +168,8 @@
 			<hr>
 
 			<div class="form-group">
-				<textarea id="summernote" name="adtContent">
-				<%-- 내용 --%>
+				<textarea name="content" id="summernote">
+				${adoption.adtBrdContent}
 				</textarea>
 				</div>
 
@@ -181,69 +185,99 @@
 		<jsp:include page="../common/footer.jsp"></jsp:include>
 		
 		
-	<script>
-	
-		 $(document).ready(function() {
+<script>
+
+/* Postcodify 주소창  */	
+	$(function(){
+    $("#postcodifyBtn").postcodifyPopUp();
+});
+
+$(document).ready(function() {
 	/* 써머노트 스타일 지정 */
-        $("#summernote").summernote({
-        	minHeight: 500, //최소높이
-        	maxHeight: null, //최대높이
-        	lang: "ko-KR",
-        	placeholder: "사진과 함께 입양 후기를 작성해 주세요.",
-        	
-        	/* 이미지 삽입 후 서버에 저장을 위한 callback */
-        	/* callbacks: function(files, editor, welEditable) {
-	            for (var i = files.length - 1; i >= 0; i--) {
-	            	sendFile(files[i], this);
-	            }
-					} */
-        });
+	$("#summernote").summernote({
+   	minHeight: 500, //최소높이
+   	maxHeight: null, //최대높이
+   	lang: "ko-KR",
+   	
+    /* 이미지 삽입 후 서버에 저장을 위한 callback */
+   	callbacks: {
+   			onImageUpload : function(files, editor, welEditable) {
+         for (var i = files.length - 1; i >= 0; i--) {
+         	sendFile(files[i], this);
+         }
+			} 
+   	}
+	});
         
-      /* 이미지 서버 저장 후 url 반환 받는 함수 */  
-/*    		function sendFile(file, el) {
-   			var form_data = new FormData();
-   			form_data.append('file', file);
-        
-   			$.ajax({
-           	data: form_data,
-           	type: "POST",
-           	url: '${contextPath}/file/uploadFile.do',
-           	cache: false,
-           	contentType: false,
-           	enctype: 'multipart/form-data',
-           	processData: false,
-           	success: function(file) {
-          		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
-             		$(el).summernote('editor.insertImage', file.filePath, file.fileName);
-           	}
-         	});
-      } */
-        
-    });//ready 함수 끝
+  /* 이미지 서버 저장 후 url 반환 받는 함수 */  
+	function sendFile(file, el) {
+		var form_data = new FormData();
+		form_data.append('file', file);
+    
+		$.ajax({
+       	data: form_data,
+       	type: "POST",
+       	url: '${contextPath}/file/uploadFile.do',
+       	cache: false,
+       	contentType: false,
+       	enctype: 'multipart/form-data',
+       	dataType : "json",
+       	processData: false,
+       	success: function(file) {
+   	  		//filePath == url : 서버에 업로드된 url을 반환받아 <img> 태그 src에 저장
+ 	    		$(el).summernote('editor.insertImage', file.filePath, file.fileName);
+   	  		console.log("서버 업로드 성공");
+       	}
+     	});
+  	}  
+	});//ready 함수 끝
 
-		// 유효성 검사 
-		function boardValidate() {
-			if ($("#titleInput").val().trim().length == 0) {
-				swal({icon:"warning", title:"제목을 입력해 주세요."});
-				$("#titleInput").focus();
-				return false;
-			}
-			if ($("#adtDateInput").val().trim().length == 0) {
-				swal({icon:"warning", title:"입양 날짜를 입력해 주세요."});
-				$("#adtDateInput").focus();
-				return false;
-			}
-			if ($("#adtLinkInput").val().trim().length == 0) {
-				swal({icon:"warning", title:"입양/분양 글 url을 입력해 주세요."});
-				$("#adtDateInput").focus();
-				return false;
-			}
+	// 유효성 검사 
+	function boardValidate() {
+		if ($("#title").val().trim().length == 0) {
+			swal({icon:"warning", title:"제목을 입력해 주세요."});
+			$("#title").focus();
+			return false;
+		}
 
-			if ($("#summernote").val().trim().length == 0) {
-				swal({icon:"warning", title:"내용을 입력해 주세요."});
-				$("#summernote").focus();
-				return false;
-			}
+		if ($("#address").val().trim().length == 0) {
+			swal({icon:"warning", title:"주소를 입력해 주세요."});
+			$("#address").focus();
+			return false;
+		}
+		
+		if ($("#adtBreed").val().trim().length == 0) {
+			swal({icon:"warning", title:"품종을 입력해 주세요."});
+			$("#adtBreed").focus();
+			return false;
+		}
+		
+		if ($("#adtAge").val().trim().length == 0) {
+			swal({icon:"warning", title:"나이 입력해 주세요."});
+			$("#adtAge").focus();
+			return false;
+		}
+
+		if ($("#adtDate").val().trim().length == 0) {
+			swal({icon:"warning", title:"공고 기간을 입력해 주세요."});
+			$("#adtDate").focus();
+			return false;
+		}
+		
+		if ($("#summernote").val().trim().length == 0) {
+			swal({icon:"warning", title:"내용을 입력해 주세요."});
+			$("#summernote").focus();
+			return false;
+		}
+			
+			// 카테고리 초기값 지정
+			(function(){
+				$("#category > option").each(function(index, item){
+					if($(item).text() == "${adoption.adtCode}"){
+						$(item).prop("selected", true);
+					}
+				})
+			})();
 			
 			/* img태그가 있는지 확인 후 없으면 img 추가하는 경고창 필요 → 썸네일이 필요하기 때문 */
 		}
