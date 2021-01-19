@@ -302,6 +302,8 @@
 					<!-- 전체 검색 후 view로 연결했을 때 목록 돌아가기는 전체 검색 목록으로..? 그냥 이전으로 처리? -->
 					
 					<a href="${goToList}" class="btn btn-teal float-right" style="width: 75px;">목록</a>
+					<button type="button" class="btn btn-dark float-right ml-1 mr-1"
+                    	onclick="location.href='${header.referer}'">뒤로가기</button>
 				</div>
 			</div>
 

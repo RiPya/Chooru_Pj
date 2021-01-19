@@ -238,7 +238,7 @@
 					<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
-						<a href="#블라인드처리.do?${tpCdStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
+						<button id="blindBtn" class="btn btn-danger float-right ml-1 mr-1">블라인드</button>
 					</c:if>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
 					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
@@ -277,6 +277,8 @@
 
 						<a href="${goToList}" class="btn btn-teal float-right"
 							style="width: 75px;">목록</a>
+						<button type="button" class="btn btn-dark float-right ml-1 mr-1"
+                    	onclick="location.href='${header.referer}'">뒤로가기</button>	
 					</div>
 				</div>
 			</div>
@@ -288,7 +290,22 @@
 
 
 	<script>
-
+	
+	//삭제 버튼 클릭
+	$("#deleteBtn").on("click", function(){
+		if(confirm("정말 삭제하시겠습니까?")) {
+			location.href = "${contextPath}/free/delete.do?${tpCpNoStr}";
+		}
+	});
+	
+	//블라인드 클릭
+	$("#blindBtn").on("click", function(){
+		if(confirm("해당 글을 블라인드하시겠습니까?")){
+			location.href="${contextPath}/admin/blindBrd.do?${tpCpNoStr}";
+		}
+	});
+	
+	
 	</script>
 </body>
 </html>

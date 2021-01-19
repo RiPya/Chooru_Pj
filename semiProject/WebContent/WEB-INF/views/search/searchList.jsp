@@ -127,11 +127,11 @@
 <body>
 	
 	<!-- tp 값 제거 (view에서 목록 돌아오기 했을 때 tp 값 없애야 header에 표시 안됨??) -->
-<%-- 	<c:if test="${!empty param.tp}">
+	<c:if test="${!empty param.tp}">
 		<script>
-			param.set('tp', '');
+			
 		</script>
-	</c:if> --%>
+	</c:if>
 	
 
 	<!-- header.jsp -->
@@ -157,88 +157,35 @@
 					
 					<%-- 게시글 목록 출력 --%>
 					<tbody>
-					<%-- 확인용 --%>
-						<c:forEach var="search" begin="1" end="3">
-									<tr>
-										<td>199</td>
-										<td class="searchTitle">
-											안녕하세요! 만나서 반갑습니다.
-											<%--본문에 img가 있을 때 표시함 --%>
-											<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>
-											<%--${search.replyCount} : 댓글 수 변수 vo에 넣기--%>
-											<span class="reply-count">[111]</span>	
-										</td>
-										<td>닉네임도길수도있죠</td>
-										<td>2021-01-06</td>
-										<td>202</td>
-										<td class="sr-only">b4</td> <%-- ${search.brdType} --%>
-									</tr>
-									<tr>
-										<td>180</td>
-										<td class="searchTitle">
-											안녕! haha ha님 영상을 보러가자 
-											<%--본문에 img가 있을 때 표시함 --%>
-											<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>
-											<%--${search.replyCount} : 댓글 수 변수 vo에 넣기--%>
-											<span class="reply-count">[3]</span>	
-										</td>
-										<td>나</td>
-										<td>2021-01-06</td>
-										<td>1</td>
-										<td class="sr-only">b3</td> <%-- ${search.brdType} --%>
-									</tr>
-									<tr>
-										<td>170</td>
-										<td class="searchTitle">
-											안녕 친구들
-											<%--본문에 img가 있을 때 표시함 --%>
-											<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>
-											<%--${search.replyCount} : 댓글 수 변수 vo에 넣기--%>
-											<span class="reply-count">[43]</span>	
-										</td>
-										<td>글쓴이</td>
-										<td>2021-01-06</td>
-										<td>88</td>
-										<td class="sr-only">b2</td> <%-- ${search.brdType} --%>
-									</tr>
-						</c:forEach>
-								<tr>
-										<td>111</td>
-										<td class="searchTitle">
-											10번째 줄 그림, 댓글 없는 버전
-											<%--본문에 img가 있을 때 표시함 --%>
-											<!-- <i class="fas fa-file-image img-exist" style="color:darkgray;"></i> -->
-											<%--${search.replyCount} : 댓글 수 변수 vo에 넣기--%>
-											<!-- <span class="reply-count">[43]</span>	 -->
-										</td>
-										<td>마지막줄</td>
-										<td>2021-01-06</td>
-										<td>0</td>
-										<td class="sr-only">b4</td> <%-- ${search.brdType} --%>
-								</tr>
-					
 					<!-- db연결 후 -->
-<%-- 					<!-- 자유게시판의 게시글이 없을 때 -->
+ 					<!-- 자유게시판의 게시글이 없을 때 -->
 					<c:choose>
-						<c:when test="${empty fList}">  
+						<c:when test="${empty sList}">  
 							<tr>
-								<td colspan="6">존재하는 게시글이 없습니다.</td>
+								<td colspan="6" height="140px" style="line-height : 100px;">존재하는 게시글이 없습니다.</td>
 							</tr>
 						</c:when>
 						<c:otherwise> <!-- 게시글이 있을 때 모두 출력-->
-							<c:forEach var="search" items="${fList}">
+							<c:forEach var="search" items="${sList}">
 								<tr>
-									<td>${search.searchBrdNo}</td>
+									<td>${search.brdNo}</td>
 									<td class="searchTitle">
-										${search.searchTitle}
+										${search.brdTitle}
 										
-										<!-- 본문에 img가 있을 때 표시함 c:if 사용? -->
-										<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>		
+										<c:forEach var="img" items="${iList}">
+							 				<c:if test="${search.brdNo == img.brdNo}">	
+							 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
+											</c:if>
+								 		</c:forEach>			
 																			
-										<!-- 댓글 수 : vo 필드에 replyCount 넣기 -->
-										<span class="reply-count">[${search.replyCount}]</span>	
+										<!-- 글번호가 같을 때 댓글 수 추가 -->
+										<c:forEach var="comm" items="${commCounts}">
+											<c:if test='${comm.brdNo == search.brdNo}'>
+												<span class="reply-count">[${comm.count}]</span>
+											</c:if>	
+										</c:forEach>
 									</td>
-									<td class="searchWriter">${search.memId}</td>
+									<td class="searchWriter">${search.nickName}</td>
 									<td> 
 									<!-- 날짜 출력 모양 지정 변수 선언 -->
 										<!-- *조건 확인용 오늘 날짜 -->
@@ -249,12 +196,10 @@
 											value="${search.brdCrtDt}" pattern="yyyy-MM-dd"/>
 										
 										<c:choose> 	
-											작성일과 오늘이 아닐 경우 : yyyy-MM-dd형태의 createDate 출력
 											<c:when test="${createDate != today}">
 													${createDate}
 											</c:when> 
 											
-											<!-- 작성일이 오늘일 경우 : boardCreateDate를 HH:mm으로 시간만 출력 -->
 										<c:otherwise>
 												<fmt:formatDate 
 													value="${search.brdCrtDt}" pattern="HH:mm"/>
@@ -266,8 +211,7 @@
 								</tr>
 							</c:forEach>
 						</c:otherwise>
-					</c:choose> --%>
-						
+					</c:choose> 
 					</tbody>
 				</table>
 			</div>
@@ -280,53 +224,92 @@
 			<!-- cd가 없다면 href의 url 뒤에 -->
 			
 			
-			<!-- 임시 확인용 Pagination -->
+
+			
+			<%-- 파라미터의 sk(searchKey)와 sv(searchValue)가 비어있지 않을 때
+					 == 검색 후 페이징바 클릭 --%>
+			<c:choose>
+				<c:when test="${!empty param.sk && !empty param.sv}">
+				 	<c:url var="pageUrl" value="/search.do"/>
+				 	
+				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
+				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
+				</c:when>
+				
+					<%-- 비어있을 때 --%>
+				<c:otherwise>
+					<c:url var="pageUrl" value="/search/search.do"/>
+				</c:otherwise>
+			</c:choose>
+			
+			
+			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
+			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${searchStr}"/>
+			
+			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
+				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
+				integerOnly="true" : 정수로만 숫자를 표현(소수점 버림)
+			--%>
+			<%-- pInfo.pageSize : 10 --%>
+			<!-- < 화살표를 눌렀을 때 이전 페이징의 endPage가 prev가 되도록 -->
+			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
+			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${searchStr}"/>
+			
+			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
+			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
+			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${searchStr}"/>
+			
+			
+			
 			<div class="my-5">
 				<ul class="pagination">
+				
+					<%-- 현재 페이지가 10페이지 초과인 경우 --%>
+					<c:if test="${pInfo.currentPage > pInfo.pageSize}">
 						<li> <!-- 첫 페이지로 이동(<<) -->
-							<a class="page-link" href="#">&lt;&lt;</a>
+							<a class="page-link" href="${firstPage}">&lt;&lt;</a>
 						</li>
 						<li> <!-- 이전 페이지로 이동(<) -->
-							<a class="page-link" href="#">&lt;</a>
+							<a class="page-link" href="${prevPage}">&lt;</a>
 						</li>
-						
-						<c:forEach var='i' begin="1" end="10">
-							<li>
-								<a class="page-link <c:if test="${param.cp==i}">pag-active</c:if>" 
-									href="#">${i}</a>
+					</c:if>
+					
+					<!-- 페이지 목록 -->
+					<c:forEach var='page' begin="${pInfo.startPage}" end="${pInfo.endPage}">
+						<c:choose>
+						<c:when test="${pInfo.currentPage == page}">
+							<li> <!-- 현재 페이지인 경우 활성화 -->
+								<a class="page-link pag-active">${page}</a>
 							</li>
-						</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<li>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${searchStr}">${page}</a>
+							</li>
+						</c:otherwise>
+						</c:choose>
+					</c:forEach>
 						
+					<%-- 다음 페이징의 첫번째 페이지가 마지막 페이지 미만일 경우 --%>	
+					<c:if test="${next <= pInfo.maxPage}">
 						<li> <!-- 이전 페이지로 이동(>>) -->
-							<a class="page-link" href="#">&gt;</a>
+							<a class="page-link" href="${nextPage}">&gt;</a>
 						</li>
 						<li> <!-- 마지막 페이지로 이동(>>) -->
-							<a class="page-link" href="#}">&gt;&gt;</a>
+							<a class="page-link" href="${lastPage}">&gt;&gt;</a>
 						</li>
+					</c:if>
 				</ul>
 			</div>
 
 
 
 
-			<!-- 게시판명에 따라서 해당 검색 list로 가는 방식이면 sk select에서 전체를 빼야 함 -->
-<%--	<c:choose>
-				<c:when test="${param.tp == 'b1'}">
-					<c:set var="goSearch" value="noticeSearch.do"/>
-				</c:when>
-				<c:when test="${param.tp == 'b2'}">
-					<c:set var="goSearch" value="adoptSearch.do"/>
-				</c:when>
-				<c:when test="${param.tp == 'b3'}">
-					<c:set var="goSearch" value="reviewSearch.do"/>
-				</c:when>
-				<c:when test="${param.tp == 'b4'}">
-					<c:set var="goSearch" value="freeSearch.do"/>
-				</c:when>
-				<c:otherwise>
-					<c:set var="goSearch" value="search.do"/>
-				</c:otherwise>
-			</c:choose>  --%>
 
 			<div class="my-5">
 				<form action="${contextPath}/search/search.do" method="GET" class="text-center " 

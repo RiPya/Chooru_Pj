@@ -48,6 +48,7 @@ public class SearchService {
 		
 		String keyValue = null;
 		
+		//System.out.println(searchKey);
 		if(searchKey == null) {//전체검색 + 고객센터 검색
 			searchKey = "all";
 		}
@@ -67,6 +68,7 @@ public class SearchService {
 		case "writer" : //내용
 			keyValue = " N_NM LIKE '%' || '" + searchValue + "' || '%' ";
 			break;
+		case "allKey" : //'전체' 검색
 		case "all" : //전체 (전체 검색 + 고객센터는 무조건 이쪽으로)
 			keyValue = " (TITLE LIKE '%' || '" + searchValue + "' || '%' "
 					+ "OR CONTENT LIKE '%' || '" + searchValue + "' || '%' "
@@ -171,6 +173,21 @@ public class SearchService {
 		close(conn);
 		
 		return iList;
+	}
+
+	/**검색 게시글 목록 댓글 수 조회 service
+	 * @param map
+	 * @return replyMap
+	 * @throws Exception
+	 */
+	public List<Map<String, String>> selectReplyCount(Map<String, Object> map) throws Exception{
+		Connection conn = getConnection();
+		
+		List<Map<String, String>> commCounts = dao.selectReplyCount(conn, map);
+		
+		close(conn);
+		
+		return commCounts;
 	}
 
 

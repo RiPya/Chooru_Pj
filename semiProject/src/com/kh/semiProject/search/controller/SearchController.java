@@ -76,8 +76,8 @@ public class SearchController extends HttpServlet {
 				String keyValue = service.getSkSvCondition(searchKey, searchValue);
 				String tpCondition = service.getTpCondition(brdType);
 				
-				System.out.println(keyValue);
-				System.out.println(tpCondition);
+				//System.out.println(keyValue);
+				//System.out.println(tpCondition);
 				
 				Map<String, Object> map = new HashMap<String, Object>();
 				
@@ -87,30 +87,38 @@ public class SearchController extends HttpServlet {
 				
 				//1.페이징 처리를 위한 값 계산 service 호출
 				PageInfo pInfo = service.getSearchPage(map);
-				System.out.println(pInfo);
+				//System.out.println(pInfo);
 				
 				map.put("pInfo", pInfo);
 				
 				//2.게시글 목록 조회 비즈니스 로직 수행
 				List<Board> sList = service.searchBrdList(map);
 				
-//				if(sList != null) {
-//					List<Image> iList = service.selectSearchThumbs(map);
-//					
-//					if(!iList.isEmpty()) {
-//						request.setAttribute("iList", iList);
-//					}
-//				}
+				if(sList != null) {
+					List<Image> iList = service.selectSearchThumbs(map);
+					
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+					
+					//댓글 수 확인
+					//comm이라는 map에 brdNo, count(댓글 수) 반환
+					List<Map<String, String>> commCounts = service.selectReplyCount(map);
+					if(!commCounts.isEmpty()) {
+						request.setAttribute("commCounts", commCounts);
+					}
+				}
 				
-				System.out.println(sList);
 				
-//				path = "/WEB-INF/views/search/searchList.jsp";
-//				
-//				request.setAttribute("sList", sList);
-//				request.setAttribute("pInfo", pInfo);
-//				
-//				view = request.getRequestDispatcher(path);
-//				view.forward(request, response);
+				//System.out.println(sList);
+				
+				path = "/WEB-INF/views/search/searchList.jsp";
+				
+				request.setAttribute("sList", sList);
+				request.setAttribute("pInfo", pInfo);
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
 				
 			}
 			

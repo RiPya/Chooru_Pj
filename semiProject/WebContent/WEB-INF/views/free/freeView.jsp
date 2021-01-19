@@ -252,6 +252,8 @@
 					</c:choose> 
 					
 					<a href="${goToList}" class="btn btn-teal float-right" style="width: 75px;">목록</a>
+					<button type="button" class="btn btn-dark float-right ml-1 mr-1"
+                    	onclick="location.href='${header.referer}'">뒤로가기</button>
 				</div>
 			</div>
 
