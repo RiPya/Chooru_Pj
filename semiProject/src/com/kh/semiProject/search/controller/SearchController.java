@@ -58,24 +58,39 @@ public class SearchController extends HttpServlet {
 			
 			SearchService service = new SearchService();
 			
-			//게시판 타입 : b1(공지) b2(입양) b3(후기) b4(자유) b5(고객센터) 
-			//mypage(마이페이지) adminMem(회원관리)
-			String brdType = request.getParameter("tp");
+			
+			//condition을 만들기 위해 파라미터에서 값 얻어와 조율하기
 			
 			String currentPage = request.getParameter("cp");
 			String searchValue = request.getParameter("sv");
 			String searchKey = request.getParameter("sk");
-			
+
+			//게시판 타입 : b1(공지) b2(입양) b3(후기) b4(자유) b5(고객센터) 
+			//mypage(마이페이지) adminMem(회원관리)
+			String brdType = request.getParameter("tp");
+			System.out.println(brdType);
+
+			//입양/분양, 자유, 고객센터에서 사용
 			String code = request.getParameter("cd");
+			
+			//검색을 위한 condition 만들기-----------------------
+			//각 조건문에서 매개변수가 null일 때 "all"로 바꿔주는 과정 진행
+			
+			//key, value에 해당하는 condition 가져오기
+			String keyValue = service.getSkSvCondition(searchKey, searchValue);
+			
+			//brdType에 해당하는 condition
+			String tpCondition = service.getTpCondition(brdType);
+			
+			//code에 해당하는 condition
+			String cdCondition = service.getCdCondition(code);
+			
+			
 			
 			//전체 검색 Controller
 			if(command.equals("/search.do")) {
 				errorMsg = "전체 검색 과정에서 오류 발생";				
 			
-				//key, value에 해당하는 condition 가져오기
-				String keyValue = service.getSkSvCondition(searchKey, searchValue);
-				String tpCondition = service.getTpCondition(brdType);
-				
 				//System.out.println(keyValue);
 				//System.out.println(tpCondition);
 				
@@ -84,6 +99,10 @@ public class SearchController extends HttpServlet {
 				map.put("currentPage", currentPage);
 				map.put("keyValue", keyValue);
 				map.put("tpCondition", tpCondition);
+				map.put("cdCondition", cdCondition);
+				
+				//어떤 게시판의 dao로 보낼 지 확인하기 위해나 brdType
+				map.put("brdType", brdType);
 				
 				//1.페이징 처리를 위한 값 계산 service 호출
 				PageInfo pInfo = service.getSearchPage(map);
@@ -92,7 +111,7 @@ public class SearchController extends HttpServlet {
 				map.put("pInfo", pInfo);
 				
 				//2.게시글 목록 조회 비즈니스 로직 수행
-				List<Board> sList = service.searchBrdList(map);
+				List<Board> sList = service.searchAllList(map);
 				
 				if(sList != null) {
 					List<Image> iList = service.selectSearchThumbs(map);
@@ -107,8 +126,8 @@ public class SearchController extends HttpServlet {
 					if(!commCounts.isEmpty()) {
 						request.setAttribute("commCounts", commCounts);
 					}
+					
 				}
-				
 				
 				//System.out.println(sList);
 				
@@ -127,6 +146,53 @@ public class SearchController extends HttpServlet {
 				errorMsg = "공지사항 검색 과정에서 오류 발생";
 				
 				path = "/WEB-INF/views/notice/noticeList.jsp";
+				//검색 과정은 모두 이 과정으로?
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+			
+			//자유 게시판 search-------------------------------------------
+			else if(command.equals("/freeSearch.do")) {
+				errorMsg = "공지사항 검색 과정에서 오류 발생";
+				
+				errorMsg = "전체 검색 과정에서 오류 발생";				
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("currentPage", currentPage);
+				map.put("keyValue", keyValue);
+				map.put("tpCondition", tpCondition);
+				map.put("cdCondition", cdCondition);
+				map.put("brdType", brdType);
+				
+				//1.페이징 처리를 위한 값 계산 service 호출
+				PageInfo pInfo = service.getSearchPage(map);
+				
+				map.put("pInfo", pInfo);
+				
+				//2.게시글 목록 조회 비즈니스 로직 수행
+				List<Board> fList = service.searchInsideList(map);
+				
+				if(fList != null) {
+					List<Image> iList = service.selectSearchThumbs(map);
+					
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+					
+					//댓글 수 확인
+					//comm이라는 map에 brdNo, count(댓글 수) 반환
+					List<Map<String, String>> commCounts = service.selectReplyCount(map);
+					if(!commCounts.isEmpty()) {
+						request.setAttribute("commCounts", commCounts);
+					}
+				}
+
+				request.setAttribute("fList", fList);
+				request.setAttribute("pInfo", pInfo);
+				
+				path = "/WEB-INF/views/free/freeList.jsp";
 				//검색 과정은 모두 이 과정으로?
 				
 				view = request.getRequestDispatcher(path);

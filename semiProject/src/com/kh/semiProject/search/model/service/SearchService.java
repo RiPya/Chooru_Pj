@@ -14,6 +14,7 @@ import com.kh.semiProject.search.model.dao.SearchDAO;
 public class SearchService {
 	private SearchDAO dao = new SearchDAO();
 
+//------------------------------pInfo-----------------------------------------------
 	/** 검색 조건에 맞는 게시글 수를 가져와 pInfo를 생성하는 service
 	 * @param map
 	 * @return pInfo
@@ -38,6 +39,10 @@ public class SearchService {
 		
 		return new PageInfo((int)map.get("currentPage"), listCount);
 	}
+	
+	
+	//------------------조건문 service : keyValue, tpCondition, cdCondition-----------------------------------
+	
 
 	/** key, value에 해당하는 조건문 service
 	 * @param map
@@ -48,10 +53,8 @@ public class SearchService {
 		
 		String keyValue = null;
 		
+		if(searchKey == null) searchKey = "all"; //고객센터, 전체 검색
 		//System.out.println(searchKey);
-		if(searchKey == null) {//전체검색 + 고객센터 검색
-			searchKey = "all";
-		}
 		
 		//검색 조건(searchKey)에 따라 SQL 조합
 		switch(searchKey) {
@@ -70,6 +73,7 @@ public class SearchService {
 			break;
 		case "allKey" : //'전체' 검색
 		case "all" : //전체 (전체 검색 + 고객센터는 무조건 이쪽으로)
+		default : 
 			keyValue = " (TITLE LIKE '%' || '" + searchValue + "' || '%' "
 					+ "OR CONTENT LIKE '%' || '" + searchValue + "' || '%' "
 					+ "OR N_NM LIKE '%' || '" + searchValue + "' || '%') ";
@@ -86,21 +90,23 @@ public class SearchService {
 	 */
 	public String getTpCondition(String brdType) throws Exception {
 		String tpCondition = null;
-		if(brdType == null) brdType = "all";
+
+		if(brdType == null) brdType = "all";//전체 검색(헤더 검색창)
 		
 		switch(brdType) {
 		case "b1" : //공지사항
-			tpCondition = " AND BRD_TYPE = 'b1' "; break;
+			tpCondition = " V_NOTICE "; break;
 		case "b2" : //입양/분양
-			tpCondition = " AND BRD_TYPE = 'b2' "; break;
+			tpCondition = " V_ADOPTION "; break;
 		case "b3" : //입양 후기
-			tpCondition = " AND BRD_TYPE = 'b3' "; break;
+			tpCondition = " V_REVIEW "; break;
 		case "b4" : //자유 게시판
-			tpCondition = " AND BRD_TYPE = 'b4' "; break;
+			tpCondition = " V_FREE "; break;
 		case "b5" : //고객센터
-			tpCondition = " AND BRD_TYPE = 'b5' "; break;
+			tpCondition = " V_INFORMATION "; break;
+		case "all" :
 		default : //전체
-			tpCondition = " "; break;
+			tpCondition = " V_SEARCH "; break;
 		}
 
 		return tpCondition;
@@ -115,7 +121,8 @@ public class SearchService {
 	public String getCdCondition(String code) throws Exception {
 		String cdCondition = null;
 		
-		if(code == null) code = "all";
+		if(code == null) code = "all";//코드 없는 경우
+		System.out.println(code);
 		
 		switch(code) {
 		//입양/분양 카테고리
@@ -136,31 +143,62 @@ public class SearchService {
 			cdCondition = " AND FREE_CODE = 'frInfo' "; break;
 		//고객센터 카테고리
 		//추가
+		case "all" :
 		default : //adtAll, frAll, null값
 			cdCondition = " ";
 		}
 		
+		System.out.println(cdCondition);
 		return cdCondition;
 	}
 
 	
-
-	/**전체 검색 게시글 목록 리스트 조회 service
+//--------------------------검색 조회 service ----------------------------
+	
+	
+	/**검색 게시글 목록 리스트 조회 service
 	 * @param map
-	 * @return sList
+	 * @return bList → sList, nList, aList, rList, fList
 	 * @throws Exception
 	 */
-	public List<Board> searchBrdList(Map<String, Object> map) throws Exception{
+	public List<Board> searchAllList(Map<String, Object> map) throws Exception{
 		Connection conn = getConnection();
 		
-		List<Board> sList = dao.searchBrdList(conn, map);
-		
+		List<Board> bList = dao.searchBrdList(conn, map); //전체 검색, 
+
 		close(conn);
 		
-		return sList;
+		return bList;
 	}
+	
+	public List<Board> searchInsideList(Map<String, Object> map) throws Exception{
+		Connection conn = getConnection();
+		
+		List<Board> bList = null;
+		
+		String brdType = (String)map.get("brdType");
+		if(brdType == null) brdType = "all";//전체 검색(헤더 검색창)
+		
+		switch(brdType) {
+		case "b1" : break; //공지사항
+		case "b2" : break; //입양/분양
+		case "b3" : break; //입양 후기
+		case "b4" : bList = dao.searchFreeList(conn, map); break;//자유
+		case "b5" : break; //고객센터
+		}
 
-	/**검색이 적용된 썸네일 목록 조회 service
+		close(conn);
+		
+		return bList;
+	}
+	
+	
+
+	
+	//--------------------썸네일, 목록 댓글 수 구하기----------------------------
+	
+	
+	/** 검색이 적용된 썸네일 목록 조회 service
 	 * @param map
 	 * @return iList
 	 * @throws Exception
@@ -189,6 +227,10 @@ public class SearchService {
 		
 		return commCounts;
 	}
+
+
+
+
 
 
 }
