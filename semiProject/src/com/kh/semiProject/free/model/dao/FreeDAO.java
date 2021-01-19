@@ -48,6 +48,7 @@ import com.kh.semiProject.review.model.dao.ReviewDAO;
 		
 		int listCount = 0;
 		
+		
 		String query = "SELECT COUNT(*) FROM V_FREE WHERE BRD_STATUS = 'Y'" + condition;
 		
 		try {

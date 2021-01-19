@@ -44,7 +44,7 @@
 	max-width : 400px;
 }
 .searchWriter{
-	min-width : 80px;
+	min-width : 120px;
 }
 
 /*제목 부분을 제외한 부분 가운데 정렬*/
@@ -186,7 +186,7 @@
 										</c:forEach>
 									</td>
 									<td class="searchWriter">${search.nickName}</td>
-									<td> 
+									<td width="140px"> 
 									<!-- 날짜 출력 모양 지정 변수 선언 -->
 										<!-- *조건 확인용 오늘 날짜 -->
 							 			<fmt:formatDate var="today" 
@@ -230,7 +230,7 @@
 					 == 검색 후 페이징바 클릭 --%>
 			<c:choose>
 				<c:when test="${!empty param.sk && !empty param.sv}">
-				 	<c:url var="pageUrl" value="/search.do"/>
+				 	<c:url var="pageUrl" value="/search/search.do"/>
 				 	
 				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
 				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
@@ -313,7 +313,7 @@
 
 			<div class="my-5">
 				<form action="${contextPath}/search/search.do" method="GET" class="text-center " 
-																																id="searchForm">
+																				onsubmit="return allValidate();"	id="searchForm">
 					<select name="tp" class="form-control sf-margin" style="width: 125px; display: inline-block;">
 						<option value="all">전체</option>
 						<option value="b1">공지사항</option>
@@ -328,7 +328,7 @@
 						<option value="writer">글쓴이</option>
 					</select>
 					
-					<input type="text" name="sv" class="form-control sf-margin" 
+					<input type="text" name="sv" class="form-control sf-margin" id="searchAll"
 							placeholder="검색어를 입력하세요." style="width: 25%; display: inline-block;">
 							
 					<button class="form-control btn btn-teal" style="width: 70px; display: inline-block;">
@@ -343,6 +343,9 @@
 	
 	<!-- footer -->
 	<jsp:include page="../common/footer.jsp"></jsp:include>
+
+	
+	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
 
 
 	<script>
@@ -387,10 +390,19 @@
 					}
 				});
 				//검색창에 검색어 출력
-				$("input[name=sv]").val(searchValue);
+				$("#searchAll").val(searchValue);
 			})(); 
 					
 		});
+		
+		
+		function allValidate() {
+			if ($("#searchAll").val().trim().length == 0) {
+				swal({icon:"warning", title:"검색어를 입력해 주세요."});
+				$("#searchAll").focus();
+				return false;
+			}
+		}
 		
 
 		// 게시글 상세보기 기능 (jquery를 통해 작업)
@@ -413,9 +425,10 @@
 			
 			
 			var url = "${contextPath}/" + brdType + "/view.do?tp=" + type + 
-								"&cp=${pInfo.currentPage}&no=" + searchBrdNo; 
+								"&from=s&cp=${pInfo.currentPage}${searchStr}&no=" + searchBrdNo; 
 									//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
 									//type : 각 목록의 게시판 type
+									//sl(전체 검색 목록에서 왔는지 아닌지 판단) : y/n
 			location.href = url;     
 		});
 		
