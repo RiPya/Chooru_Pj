@@ -169,6 +169,7 @@ public class MemberController extends HttpServlet {
 				
 				Member loginMember = service.loginMember(member);
 				
+				
 				// Service에서 값을 잘 받아왔는지 확인하기위한 콘솔
 				// System.out.println(loginMember);
 				
@@ -301,6 +302,59 @@ public class MemberController extends HttpServlet {
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}
+			
+			// 내 정보 수정 Controller --------------------------
+			else if(command.equals("/updateMyInfo.do")) {
+				errorMsg = "내 정보 수정 과정에서 오류 발생";
+				
+				String name = request.getParameter("name");
+				String phone = request.getParameter("phone");
+				String email = request.getParameter("email");
+				String nickName = request.getParameter("nickName");
+				char petYn = request.getParameter("petYn").charAt(0);
+				
+				// Session에 있는 로그인 정보 얻어오기(회원정보)
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				// 수정정보와 회원정보를 하나의 객체에 담기
+				Member member = new Member();
+				member.setMemNo(loginMember.getMemNo());
+				member.setMemNm(name);
+				member.setPhone(phone);
+				member.setEmail(email);
+				member.setNickName(nickName);
+				member.setPetYn(petYn);
+				
+				// 비즈니스 로직
+				int result = service.updateMyInfo(member);
+				
+				if(result > 0) {
+					swalIcon = "success";
+					swalTitle = "회원 정보 수정 성공";
+					swalText = "회원 정보가 수정되었습니다.";
+					
+					// DB 데이터가 갱신 된 경우, 세션에 담긴 회원 정보도 갱신
+					// 기존 로그인 정보에서 id를 얻어와, 갱신에 사용된 member객체에 저장
+					// → member 객체가 갱신된 회원 정보를 모두 갖게된다.
+					member.setMemId(loginMember.getMemId());
+					member.setMemNm(loginMember.getMemNm());
+					member.setGrade(loginMember.getGrade());
+					
+					// Session에 있는 loginMember 정보를 member로 갱신
+					session.setAttribute("loginMember", member);
+				}else {
+					swalIcon = "error";
+					swalTitle = "회원 정보 수정 실패";
+					swalText = "고객센터에 문의 바랍니다.";
+				}
+				
+				session.setAttribute("swalIcon", swalIcon);
+				session.setAttribute("swalTitle", swalTitle);
+				session.setAttribute("swalText", swalText);
+				
+				response.sendRedirect(request.getHeader("referer"));
+			}
 
 			
 			// 마이페이지: 비밀번호 변경으로 연결 :
@@ -409,11 +463,6 @@ public class MemberController extends HttpServlet {
 				
 				response.sendRedirect(path);
 			}
-		
-			
-			
-			
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();

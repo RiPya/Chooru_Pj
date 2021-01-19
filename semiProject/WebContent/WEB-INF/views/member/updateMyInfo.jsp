@@ -43,7 +43,7 @@
 			<br><br>
 		<div class="row">
 			<div class="col-md-6 offset-md-3">
-				<form method="POST" action="updateMyInfo.do" class="needs-validation" name="updateMyInfoForm" onsubmit="return validate();">
+				<form method="POST" action="updateMyInfo.do" class="needs-validation" name="updateMyInfoForm" onsubmit="return updateMyInfoValidate();">
 				
 					<!-- 아이디 -->
 					<div class="row mb-3 form-row">
@@ -51,7 +51,7 @@
 							<label for="id">아이디</label>
 						</div>
 						<div class="col-md-6">
-							<input type="text" class="form-control" name="id" id="id" maxlength="12" autocomplete="off" required>
+							<input type="text" class="form-control" name="id" id="id" maxlength="12" autocomplete="off" value="${loginMember.memId}" readOnly>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkId">&nbsp;</span>
@@ -64,7 +64,7 @@
 							<label for="name">이름</label>
 						</div>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="name" name="name" required>
+							<input type="text" class="form-control" id="name" name="name" value="${loginMember.memNm}" required>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkName">&nbsp;</span>
@@ -77,7 +77,7 @@
 							<label for="phone">전화번호</label>
 						</div>
 						<div class="col-md-6">
-							<input type="text" class="form-control phone" id="phone" name="phone" placeholder="전화번호 '-' 포함" required>
+							<input type="text" class="form-control phone" id="phone" name="phone" placeholder="전화번호 '-' 제외" value="${loginMember.phone}" required>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkPhone">&nbsp;</span>
@@ -90,7 +90,7 @@
 							<label for="email">이메일</label>
 						</div>
 						<div class="col-md-6">
-							<input type="email" class="form-control" id="email" name="email" autocomplete="off" required>
+							<input type="email" class="form-control" id="email" name="email" autocomplete="off" value="${loginMember.email}" required>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkEmail">&nbsp;</span>
@@ -99,10 +99,10 @@
 					
 					<div class="row mb-3 form-row">
 						<div class="col-md-4">
-							<label for="email">닉네임</label>
+							<label for="nickName">닉네임</label>
 						</div>
 						<div class="col-md-6">
-							<input type="email" class="form-control" id="nickName" name="nickName" autocomplete="off" required>
+							<input type="text" class="form-control" id="nickName" name="nickName" autocomplete="off" value="${loginMember.nickName}" required>
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkNickName">&nbsp;</span>
@@ -114,14 +114,14 @@
 							<label>반려동물 유무</label>
 						</div>
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="pet" id="y">
-						<label class="form-check-label" for="flexRadioDefault1">
+						<input class="form-check-input petYn" type="radio" name="petYn" id="petY" value="Y">
+						<label class="form-check-label" for="petY">
 							유 &nbsp;&nbsp;&nbsp;&nbsp;
 						</label>
 					</div>
 					<div class="form-check">
-						<input class="form-check-input" type="radio" name="pet" id="n" checked>
-						<label class="form-check-label" for="flexRadioDefault2">
+						<input class="form-check-input petYn" type="radio" name="petYn" id="petN" value="N">
+						<label class="form-check-label" for="petN">
 							무
 						</label>
 						</div>
@@ -137,11 +137,19 @@
 
 		
 	</div>
+	<script src="${contextPath}/resources/js/semi_member.js"></script>
 		<!-- footer -->
 		<jsp:include page="../common/footer.jsp"></jsp:include>
 	
 	<script>
-	
+	// 반려동물 유무
+	(function(){
+		$(".petYn").each(function(index, item){
+			if($(item).val() == "${loginMember.petYn}") {
+				$(item).prop("checked", true);
+			}
+		});
+	})();
 	
 	
 	</script>

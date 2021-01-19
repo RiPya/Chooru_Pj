@@ -208,7 +208,7 @@ function validate(){
 
 
 // 회원 정보 수정 
-function memberUpdateValidate(){
+function updateMyInfoValidate(){
     // 각 유효성 검사를 저장할 객체
     var updateCheck = { "name": false,
                         "phone": false,
@@ -221,6 +221,33 @@ function memberUpdateValidate(){
         updateCheck.name = false;
     }else{
         updateCheck.name = true;
+    }
+
+
+    // 전화번호 유효성 검사
+    var regExp2 = /^01([0|1|6|7|8|9]?)-?([0-9]{3,4})-?([0-9]{4})$/;
+    var p1 = $("#phone").val();
+
+    if(!regExp2.test(p1)){
+        updateCheck.phone = false;
+    }else{
+        updateCheck.phone = true;
+    }
+    
+    // 이메일 유효성 검사
+    var regExp4 =  /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
+    if(!regExp4.test($("#email").val())){
+        updateCheck.email = false;
+    }else{
+        updateCheck.email = true;
+    }
+    
+    // 닉네임 유효성 검사
+    var regExp3 = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
+    if(!regExp3.test($("#nickName").val())){
+        updateCheck.nickName = false;
+    }else{
+        updateCheck.nickName = true;
     }
 
     // updateCheck 내부에 저장된 값 검사

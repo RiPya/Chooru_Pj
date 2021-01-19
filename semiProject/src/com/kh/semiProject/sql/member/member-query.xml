@@ -53,4 +53,15 @@ SELECT COUNT(*) FROM MEMBER
 WHERE N_NM = ?
 AND (GRADE = '1' OR GRADE = '8')
 </entry>
+
+<!-- 회원정보 수정 -->
+<entry key="updateMyInfo">
+UPDATE MEMBER SET
+MEM_NM = ?,
+PHONE = ?,
+N_NM = ?,
+EMAIL = ?,
+PET_YN = ?
+WHERE MEM_NO = ?
+</entry>
 </properties>
