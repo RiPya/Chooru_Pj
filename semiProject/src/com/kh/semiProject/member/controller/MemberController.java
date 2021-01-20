@@ -2,6 +2,7 @@ package com.kh.semiProject.member.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,8 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.kh.semiProject.common.model.vo.Board;
+import com.kh.semiProject.common.model.vo.PageInfo;
+import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.member.model.service.MemberService;
 import com.kh.semiProject.member.model.vo.Member;
+import com.sun.javafx.collections.MappingChange.Map;
 
 @WebServlet("/member/*")
 public class MemberController extends HttpServlet {
@@ -283,14 +288,35 @@ public class MemberController extends HttpServlet {
 				
 				//activeCode가 myActiveList면 내가 쓴 글, myActiveReply이면 내가 쓴 댓글
 				
+				// 세션에 로그인 되어있는 내 정보 가져오기
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				// 페이징 처리를 위한 Service 호출
+				PageInfo pInfo = service.getPageInfo(cp, loginMember);
+				
+				// 게시글 목록조회 비즈니스 로직
+				List<Board> bList = service.myActiveList(pInfo, loginMember);
+				
+				// 게시글 목록에 썸네일 목록 조회 비즈니스 로직
+				if(bList != null) {
+					List<Image> iList = service.myActiveImage(pInfo, loginMember);
+					
+					// 썸네일 목록이 비어있지 않을 때
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+				}
+				
+				request.setAttribute("bList", bList);
+				request.setAttribute("pInfo", pInfo);
+				
 				// 활동 정보를 보여주는 서블릿
 				path = "/WEB-INF/views/member/myPage.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}
-			
-			
-			
+		
 			
 			// 마이페이지: 내 정보 수정으로 연결 :
 			//mypageCode가 updateInfo이면 내 정보 수정

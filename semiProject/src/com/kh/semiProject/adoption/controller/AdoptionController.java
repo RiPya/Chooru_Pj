@@ -419,7 +419,7 @@ public class AdoptionController extends HttpServlet {
 				if(result > 0) {
 					swalIcon = "success";
 					swalTitle = "게시글 삭제 성공";
-					path = "list.do";
+					path = "list.do?tp=b2";
 					
 				} else {
 					swalIcon = "error";

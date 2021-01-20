@@ -3,9 +3,14 @@ package com.kh.semiProject.member.model.service;
 import static com.kh.semiProject.common.JDBCTemplate.*;
 
 import java.sql.Connection;
+import java.util.List;
 
+import com.kh.semiProject.common.model.vo.Board;
+import com.kh.semiProject.common.model.vo.PageInfo;
+import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.member.model.dao.MemberDAO;
 import com.kh.semiProject.member.model.vo.Member;
+import com.sun.javafx.collections.MappingChange.Map;
 
 public class MemberService {
 	
@@ -149,4 +154,57 @@ public class MemberService {
 		return result;
 	}
 
+
+	/** 페이징 처리 Service
+	 * @param cp 
+	 * @param loginMember 
+	 * @return pInfo
+	 * @throws Exception
+	 */
+	public PageInfo getPageInfo(String cp, Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		int currentPage = 0;
+		
+		if(cp == null)	currentPage = 1;
+		else			currentPage = Integer.parseInt(cp);
+		
+		int listCount = dao.getPageInfo(conn, loginMember);
+		
+		close(conn);
+		return new PageInfo(currentPage, listCount);
+	}
+
+
+	/** 내 게시글 목록 조회 Service
+	 * @param pInfo
+	 * @param loginMember
+	 * @return bList
+	 * @throws Exception
+	 */
+	public List<Board> myActiveList(PageInfo pInfo, Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		List<Board> bList = dao.myActiveList(conn, pInfo, loginMember);
+		
+		close(conn);
+		
+		return bList;
+	}
+
+
+	/** 내 게시글 썸네일 조회 Service
+	 * @param pInfo
+	 * @param loginMember
+	 * @return iList
+	 * @throws Exception
+	 */
+	public List<Image> myActiveImage(PageInfo pInfo, Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		List<Image> iList = dao.myActiveImage(conn, pInfo, loginMember);
+		
+		close(conn);
+		return iList;
+	}
 }

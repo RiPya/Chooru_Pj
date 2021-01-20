@@ -196,11 +196,11 @@
 				<ul class="myActiveList">
 					<li>내 활동 조회</li>
 					<li><button
-							class="btn bg-white myActive <c:if test="${empty param.my || param.cd == 'myActiveList'}">menu-active</c:if>"
+							class="btn bg-white myActive <c:if test="${empty param.cd || param.cd == 'myActiveList'}">menu-active</c:if>"
 							type="button">내가 쓴 글</button></li>
 					<li>|</li>
 					<li><button
-							class="btn bg-white myActive <c:if test="${param.my == 'myActiveReply'}">menu-active</c:if>"
+							class="btn bg-white myActive <c:if test="${param.cd == 'myActiveReply'}">menu-active</c:if>"
 							type="button">내가 쓴 댓글</button></li>
 				</ul>
 			</div>
@@ -220,80 +220,29 @@
 
 					<%-- 게시글 목록 출력 --%>
 					<tbody>
-						<%-- 확인용 --%>
-						<c:forEach var="mypage" begin="1" end="3">
-							<tr>
-								<td>199</td>
-								<td class="cd-color">자유게시판</td>
-								<td class="mypageTitle">제목입니다 삼십자를 채워서 제일 긴 제목을 출력합니다 하하핫 <%--본문에 img가 있을 때 표시함 --%>
-									<i class="fas fa-file-image img-exist" style="color: darkgray;"></i>
-									<%--${mypage.replyCount} : 댓글 수 변수 vo에 넣기--%> <span
-									class="reply-count">[111]</span>
-								</td>
-								<td>닉네임도길수도있죠</td>
-								<td>2021-01-06</td>
-								<td>202</td>
-							</tr>
-							<tr>
-								<td>180</td>
-								<td class="cd-color">입양 후기</td>
-								<td class="mypageTitle">haha ha님 영상을 보러가자 <%--본문에 img가 있을 때 표시함 --%>
-									<i class="fas fa-file-image img-exist" style="color: darkgray;"></i>
-									<%--${mypage.replyCount} : 댓글 수 변수 vo에 넣기--%> <span
-									class="reply-count">[3]</span>
-								</td>
-								<td>나</td>
-								<td>2021-01-06</td>
-								<td>1</td>
-							</tr>
-							<tr>
-								<td>170</td>
-								<td class="cd-color">공지사항</td>
-								<td class="mypageTitle">아 스타일 맞추는 거 어렵다구요 <%--본문에 img가 있을 때 표시함 --%>
-									<i class="fas fa-file-image img-exist" style="color: darkgray;"></i>
-									<%--${mypage.replyCount} : 댓글 수 변수 vo에 넣기--%> <span
-									class="reply-count">[43]</span>
-								</td>
-								<td>글쓴이</td>
-								<td>2021-01-06</td>
-								<td>88</td>
-							</tr>
-						</c:forEach>
-						<tr>
-							<td>111</td>
-							<td class="cd-color">일상</td>
-							<td class="mypageTitle">10번째 줄 그림, 댓글 없는 버전 <%--본문에 img가 있을 때 표시함 --%>
-								<!-- <i class="fas fa-file-image img-exist" style="color:darkgray;"></i> -->
-								<%--${mypage.replyCount} : 댓글 수 변수 vo에 넣기--%> <!-- <span class="reply-count">[43]</span>	 -->
-							</td>
-							<td>마지막줄</td>
-							<td>2021-01-06</td>
-							<td>0</td>
-						</tr>
-
 						<!-- db연결 후 -->
-						<%-- 					<!-- 자유게시판의 게시글이 없을 때 -->
+						<!-- 자유게시판의 게시글이 없을 때 -->
 					<c:choose>
 						<c:when test="${empty fList}">  
 							<tr>
-								<td colspan="6">존재하는 게시글이 없습니다.</td>
+								<td colspan="6" align="center">존재하는 게시글이 없습니다.</td>
 							</tr>
 						</c:when>
 						<c:otherwise> <!-- 게시글이 있을 때 모두 출력-->
-							<c:forEach var="mypage" items="${fList}">
+							<c:forEach var="mypage" items="${list}">
 								<tr>
-									<td>${mypage.mypageBrdNo}</td>
-									<td class="cd-color">${mypage.mypageCode}</td>
+									<td>${board.brdNo}</td>
+									<td class="cd-color">${board.brdType}</td>
 									<td class="mypageTitle">
-										${mypage.mypageTitle}
+										${board.title}
 										
 										<!-- 본문에 img가 있을 때 표시함 c:if 사용? -->
 										<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>		
 																			
 										<!-- 댓글 수 : vo 필드에 replyCount 넣기 -->
-										<span class="reply-count">[${mypage.replyCount}]</span>	
+										<span class="reply-count">[${board.replyCount}]</span>	
 									</td>
-									<td class="mypageWriter">${mypage.memId}</td>
+									<td class="mypageWriter">${board.nickName}</td>
 									<td> 
 									<!-- 날짜 출력 모양 지정 변수 선언 -->
 										<!-- *조건 확인용 오늘 날짜 -->
@@ -301,26 +250,26 @@
 											value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/> 
 										<!-- *조회한 글의 작성 날짜 모양-->
 									<fmt:formatDate var="createDate" 
-											value="${mypage.brdCrtDt}" pattern="yyyy-MM-dd"/>
+											value="${board.brdCrtDt}" pattern="yyyy-MM-dd"/>
 										
 										<c:choose> 	
-											작성일과 오늘이 아닐 경우 : yyyy-MM-dd형태의 createDate 출력
+											<%-- 작성일과 오늘이 아닐 경우 : yyyy-MM-dd형태의 createDate 출력 --%>
 											<c:when test="${createDate != today}">
 													${createDate}
 											</c:when> 
 											
-											<!-- 작성일이 오늘일 경우 : boardCreateDate를 HH:mm으로 시간만 출력 -->
+											<%-- 작성일이 오늘일 경우 : boardCreateDate를 HH:mm으로 시간만 출력 --%>
 										<c:otherwise>
 												<fmt:formatDate 
-													value="${mypage.brdCrtDt}" pattern="HH:mm"/>
+													value="${board.brdCrtDt}" pattern="HH:mm"/>
 											</c:otherwise>
 										</c:choose>	
 									</td>
-									<td>${mypage.readCount}</td>
+									<td>${board.readCount}</td>
 								</tr>
 							</c:forEach>
 						</c:otherwise>
-					</c:choose> --%>
+					</c:choose>
 
 					</tbody>
 				</table>
@@ -334,6 +283,7 @@
 
 			<!-- 임시 확인용 Pagination -->
 			<div class="my-5">
+
 				<ul class="pagination">
 					<li>
 						<!-- 첫 페이지로 이동(<<) --> <a class="page-link" href="#">&lt;&lt;</a>
@@ -400,14 +350,29 @@
 		});
 
 		// 게시글 상세보기 기능 (jquery를 통해 작업)
-		$("#list-table td").on("click", function() {
+		$("#list-table td").on("click", function(){
+			//boardType 얻어오기 (파라미터 보내기와 상세 조회를 위해 필요함)
+			var type = $(this).parent().children().eq(1).text();
+			
 			//게시글 번호 얻어오기
-			var myPageBrdNo = $(this).parent().children().eq(0).text();
+			var searchBrdNo = $(this).parent().children().eq(0).text();
 
-			var url = "${contextPath}/member/view.do?${tpCdStr}&cp=${pInfo.currentPage}&no="+ myPageBrdNo;
-			//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
-			//tpCdStr : "tp=_&cd=_"
-			location.href = url;
+			var brdType = ""; /*주소용 게시판  */
+			
+			switch(type) {
+			case "b1" : brdType = "notice"; break;
+			case "b2" : brdType = "adoption"; break;
+			case "b3" : brdType = "review"; break;
+			case "b4" : brdType = "free"; break;
+			/* case "b5" : brdType = "information"; //고객센터도  */
+			}
+			
+			
+			var url = "${contextPath}/" + brdType + "/view.do?tp=" + type + 
+					  "&cp=${pInfo.currentPage}&no=" + searchBrdNo; 
+						//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
+						//type : 각 목록의 게시판 type
+			location.href = url;     
 		});
 	</script>
 </body>
