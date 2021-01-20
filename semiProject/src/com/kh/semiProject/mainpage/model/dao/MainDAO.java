@@ -26,7 +26,7 @@ public class MainDAO {
 	
 	public MainDAO(){
 		String fileName
-		 = ReviewDAO.class.getResource("/com/kh/semiProject/sql/main/main-query.xml").getPath();
+		 = MainDAO.class.getResource("/com/kh/semiProject/sql/main/main-query.xml").getPath();
 		
 		try {
 			prop = new Properties();

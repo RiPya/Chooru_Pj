@@ -73,9 +73,9 @@ div { box-sizing : border-box;}
     text-align : left;
 }
 .main-title{ /*게시판 이름 div*/
-    font : bold 18px/40px "맑은 고딕";/*style size/height family*/
+    font : 20px/40px "TmoneyRoundWindRegular";/*style size/height family*/
     color : rgb(250, 255, 250);
-    margin-left : 5px;
+    margin-left : 10px;
 }
 .main-href > span { /* + 버튼*/
     display : inline-block;
@@ -117,7 +117,7 @@ div { box-sizing : border-box;}
 #main-notice .notice-title{
     width : 75%;
     height : 40px;
-    font : bold 16px/20px "맑은 고딕";
+    font : bold 17px/20px "TmoneyRoundWindRegular";
 }
 /*공지사항의 날짜 td*/
 #main-notice .notice-date {
@@ -184,8 +184,7 @@ div { box-sizing : border-box;}
 }
 /* 입양 후기 카드 바디 내 제목 */
 .review-card .card-title {
-    font-size : 16px;
-    font-weight: bold;
+    font : bold 17px/20px "TmoneyRoundWindRegular";
     height: 50px;
     margin:0;
     padding-bottom: 5px;
