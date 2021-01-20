@@ -134,8 +134,9 @@
 }
 
 .form-free {
-	font-size: 20px;
-	font-weight: bolder;
+	font-size : 22px;
+	font-weight: bold;
+	font-family: 'TmoneyRoundWindRegular';   
 	padding-right: 20px;
 }
 
@@ -181,9 +182,9 @@
 					
 					<!-- Date -->
 					<span class="brd-second inline-block">
-						작성일 <fmt:formatDate value="${free.brdCrtDt}" pattern="yy-MM-dd HH:mm"/>
+						작성일 <fmt:formatDate value="${free.brdCrtDt}" pattern="yyyy년 MM월 dd일 HH:mm"/>
 						<c:if test="${!empty free.brdModify}">
-						 ┃ 수정일 <fmt:formatDate value="${free.brdModify}" pattern="yy-MM-dd HH:mm"/>
+						 ┃ 수정일 <fmt:formatDate value="${free.brdModify}" pattern="yyyy년 MM월 dd일 HH:mm"/>
 						</c:if>
 					</span>
 					

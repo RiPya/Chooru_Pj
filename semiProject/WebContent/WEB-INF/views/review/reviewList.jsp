@@ -136,8 +136,9 @@
 	margin-bottom: 2rem;
 }
 .form-review {
-   font-size: 20px;
-   font-weight: bolder;
+	font-size : 22px;
+	font-weight: bold;
+	font-family: 'TmoneyRoundWindRegular';   
    padding-right: 20px;
 } 
 .form-hr > hr{
@@ -158,9 +159,6 @@
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-<%-- 	<c:if test="${!empty param.cd}">
-		<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
-	</c:if> --%>
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -301,18 +299,19 @@
 				<!-- 검색창 : type:게시판코드(자유는 b4), cd:자유카테고리(검색창에서 설정)-->
 				<!-- 게시판코드를 파라미터로 넘겨야 할까? -->
 			<div class="my-5">
-				<form action="${contextPath}/reviewSearch.do?${tpStr}" method="GET" class="text-center " 
-																																id="searchForm">
+				<form action="${contextPath}/search/reviewSearch.do?" method="GET" class="text-center " 
+														onsubmit="return reviewValidate();" id="searchForm">
 
-					<select name="sk" class="form-control sf-margin" style="width: 110px; display: inline-block;">
+					<select name="sk" class="form-control sf-margin" style="width: 120px; display: inline-block;">
 						<option value="title">제목</option>
 						<option value="titcont">제목+내용</option>
 						<option value="writer">글쓴이</option>
 					</select>
 					
-					<input type="text" name="sv" class="form-control sf-margin" 
+					<input type="text" name="sv" class="form-control sf-margin" id="searchReview"
 							placeholder="검색어를 입력하세요." style="width: 25%; display: inline-block;">
-							
+					<input type=text name="tp" class="sr-only" value="b3"><!-- tp 보내는 input -->
+						
 					<button class="form-control btn btn-teal" style="width: 70px; display: inline-block;">
 						<i class="fas fa-search" id="search-in-icon"></i><!--찾기아이콘-->
 					</button>
@@ -334,10 +333,11 @@
 				//글번호를 얻어와 해당 주소로 전달
 				var reviewNo = $(this).children().children(".review-no").text();
 				
-				var url = "${contextPath}/review/view.do?tp=b3&cp=${pInfo.currentPage}&no="  + reviewNo + "${searchStr}";
+				var url = "${contextPath}/review/view.do?${tpStr}${searchStr}&cp=${pInfo.currentPage}&no="  + reviewNo;
 										//tdCdStr == tp=_&cd=_ /
 				location.href = url;
 			});		
+			
 			
 			//입양 후기 썸네일이 없을 때 야멍 로고 넣기 즉시 함수
 			(function(){
@@ -352,7 +352,42 @@
 				
 			})();//썸네일 추가 즉시 함수 끝
 					
-		});
+		});//ready 함수 끝
+		
+		/* 검색창 유효성 검사 */
+ 		function reviewValidate() {
+			if ($("#searchReview").val().trim().length == 0) {
+				swal({icon:"warning", title:"검색어를 입력해 주세요."});
+				$("#searchReview").focus();
+				return false;
+			}
+		} 
+		
+		//입양 후기 검색 jsp에서 사용
+		//검색 내용이 있을 경우 검색창에 해당 내용을 작성해두는 즉시 실행 함수
+		(function(){
+			//cd:자유카테고리(검색창에서 설정): FREE_CODE
+			//파라미터 중 cd, sk, sv가 있을 경우 변수가 저장됨 → 출력
+			//파라미터 중 cd, sk, sv가 없을 경우 빈문자열로 출력됨(el은 null을 인식 안함)
+			var searchKey = "${param.sk}";
+			var searchValue = "${param.sv}";
+			
+			//.each문 반복 접근문
+			//검색창 select의 option을 반복 접근
+			$("select[name=sk] > option").each(function(index, item){
+				//index : 현재 접근 중인 요소의 인덱스
+				//item : 현재 접근 중인 요소
+				
+				//검색조건일 경우 selected 추가
+				if($(item).val() == searchKey){
+					$(item).prop("selected", true);
+				}
+			});
+			//검색창에 검색어 출력
+			$("#searchReview").val(searchValue);
+		})();
+		
+		
 	
 	</script>
 

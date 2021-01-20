@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
@@ -143,7 +144,7 @@ public class SearchController extends HttpServlet {
 			
 			//공지 게시판 search-------------------------------------------
 			else if(command.equals("/noticeSearch.do")) {
-				errorMsg = "공지사항 검색 과정에서 오류 발생";
+				errorMsg = "게시판 내 검색 과정에서 오류 발생";
 				
 				path = "/WEB-INF/views/notice/noticeList.jsp";
 				//검색 과정은 모두 이 과정으로?
@@ -152,11 +153,102 @@ public class SearchController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
+			//입양/분양 게시판 search----------------------------------------
+			else if(command.equals("/adoptionSearch.do")) {
+				errorMsg = "게시판 내 검색 과정에서 오류 발생";
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("currentPage", currentPage);
+				map.put("keyValue", keyValue);
+				map.put("tpCondition", tpCondition);
+				map.put("cdCondition", cdCondition);
+				map.put("brdType", brdType);
+				
+				//1.페이징 처리를 위한 값 계산 service 호출
+				PageInfo pInfo = service.getSearchPage(map);
+				
+				map.put("pInfo", pInfo);
+				
+				//2.게시글 목록 조회 비즈니스 로직 수행
+				List<Adoption> aList = service.searchAoptList(map);
+				
+				if(aList != null) {
+					List<Image> iList = service.selectSearchThumbs(map);
+					
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+					
+					//댓글 수 확인
+					//comm이라는 map에 brdNo, count(댓글 수) 반환
+					List<Map<String, String>> commCounts = service.selectReplyCount(map);
+					if(!commCounts.isEmpty()) {
+						request.setAttribute("commCounts", commCounts);
+					}
+				}
+
+				request.setAttribute("aList", aList);
+				request.setAttribute("pInfo", pInfo);
+				
+				path = "/WEB-INF/views/adoption/adoptionList.jsp";
+				//검색 과정은 모두 이 과정으로?
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+			
+			
+			
+			//입양 후기 게시판 search ------------=---------------------------
+			else if(command.equals("/reviewSearch.do")) {
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("currentPage", currentPage);
+				map.put("keyValue", keyValue);
+				map.put("tpCondition", tpCondition);
+				map.put("cdCondition", cdCondition);
+				map.put("brdType", brdType);
+				
+				//1.페이징 처리를 위한 값 계산 service 호출
+				PageInfo pInfo = service.getSearchPage(map);
+				
+				map.put("pInfo", pInfo);
+				
+				//2.게시글 목록 조회 비즈니스 로직 수행
+				List<Board> rList = service.searchInsideList(map);
+				
+				if(rList != null) {
+					List<Image> iList = service.selectSearchThumbs(map);
+					
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+					
+					//댓글 수 확인
+					//comm이라는 map에 brdNo, count(댓글 수) 반환
+					List<Map<String, String>> commCounts = service.selectReplyCount(map);
+					if(!commCounts.isEmpty()) {
+						request.setAttribute("commCounts", commCounts);
+					}
+				}
+
+				request.setAttribute("rList", rList);
+				request.setAttribute("pInfo", pInfo);
+				
+				path = "/WEB-INF/views/review/reviewList.jsp";
+				//검색 과정은 모두 이 과정으로?
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+			
+			
+			
 			//자유 게시판 search-------------------------------------------
 			else if(command.equals("/freeSearch.do")) {
-				errorMsg = "공지사항 검색 과정에서 오류 발생";
-				
-				errorMsg = "전체 검색 과정에서 오류 발생";				
+				errorMsg = "게시판 내 검색 과정에서 오류 발생";
 				
 				Map<String, Object> map = new HashMap<String, Object>();
 				

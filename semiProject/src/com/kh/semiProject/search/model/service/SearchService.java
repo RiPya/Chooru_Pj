@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
@@ -181,8 +182,7 @@ public class SearchService {
 		
 		switch(brdType) {
 		case "b1" : break; //공지사항
-		case "b2" : break; //입양/분양
-		case "b3" : break; //입양 후기
+		case "b3" : bList = dao.searchReviewList(conn, map); break; //입양 후기
 		case "b4" : bList = dao.searchFreeList(conn, map); break;//자유
 		case "b5" : break; //고객센터
 		}
@@ -192,6 +192,21 @@ public class SearchService {
 		return bList;
 	}
 	
+	/**입양/분양 게시판 검색 목록 리스트 조회 service
+	 * 입양/분양은 Adoption을 사용하기 때문에 반환 값이 달리 service를 다르게 해야함
+	 * @param map
+	 * @return aList
+	 * @throws Exception
+	 */
+	public List<Adoption> searchAoptList(Map<String, Object> map) throws Exception{
+		Connection conn = getConnection();
+		
+		List<Adoption> aList = dao.searchAdoptList(conn, map);
+
+		close(conn);
+		
+		return aList;
+	}
 	
 
 	

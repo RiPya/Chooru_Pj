@@ -31,8 +31,9 @@
 
 /*메뉴에서 게시판명 폰트 조정*/
 .menu li:first-of-type {
-	font-size : 20px;
-	font-weight : bold;
+	font-size : 22px;
+	font-weight: bold;
+	font-family: 'TmoneyRoundWindRegular';   
 }
 
 #insertBtn{
@@ -436,7 +437,7 @@
 				})();
 				//페이징바 활성화(현재 페이지 부분 색바꾸기) 진행?
 				
-		});
+		});//ready함수 끝
 		
 
 		// 게시글 상세보기 기능 (jquery를 통해 작업)

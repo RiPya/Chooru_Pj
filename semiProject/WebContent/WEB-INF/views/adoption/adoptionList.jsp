@@ -30,8 +30,9 @@
 
 /*메뉴에서 게시판명 폰트 조정*/
 .menu li:first-of-type {
-	font-size : 20px;
-	font-weight : bold;
+	font-size : 22px;
+	font-weight: bold;
+	font-family: 'TmoneyRoundWindRegular';
 }
 
 #insertBtn{
@@ -95,11 +96,19 @@
 	width : 100%;
 	height : 250px;
 /* 	margin-bottom : 10px; */
+	position: relative;
+	overflow : hidden; /* img 가운데 오게 하기 위해 필요함 */
 }
 
 #adoptionList .card-img-top {
 /* 	width : 100%; */
-	height: 100%;
+/* 	height: 100%; */
+	/*img 태그: 사진 가운데에 오게 하기! 세로는 div 크기 만큼만 보이게 하기*/
+	position: absolute;
+	min-width : 115%;
+	top: 50%;
+	left: 50%;
+	transform : translate(-50%, -50%);
 }
 
 #adoptionList > .list-card > .card-body { }
@@ -201,7 +210,7 @@
 	<div class="container my-5">
 			<div class="menu-wrapper">
 				<ul class="menu">
-					<li>입양/후기</li> <!-- on이벤트로 script에 작성하기 id 구분 필요 myPage는 클래스로-->
+					<li>입양/분양</li> <!-- on이벤트로 script에 작성하기 id 구분 필요 myPage는 클래스로-->
 					<li><button class="btn btn-light adoption <c:if test="${empty param.cd || param.cd == 'adtAll'}">menu-active</c:if>"
 							 	type="button">전체</button></li>
 					<li><button class="btn btn-light adoption <c:if test="${param.cd == 'adtDog'}">menu-active</c:if>" 
@@ -347,8 +356,8 @@
 			<!-- 검색창 : type:게시판코드(입양/분양은 b2), cd:자유카테고리(검색창에서 설정)-->
 			<!-- 게시판코드를 파라미터로 넘겨야 할까? -->
 			<div class="my-5">
-				<form action="${contextPath}/adoptionSearch.do?${tpStr}" method="GET" class="text-center " 
-																																id="searchForm">
+				<form action="${contextPath}/search/adoptionSearch.do" method="GET" 
+						class="text-center " id="searchForm"  onsubmit="return adoptValidate();">
 					<!-- cd -->
 					<select name="cd" class="form-control sf-margin" style="width: 120px; display: inline-block;">
 						<option value="adtAll">전체</option>
@@ -364,8 +373,9 @@
 						<option value="writer">글쓴이</option>
 					</select>
 					
-					<input type="text" name="sv" class="form-control sf-margin" 
+					<input type="text" name="sv" class="form-control sf-margin" id="searchAdopt"
 							placeholder="검색어를 입력하세요." style="width: 25%; display: inline-block;">
+					<input type=text name="tp" class="sr-only" value="b2"><!-- tp 보내는 input -->
 							
 					<button class="form-control btn btn-teal" style="width: 70px; display: inline-block;">
 						<i class="fas fa-search" id="search-in-icon"></i><!--찾기아이콘-->
@@ -404,7 +414,7 @@
 				
 				//해당 카테고리를 가지는 게시글 목록만 다시 출력하도록 요청
 				//해당 카테고리의 1페이지로 리셋해야 하기 때문에 cp=1
-				var url = "${contextPath}/adoption/list.do?${tpStr}${cdStr}&cp=1&cd=" + adtCode;
+				var url = "${contextPath}/adoption/list.do?${tpStr}${searchStr}&cp=1&cd=" + adtCode;
 								//cp(페이지), tp(게시판타입 b1 b2 b3 b4 adminMem b5 mypage), cd(카테고리)
 								//tpStr = tp=_
 				location.href = url;
@@ -458,7 +468,7 @@
 				//글번호를 얻어와 해당 주소로 전달
 				var adtBrdNo = $(this).children().children(".adopt-no").text();
 				
-				var url = "${contextPath}/adoption/view.do?${tpStr}${cdStr}&cp=${pInfo.currentPage}&no=" + adtBrdNo;
+				var url = "${contextPath}/adoption/view.do?${tpCdStr}${searchStr}&cp=${pInfo.currentPage}&no=" + adtBrdNo;
 										//tdCdStr == tp=_&cd=_ // cp 추가하기 ${param.cp}
 				location.href = url;
 			});		
@@ -477,6 +487,55 @@
 			})();//썸네일 추가 즉시 함수 끝
 					
 		});
+		
+		//입양/분양 검색 jsp에서 사용
+		//검색 내용이 있을 경우 검색창에 해당 내용을 작성해두는 즉시 실행 함수
+		(function(){
+			//cd:입양/분양 카테고리(검색창에서 설정): ADOPT_CODE
+			//파라미터 중 cd, sk, sv가 있을 경우 변수가 저장됨 → 출력
+			//파라미터 중 cd, sk, sv가 없을 경우 빈문자열로 출력됨(el은 null을 인식 안함)
+			var freeCode = "${param.cd}";
+			var searchKey = "${param.sk}";
+			var searchValue = "${param.sv}";
+			
+			//검색창 select 카테고리에 검색한 카테고리로 selected하기
+			$("select[name=cd] > option").each(function(index, item){
+				//index : 현재 접근 중인 요소의 인덱스
+				//item : 현재 접근 중인 요소
+				
+				//검색조건일 경우 selected 추가
+				if($(item).val() == freeCode){
+					$(item).prop("selected", true);
+				}
+			});
+						
+			//.each문 반복 접근문
+			//검색창 select의 option을 반복 접근
+			$("select[name=sk] > option").each(function(index, item){
+				//index : 현재 접근 중인 요소의 인덱스
+				//item : 현재 접근 중인 요소
+				
+				//검색조건일 경우 selected 추가
+				if($(item).val() == searchKey){
+					$(item).prop("selected", true);
+				}
+			});
+			//검색창에 검색어 출력
+			$("#searchAdopt").val(searchValue);
+		})();
+		
+		/* 검색창 유효성 검사 */
+ 		function adoptValidate() {
+			if ($("#searchAdopt").val().trim().length == 0) {
+				swal({icon:"warning", title:"검색어를 입력해 주세요."});
+				$("#searchAdopt").focus();
+				return false;
+			}
+		} 
+		
+		
+		
+		
 		
 	</script>
 
