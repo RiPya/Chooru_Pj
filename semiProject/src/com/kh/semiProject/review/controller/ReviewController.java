@@ -395,7 +395,7 @@ public class ReviewController extends HttpServlet {
 					//삭제 성공 시 : 게시글 목록 조회
 					swalIcon = "success";
 					swalTitle = "게시글 삭제 성공";
-					path = "list.do";
+					path = "list.do?tp=b3";
 					
 				} else {
 					//삭제 실패 시 : 삭제 시도한 게시글의 상세 조회 페이지로 redirect

@@ -7,9 +7,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
+import com.kh.semiProject.common.model.vo.Board;
+import com.kh.semiProject.common.model.vo.PageInfo;
+import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.member.model.vo.Member;
+import com.sun.javafx.collections.MappingChange.Map;
 
 public class MemberDAO {
 	
@@ -266,6 +273,121 @@ public class MemberDAO {
 			close(pstmt);
 		}
 		return result;
+	}
+
+
+	/** pageInfo 객체를 위한 전체 게시글 수 DAO
+	 * @param conn
+	 * @param loginMember 
+	 * @return listCount
+	 * @throws Exception
+	 */
+	public int getPageInfo(Connection conn, Member loginMember) throws Exception{
+		int listCount = 0;
+		
+		String query = "SELECT COUNT(*) FROM V_MYACTIVE_LIST WHERE BRD_STATUS = 'Y' AND MEM_NO = ?";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, loginMember.getMemNo());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				listCount = rset.getInt(1);
+			}
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return listCount;
+	}
+
+
+	/** 내 게시글 목록 DAO
+	 * @param conn
+	 * @param pInfo 
+	 * @param loginMember
+	 * @return bList
+	 * @throws Exception
+	 */
+	public List<Board> myActiveList(Connection conn, PageInfo pInfo, Member loginMember) throws Exception{
+		List<Board> bList = null;
+		
+		String query = prop.getProperty("myActiveList");
+		
+		try {
+			int startRow = (pInfo.getCurrentPage() -1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() -1;
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, loginMember.getMemNo());
+			pstmt.setInt(2, startRow);
+			pstmt.setInt(3, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			bList = new ArrayList<Board>();
+			
+			while(rset.next()) {
+				Board active = new Board();
+				
+				active.setBrdNo(rset.getInt("BRD_NO"));
+				active.setBrdType(rset.getString("BRD_TYPE"));
+				active.setBrdTitle(rset.getString("TITLE"));
+				active.setNickName(rset.getString("N_NM"));
+				active.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				active.setReadCount(rset.getInt("READ_COUNT"));
+				
+				bList.add(active);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return bList;
+	}
+
+
+	/** 내 게시글 썸네일 조회 DAO
+	 * @param conn
+	 * @param pInfo
+	 * @param loginMember
+	 * @return iList
+	 * @throws Exception
+	 */
+	public List<Image> myActiveImage(Connection conn, PageInfo pInfo, Member loginMember) throws Exception{
+		List<Image> iList = null;
+		
+		String query = prop.getProperty("myActiveImage");
+		
+		try {
+			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() +1;
+			int endRow = startRow + pInfo.getLimit() -1;
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, loginMember.getMemNo());
+			pstmt.setInt(2, startRow);
+			pstmt.setInt(3, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			iList = new ArrayList<Image>();
+			
+			while(rset.next()) {
+				Image img = new Image();
+				img.setFileName(rset.getString("FILE_NAME"));
+				img.setBrdNo(rset.getInt("BRD_NO"));
+				
+				iList.add(img);
+			}
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return iList;
 	}
 
 

@@ -168,9 +168,8 @@
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}" />
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:if test="${!empty param.cd}">
-		<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}" />
-	</c:if>
+		<c:set var="tpNoStr" value="tp=${param.tp}&no=${param.no}" />
+		
 
 
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -184,51 +183,34 @@
 				<div id="board-area">
 
 					<h3>
-						<!--Title ${notice.noticeTitle} -->
-						<span class="mt-4 inline-block brd-title">제목입니다 삼십자를 채워서 제일 긴 제목을
-							출력합니다 하하핫 </span>
+						<span class="mt-4 inline-block brd-title">${notice.brdTitle}</span>
 					</h3>
 					<br>
 
 					<p id="brd-second-area">
-						<!-- Writer ${notice.nickName} -->
-						<span class="inline-block brd-second" id="writer">관리자</span>
+						<span class="inline-block brd-second" id="writer">${notice.nickName}</span>
 
 						<!-- Date -->
-						<span class="brd-second inline-block"> 2021-01-06 23:41:75
+						<span class="brd-second inline-block">
 
-							<%-- <fmt:formatDate value="${notice.brdCrtDt}" 
-														pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%> <!-- 수정일을 굳이 상세 조회 때 출력해야하나? -->
-							<%--<br>
-						 마지막 수정일 : <fmt:formatDate value="${notice.brdModify}" 
-																									pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
+							작성일 <fmt:formatDate value="${notice.brdCrtDt}" pattern="yyyy년 MM월 dd일 HH:mm"/>
+							<c:if test="${!empty notice.brdModify }">
+						 		┃ 수정일  <fmt:formatDate value="${notice.brdModify}" pattern="yyyy년 MM월 dd일 HH:mm"/>
+						 	</c:if>
 						</span>
 
 						<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-						<!-- 댓글 ${notice.replyCount} -->
-						<span class="float-right brd-second">댓글 333</span>
 
 						<!-- 조회 ${notice.readCount}-->
-						<span class="float-right brd-second">조회 202</span>
+						<span class="float-right brd-second">조회 ${notice.readCount }</span>
 					</p>
 
 					<hr>
 
-					<%-- 				
-				<p>
-					입양/분양, 입양 후기의 경우 필수 항목 출력할 때 여기에 하면 됨
-				</p>
-				<hr>
- --%>
 					<!-- 썸머노트를 사용하면 content에 img파일에 <img>태그로 연결되기 때문에 
 						별도의 이미지 영역 필요 없음 -->
-					<!-- Content ${notice.noticeContent} -->
 					<div id="board-content">
-						나만 고양이 없어 <br> 나만 고양이 없어 <br> 나만 고양이 없어 <br> 나만 고양이
-						없어 <br> 나만 고양이 없어 <br> 나만 고양이 없어 <br> <img
-							src="https://cdn.pixabay.com/photo/2014/04/13/20/49/cat-323262_960_720.jpg"
-							width="60%" />
-						<h1 style="color: tomato;">나만~~~~~~~~~~~~~~~~~~~~</h1>
+						${notice.brdContent}
 					</div>
 
 
@@ -238,42 +220,39 @@
 					<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
-						<button id="blindBtn" class="btn btn-danger float-right ml-1 mr-1">블라인드</button>
-					</c:if>
-					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
-					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-						<a href="#" class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
-					<%-- </c:if> --%>
+						<a href="${contextPath}/notice/updateForm.do?${tpNoStr}${searchStr}"  
+							class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
+					</c:if>
+
 
 
 						<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
-						<%-- <c:choose> 
-						<c:when test="${!empty param.sk && !empty param.sv }"> --%>
+						<c:choose> 
+						<c:when test="${!empty param.sk && !empty param.sv }">
 						<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨
 								ex) wsp/board/search.do(X), wsp/search.do(O)
 								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
-						<%-- <c:url var="goToList" value="../search.do">
+						<c:url var="goToList" value="../search.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>
 								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
-							</c:url> --%>
-						<%-- </c:when> --%>
+							</c:url>
+						</c:when>
 
 						<%-- 이전 목록이 일반 게시글 목록일 때 --%>
 						<%-- c:url를 통해 목록으로 돌아가는 주소를 만들고 그 안에 파라미터 cp(현재페이지)에 지정하면 
 									목록으로 돌아갈 때 cp가 같이 전달됨 --%>
-						<%-- 						<c:otherwise>--%>
+						<c:otherwise>
 						<c:url var="goToList" value="list.do">
-							<c:param name="cp">${param.cp}</c:param>
 							<c:param name="cd">${param.cd}</c:param>
 							<c:param name="tp">${param.tp}</c:param>
 						</c:url>
-						<%--</c:otherwise>
-					</c:choose> --%>
+						</c:otherwise>
+					</c:choose>
 
 						<a href="${goToList}" class="btn btn-teal float-right"
 							style="width: 75px;">목록</a>
@@ -294,14 +273,14 @@
 	//삭제 버튼 클릭
 	$("#deleteBtn").on("click", function(){
 		if(confirm("정말 삭제하시겠습니까?")) {
-			location.href = "${contextPath}/free/delete.do?${tpCpNoStr}";
+			location.href = "${contextPath}/notice/noticeDelete.do?${tpNoStr}";
 		}
 	});
 	
 	//블라인드 클릭
 	$("#blindBtn").on("click", function(){
 		if(confirm("해당 글을 블라인드하시겠습니까?")){
-			location.href="${contextPath}/admin/blindBrd.do?${tpCpNoStr}";
+			location.href="${contextPath}/admin/blindBrd.do?${tpNoStr}";
 		}
 	});
 	
