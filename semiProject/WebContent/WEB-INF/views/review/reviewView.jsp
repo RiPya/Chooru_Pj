@@ -185,12 +185,6 @@
 	<!-- tp와 no(게시글 번호)을 파라미터로 동시에 보낼 때 사용하는 변수 : 수정글에 필요(카테고리 없는 글: 공지, 입양후기)-->
 	<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"/>
 	
-	<!-- 검색을 통해 온 경우 -->
-	<c:if test="${!empty param.sk && !empty param.sv }">
-		<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
-	</c:if>
-	
-	
 
 	<jsp:include page="../common/header.jsp"></jsp:include>
 	<div class="container  my-5">
@@ -214,9 +208,9 @@
 					
 					<!-- Date -->
 					<span class="brd-second inline-block">
-						작성일 <fmt:formatDate value="${review.brdCrtDt}" pattern="yy-MM-dd HH:mm"/>
+						작성일 <fmt:formatDate value="${review.brdCrtDt}" pattern="yyyy년 MM월 dd일 HH:mm"/>
 						<c:if test="${!empty review.brdModify}">
-						 ┃ 수정일 <fmt:formatDate value="${review.brdModify}" pattern="yy-MM-dd HH:mm"/>
+						 ┃ 수정일 <fmt:formatDate value="${review.brdModify}" pattern="yyyy년 MM월 dd일 HH:mm"/>
 						</c:if>
 					</span>
 					
@@ -271,16 +265,24 @@
 						<a href="${contextPath}/review/updateForm.do?${tpCpNoStr}${searchStr}" 
 							class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
 					</c:if>
-					
+	
 					
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
 					<c:choose> 
-						<c:when test="${!empty param.sk && !empty param.sv }">
+						<c:when test="${!empty param.from && param.from == 's'}">
+							<c:url var="goToList" value="/search/search.do">
+								<c:param name="cp">${param.cp}</c:param>
+								<c:param name="sk">${param.sk}</c:param>
+								<c:param name="sv">${param.sv}</c:param>
+								<c:param name="tp">${param.tp}</c:param>
+							</c:url>
+						</c:when>
+						<c:when test="${empty param.from && !empty param.sk && !empty param.sv }">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨
 								ex) wsp/board/search.do(X), wsp/search.do(O)
 								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
-							<c:url var="goToList" value="../search.do">
+							<c:url var="goToList" value="/search/reviewSearch.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>

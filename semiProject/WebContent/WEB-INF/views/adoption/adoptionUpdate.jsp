@@ -24,9 +24,10 @@
 }
 
 .form-info {
-   font-size: 20px;
-   font-weight: bolder;
-   padding-right: 20px;
+	font-size : 22px;
+	font-weight: bold;
+	font-family: 'TmoneyRoundWindRegular';   
+  padding-right: 20px;
    
 } 
 

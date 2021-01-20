@@ -146,9 +146,10 @@
 	}
 	
 	.form-adoption {
-		font-size: 20px;
-		font-weight: bolder;
 		padding-right: 20px;
+		font-size : 22px;
+		font-weight: bold;
+		font-family: 'TmoneyRoundWindRegular';
 	}
 		
 	.form-hr>hr {
@@ -270,13 +271,22 @@
 					
 					
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
-					<c:choose> 
-						<c:when test="${!empty param.sk && !empty param.sv }">
+					<c:choose>
+						<%-- 이전 목록이 전체 검색일 때 파라미터에 sl 있음 --%>
+						<c:when test="${!empty param.from && param.from == 's'}">
+							<c:url var="goToList" value="/search/search.do">
+								<c:param name="cp">${param.cp}</c:param>
+								<c:param name="sk">${param.sk}</c:param>
+								<c:param name="sv">${param.sv}</c:param>
+								<c:param name="tp">${param.tp}</c:param>
+							</c:url>
+						</c:when> 
+						<c:when test="${empty param.from && !empty param.sk && !empty param.sv }">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨
 								ex) wsp/board/search.do(X), wsp/search.do(O)
 								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
-							 <c:url var="goToList" value="../search.do">
+							 <c:url var="goToList" value="/search/adoptionSearch.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>

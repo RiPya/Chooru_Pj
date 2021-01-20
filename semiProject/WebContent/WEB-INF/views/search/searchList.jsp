@@ -16,8 +16,10 @@
 	margin-bottom: 2rem;
 }
 .form-search {
-   font-size: 20px;
-   font-weight: bolder;
+	font-size : 22px;
+	font-weight: bold;
+	font-family: 'TmoneyRoundWindRegular';   
+	  
    padding-right: 20px;
    padding-left : 50px;
 } 
