@@ -200,7 +200,7 @@
 					<c:choose>
 						<c:when test="${empty fList}">  
 							<tr>
-								<td colspan="6">존재하는 게시글이 없습니다.</td>
+								<td colspan="6"  height="140px" style="line-height : 100px;">존재하는 게시글이 없습니다.</td>
 							</tr>
 						</c:when>
 						

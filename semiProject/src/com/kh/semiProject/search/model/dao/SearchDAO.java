@@ -240,8 +240,181 @@ public class SearchDAO {
 	}
 	
 	
+
+//----------------------------------공지사항----------------------------------------------	
+	
+	/**공지사항 내부 검색 board 리스트 dao
+	 * @param conn
+	 * @param map
+	 * @return nList
+	 * @throws Exception
+	 */
+	public List<Board> searchNoticeList(Connection conn, Map<String, Object> map) throws Exception{
+		List<Board> nList = null;;
+		
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		
+		String query = "SELECT TITLE, N_NM, BRD_NO, READ_COUNT, BRD_CRT_DT "
+						+ "FROM (SELECT ROWNUM RNUM, V.* "
+									+ "FROM(SELECT * FROM V_NOTICE "
+											+ "WHERE" + keyValue
+											+ " AND BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
+					    +  "WHERE RNUM BETWEEN ? AND ?";
+		//System.out.println(query);
+		
+		try {
+			//SQL 구문 조건절에 대입할 변수 생성
+			 PageInfo pInfo = (PageInfo)map.get("pInfo");
+			 
+			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() - 1;
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			nList = new ArrayList<Board>();
+			
+			while(rset.next()) {
+				Board notice = new Board();
+				
+				notice.setBrdTitle(rset.getString("TITLE"));
+				notice.setNickName(rset.getString("N_NM"));
+				notice.setBrdNo(rset.getInt("BRD_NO"));
+				notice.setReadCount(rset.getInt("READ_COUNT"));
+				notice.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				
+				nList.add(notice);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return nList;
+	}
+	
+
+//------------------------------입양/분양--------------------------------------------------------
+
+	/**입양/분양 내부 검색 board 리스트 dao
+	 * @param conn
+	 * @param map
+	 * @return aList
+	 * @throws Exception
+	 */
+	public List<Adoption> searchAdoptList(Connection conn, Map<String, Object> map) throws Exception{
+		List<Adoption> aList = null;;
+		
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		String cdCondition = (String)map.get("cdCondition");//code 조건문
+		if(cdCondition.equals("none")) cdCondition = " ";
+		
+		String query =
+			"SELECT TITLE, ADT_CODE, ADT_BREED, ADT_GENDER, ADT_AGE, ADT_YN, N_NM, BRD_NO "
+			+ "FROM (SELECT ROWNUM RNUM, V.* "
+		       		+ "FROM(SELECT * FROM V_ADOPTION "
+		       			+ "WHERE " + keyValue + cdCondition
+		       			+ " AND BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
+				+ "WHERE RNUM BETWEEN ? AND ?";
+		//System.out.println(query);
+		
+		try {
+			//SQL 구문 조건절에 대입할 변수 생성
+			 PageInfo pInfo = (PageInfo)map.get("pInfo");
+			
+		 	 int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+		 	 int endRow = startRow + pInfo.getLimit() - 1;
+			
+		 	 pstmt = conn.prepareStatement(query);
+			
+	         pstmt.setInt(1, startRow);
+	         pstmt.setInt(2, endRow);
+	         
+	         rset = pstmt.executeQuery();
+	         
+	         aList = new ArrayList<Adoption>();
+	         
+	         while(rset.next()) {
+	        	Adoption adoption = new Adoption();
+					
+				adoption.setAdtBrdTitle(rset.getString("TITLE"));
+				adoption.setAdtCode(rset.getString("ADT_CODE"));
+				adoption.setAdtBreed(rset.getString("ADT_BREED"));
+				adoption.setAdtGender(rset.getString("ADT_GENDER"));
+				adoption.setAdtAge(rset.getString("ADT_AGE"));
+				adoption.setAdtYn(rset.getString("ADT_YN").charAt(0));
+				adoption.setNickName(rset.getString("N_NM"));
+				adoption.setAdtBrdNo(rset.getInt("BRD_NO"));
+				
+				aList.add(adoption);
+	         }
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return aList;
+	}
+			
 	
 	
+//---------------------------------입양 후기------------------------------------------------------
+	/**입양 후기 내부 검색 board 리스트 dao
+	 * @param conn
+	 * @param map
+	 * @return rList
+	 * @throws Exception
+	 */
+	public List<Board> searchReviewList(Connection conn, Map<String, Object> map) throws Exception{
+		List<Board> rList = null;;
+		
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		
+		String query = "SELECT TITLE, N_NM, BRD_NO "
+						+ "FROM (SELECT ROWNUM RNUM, V.* "
+									+ "FROM(SELECT * FROM V_REVIEW "
+											+ "WHERE" + keyValue
+											+ " AND BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
+					    +  "WHERE RNUM BETWEEN ? AND ?";
+		//System.out.println(query);
+		
+		try {
+			//SQL 구문 조건절에 대입할 변수 생성
+			 PageInfo pInfo = (PageInfo)map.get("pInfo");
+			 
+			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() - 1;
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			rList = new ArrayList<Board>();
+			
+			while(rset.next()) {
+				Board review = new Board();
+				
+				review.setBrdTitle(rset.getString("TITLE"));
+				review.setNickName(rset.getString("N_NM"));
+				review.setBrdNo(rset.getInt("BRD_NO"));
+				
+				rList.add(review);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return rList;
+	}
+	
+
 	
 	//----------------------------자유 게시판--------------------------------------
 	/* 자유 게시판 뷰
@@ -318,122 +491,6 @@ public class SearchDAO {
 	}
 
 	
-//---------------------------------입양 후기------------------------------------------------------
-	/**입양 후기 내부 검색 board 리스트 dao
-	 * @param conn
-	 * @param map
-	 * @return rList
-	 * @throws Exception
-	 */
-	public List<Board> searchReviewList(Connection conn, Map<String, Object> map) throws Exception{
-		List<Board> rList = null;;
-		
-		String keyValue = (String)map.get("keyValue");//key-value 조건문
-		
-		String query = "SELECT TITLE, N_NM, BRD_NO "
-						+ "FROM (SELECT ROWNUM RNUM, V.* "
-									+ "FROM(SELECT * FROM V_REVIEW "
-											+ "WHERE" + keyValue
-											+ " AND BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
-					    +  "WHERE RNUM BETWEEN ? AND ?";
-		//System.out.println(query);
-		
-		try {
-			//SQL 구문 조건절에 대입할 변수 생성
-			 PageInfo pInfo = (PageInfo)map.get("pInfo");
-			 
-			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
-			int endRow = startRow + pInfo.getLimit() - 1;
-			
-			pstmt = conn.prepareStatement(query);
-			pstmt.setInt(1, startRow);
-			pstmt.setInt(2, endRow);
-			
-			rset = pstmt.executeQuery();
-			
-			rList = new ArrayList<Board>();
-			
-			while(rset.next()) {
-				Board review = new Board();
-				
-				review.setBrdTitle(rset.getString("TITLE"));
-				review.setNickName(rset.getString("N_NM"));
-				review.setBrdNo(rset.getInt("BRD_NO"));
-				
-				rList.add(review);
-			}
-		} finally {
-			close(rset);
-			close(pstmt);
-		}
-		
-		return rList;
-	}
-	
-
-//------------------------------입양/분양--------------------------------------------------------
-
-	/**입양/분양 내부 검색 board 리스트 dao
-	 * @param conn
-	 * @param map
-	 * @return aList
-	 * @throws Exception
-	 */
-	public List<Adoption> searchAdoptList(Connection conn, Map<String, Object> map) throws Exception{
-		List<Adoption> aList = null;;
-		
-		String keyValue = (String)map.get("keyValue");//key-value 조건문
-		String cdCondition = (String)map.get("cdCondition");//code 조건문
-		if(cdCondition.equals("none")) cdCondition = " ";
-		
-		String query =
-			"SELECT TITLE, ADT_CODE, ADT_BREED, ADT_GENDER, ADT_AGE, ADT_YN, N_NM, BRD_NO "
-			+ "FROM (SELECT ROWNUM RNUM, V.* "
-		       		+ "FROM(SELECT * FROM V_ADOPTION "
-		       			+ "WHERE " + keyValue + cdCondition
-		       			+ " AND BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
-				+ "WHERE RNUM BETWEEN ? AND ?";
-		System.out.println(query);
-		
-		try {
-			//SQL 구문 조건절에 대입할 변수 생성
-			 PageInfo pInfo = (PageInfo)map.get("pInfo");
-			
-		 	 int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
-		 	 int endRow = startRow + pInfo.getLimit() - 1;
-			
-		 	 pstmt = conn.prepareStatement(query);
-			
-	         pstmt.setInt(1, startRow);
-	         pstmt.setInt(2, endRow);
-	         
-	         rset = pstmt.executeQuery();
-	         
-	         aList = new ArrayList<Adoption>();
-	         
-	         while(rset.next()) {
-	        	Adoption adoption = new Adoption();
-					
-				adoption.setAdtBrdTitle(rset.getString("TITLE"));
-				adoption.setAdtCode(rset.getString("ADT_CODE"));
-				adoption.setAdtBreed(rset.getString("ADT_BREED"));
-				adoption.setAdtGender(rset.getString("ADT_GENDER"));
-				adoption.setAdtAge(rset.getString("ADT_AGE"));
-				adoption.setAdtYn(rset.getString("ADT_YN").charAt(0));
-				adoption.setNickName(rset.getString("N_NM"));
-				adoption.setAdtBrdNo(rset.getInt("BRD_NO"));
-				
-				aList.add(adoption);
-	         }
-			
-		} finally {
-			close(rset);
-			close(pstmt);
-		}
-		
-		return aList;
-	}
-
 
 }
 

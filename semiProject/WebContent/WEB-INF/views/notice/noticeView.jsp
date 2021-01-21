@@ -23,16 +23,17 @@
 
 /*--------------------------*/
 /* 공지사항라인 */
-.header-review {
+.header-notice {
 	width: 100%;
 	padding-top: 8px;
 	margin-bottom: 2rem;
 }
 
-.form-review {
-	font-size: 20px;
-	font-weight: bolder;
-	padding-right: 20px;
+.form-notice {
+		padding-right: 20px;
+		font-size : 22px;
+		font-weight: bold;
+		font-family: 'TmoneyRoundWindRegular';
 }
 
 .form-hr>hr {
@@ -168,14 +169,14 @@
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}" />
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-		<c:set var="tpNoStr" value="tp=${param.tp}&no=${param.no}" />
+		<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}" />
 		
 
 
 	<jsp:include page="../common/header.jsp"></jsp:include>
 	<div class="container  my-5">
-			<div class="header-review">
-				<span class="form-review">공지사항</span> 
+			<div class="header-notice">
+				<span class="form-notice">공지사항</span> 
 				<span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
 			</div>
 			<div>
@@ -221,36 +222,43 @@
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-						<a href="${contextPath}/notice/updateForm.do?${tpNoStr}${searchStr}"  
+						<a href="${contextPath}/notice/updateForm.do?${tpCpNoStr}${searchStr}"  
 							class="btn btn-secondary float-right ml-1 mr-1" style="width: 75px;">수정</a>
 					</c:if>
 
 
 
-						<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
-						<c:choose> 
-						<c:when test="${!empty param.sk && !empty param.sv }">
-						<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
-								board 위치에서 바뀌어야 됨
-								ex) wsp/board/search.do(X), wsp/search.do(O)
-								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
-						<c:url var="goToList" value="../search.do">
+					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
+					<c:choose> 
+						<c:when test="${!empty param.from && param.from == 's'}">
+							<c:url var="goToList" value="/search/search.do">
 								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="sk">${param.sk}</c:param>
 								<c:param name="sv">${param.sv}</c:param>
-								<c:param name="cd">${param.cd}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
 						</c:when>
-
+						<c:when test="${empty param.from && !empty param.sk && !empty param.sv }">
+							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
+								board 위치에서 바뀌어야 됨
+								ex) wsp/board/search.do(X), wsp/search.do(O)
+								→ ../search.do를 사용하면 한단계 상위 위치에서(board) 주소를 search.do로 바꿈 --%>
+							<c:url var="goToList" value="/search/noticeSearch.do">
+								<c:param name="cp">${param.cp}</c:param>
+								<c:param name="sk">${param.sk}</c:param>
+								<c:param name="sv">${param.sv}</c:param>
+								<c:param name="tp">${param.tp}</c:param>
+							</c:url>
+						</c:when>
+						
 						<%-- 이전 목록이 일반 게시글 목록일 때 --%>
 						<%-- c:url를 통해 목록으로 돌아가는 주소를 만들고 그 안에 파라미터 cp(현재페이지)에 지정하면 
 									목록으로 돌아갈 때 cp가 같이 전달됨 --%>
 						<c:otherwise>
-						<c:url var="goToList" value="list.do">
-							<c:param name="cd">${param.cd}</c:param>
-							<c:param name="tp">${param.tp}</c:param>
-						</c:url>
+							<c:url var="goToList" value="list.do">
+								<c:param name="cp">${param.cp}</c:param>
+								<c:param name="tp">${param.tp}</c:param>
+							</c:url>
 						</c:otherwise>
 					</c:choose>
 
@@ -273,16 +281,10 @@
 	//삭제 버튼 클릭
 	$("#deleteBtn").on("click", function(){
 		if(confirm("정말 삭제하시겠습니까?")) {
-			location.href = "${contextPath}/notice/noticeDelete.do?${tpNoStr}";
+			location.href = "${contextPath}/notice/noticeDelete.do?${tpCpNoStr}";
 		}
 	});
 	
-	//블라인드 클릭
-	$("#blindBtn").on("click", function(){
-		if(confirm("해당 글을 블라인드하시겠습니까?")){
-			location.href="${contextPath}/admin/blindBrd.do?${tpNoStr}";
-		}
-	});
 	
 	
 	</script>

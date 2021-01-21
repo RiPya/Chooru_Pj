@@ -359,7 +359,7 @@
 				<form action="${contextPath}/search/adoptionSearch.do" method="GET" 
 						class="text-center " id="searchForm"  onsubmit="return adoptValidate();">
 					<!-- cd -->
-					<select name="cd" class="form-control sf-margin" style="width: 120px; display: inline-block;">
+					<select name="cd" class="form-control sf-margin" style="width: 130px; display: inline-block;">
 						<option value="adtAll">전체</option>
 						<option value="adtDog">입양 개</option>
 						<option value="adtCat">입양 고양이</option>
@@ -367,10 +367,10 @@
 						<option value="temp">임시 보호</option>
 					</select> 
 					
-					<select name="sk" class="form-control sf-margin" style="width: 110px; display: inline-block;">
+					<select name="sk" class="form-control sf-margin" style="width: 120px; display: inline-block;">
 						<option value="title">제목</option>
 						<option value="titcont">제목+내용</option>
-						<option value="writer">글쓴이</option>
+						<%-- <option value="writer">글쓴이</option> --%>
 					</select>
 					
 					<input type="text" name="sv" class="form-control sf-margin" id="searchAdopt"

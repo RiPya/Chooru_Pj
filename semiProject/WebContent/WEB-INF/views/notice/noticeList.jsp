@@ -25,9 +25,10 @@
    margin-bottom: 2rem;
 }
 .form-review {
-   font-size: 20px;
+   font-size: 22px;
    font-weight: bolder;
    padding-right: 20px;
+   font-family: 'TmoneyRoundWindRegular'; 
 } 
 .form-hr > hr{
    height: 8px;
@@ -167,7 +168,7 @@
 	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
 	<c:set var="tpStr" value="tp=${param.tp}"/>
 	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
-	<c:set var="tpCdStr" value="tp=${param.tp}&cd=${param.cd}"/>
+	<%-- <c:set var="tpNoStr" value="tp=${param.tp}&no=${param.no}"/> --%>
 
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
@@ -197,7 +198,7 @@
 					<c:choose>
 						<c:when test="${empty nList}">  
 							<tr>
-								<td colspan="6">존재하는 게시글이 없습니다.</td>
+								<td colspan="6" height="140px" style="line-height : 100px;">존재하는 게시글이 없습니다.</td>
 							</tr>
 						</c:when>
 						<c:otherwise> <!-- 게시글이 있을 때 모두 출력-->
@@ -346,17 +347,17 @@
 				<!-- 검색창 : type:게시판코드(자유는 b4), cd:자유카테고리(검색창에서 설정)-->
 				<!-- 게시판코드를 파라미터로 넘겨야 할까? -->
 			<div class="my-5">
-				<form action="${contextPath}/search/noticeSearch.do?${tpStr}" method="GET" class="text-center " id="searchForm"
-						onsubmit="return NoticeValidate();">
-					<select name="sk" class="form-control sf-margin" style="width: 110px; display: inline-block;">
+				<form action="${contextPath}/search/noticeSearch.do?" method="GET" class="text-center " id="searchForm"
+						onsubmit="return noticeValidate();">
+					<select name="sk" class="form-control sf-margin" style="width: 120px; display: inline-block;">
 						<option value="title">제목</option>
 						<option value="titcont">제목+내용</option>
-						<option value="writer">글쓴이</option>
+						<%-- <option value="writer">글쓴이</option>--%><!-- 공지사항은 모두 관리자가 글쓴이...! -->
 					</select>
 					
 					<input type="text" name="sv" class="form-control sf-margin" id="searchNotice"
 							placeholder="검색어를 입력하세요." style="width: 25%; display: inline-block;">
-					<input type=text name="tp" class="sr-only" value="b4"><!-- tp 보내는 input -->
+					<input type=text name="tp" class="sr-only" value="b1"><!-- tp 보내는 input -->
 							
 					<button class="form-control btn btn-teal" style="width: 70px; display: inline-block;">
 						<i class="fas fa-search" id="search-in-icon"></i><!--찾기아이콘-->
@@ -378,7 +379,7 @@
 			//게시글 번호 얻어오기
 			var noticeBrdNo = $(this).parent().children().eq(0).text();
 			
-			var url = "${contextPath}/notice/view.do?${tpCdStr}&cp=${pInfo.currentPage}&no=" + noticeBrdNo; 
+			var url = "${contextPath}/notice/view.do?${tpStr}${searchStr}&cp=${pInfo.currentPage}&no=" + noticeBrdNo; 
 																	//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
 																	//tpCdStr : "tp=_&cd=_"
 			location.href = url;     
@@ -418,11 +419,11 @@
 			});
 			
 			//검색창에 검색어 출력
-			$("input[name=sv]").val(searchValue);
+			$("#searchNotice").val(searchValue);
 			})(); 
 		
 		/* 검색창 유효성 검사 */
- 		function NoticeValidate() {
+ 		function noticeValidate() {
 			if ($("#searchNotice").val().trim().length == 0) {
 				swal({icon:"warning", title:"검색어를 입력해 주세요."});
 				$("#searchNotice").focus();

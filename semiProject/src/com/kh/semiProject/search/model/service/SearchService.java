@@ -123,7 +123,7 @@ public class SearchService {
 		String cdCondition = null;
 		
 		if(code == null) code = "all";//코드 없는 경우
-		System.out.println(code);
+		//System.out.println(code);
 		
 		switch(code) {
 		//입양/분양 카테고리
@@ -149,7 +149,7 @@ public class SearchService {
 			cdCondition = " ";
 		}
 		
-		System.out.println(cdCondition);
+		//System.out.println(cdCondition);
 		return cdCondition;
 	}
 
@@ -181,7 +181,7 @@ public class SearchService {
 		if(brdType == null) brdType = "all";//전체 검색(헤더 검색창)
 		
 		switch(brdType) {
-		case "b1" : break; //공지사항
+		case "b1" : bList = dao.searchNoticeList(conn, map); break; //공지사항
 		case "b3" : bList = dao.searchReviewList(conn, map); break; //입양 후기
 		case "b4" : bList = dao.searchFreeList(conn, map); break;//자유
 		case "b5" : break; //고객센터
@@ -198,7 +198,7 @@ public class SearchService {
 	 * @return aList
 	 * @throws Exception
 	 */
-	public List<Adoption> searchAoptList(Map<String, Object> map) throws Exception{
+	public List<Adoption> searchAdoptList(Map<String, Object> map) throws Exception{
 		Connection conn = getConnection();
 		
 		List<Adoption> aList = dao.searchAdoptList(conn, map);
