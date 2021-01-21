@@ -52,11 +52,8 @@ public class MainpageController extends HttpServlet {
 			//섬네일 사진, 글번호(안보임) 얻어오기. 게시판타입('B2' 입양/분양)
 			
 			
-			//공지사항 최신 게시글 3개 얻어오기
-			//제목, 작성일, 글번호(안보임) 얻어오기. 게시판 타입('B1' 공지사항) 
 			
-			
-			//입양 후기 최신 게시글 3개 얻어오기
+			//입양 후기 최신 게시글 3개 얻어오기-----------------
 			//제목, 입양날짜, 글번호(안보임) 얻어오기.
 			if(command.equals("/selectReview.do")) {
 
@@ -71,7 +68,7 @@ public class MainpageController extends HttpServlet {
 					map = new HashMap<String, Object>();
 					map.put("rList", rList);
 					
-					List<Image> iList = service.selectThumbMain();
+					List<Image> iList = service.selectReviewThumb();
 					
 					//썸네일 목록이 비어있지 않은 경우
 					if(!iList.isEmpty()) {
@@ -80,6 +77,43 @@ public class MainpageController extends HttpServlet {
 				}
 				
 				Gson gson = new GsonBuilder().setDateFormat("yyyy년 MM월 dd일").create();
+				gson.toJson(map, response.getWriter());
+			}
+			
+			//공지사항 최신글 5개 얻어오기------------------
+			//제목, 작성일, 글번호(안보임) 얻어오기
+			else if(command.equals("/selectNotice.do")) {
+				List<Board> nList = service.selectNoticeMain();
+				
+				Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+				gson.toJson(nList, response.getWriter());
+			}
+			
+			
+			//입양/분양 최신글 9개 얻어오기------------------------
+			else if(command.equals("/selectAdoption.do")) {
+				Map<String, Object> map = null;
+				
+				List<Board> aList = service.selectAdoptMain();
+				if(aList != null) {
+					map = new HashMap<String, Object>();
+					map.put("aList", aList);
+					
+					List<Image> iList = service.selectAdoptThumb();
+					
+					//썸네일 목록이 비어있지 않은 경우
+					if(!iList.isEmpty()) {
+						map.put("iList", iList);
+					}
+					//System.out.println(iList);
+				}
+				
+//				for(Board brd : aList) {
+//					System.out.println(brd.getBrdTitle());
+//				}
+				
+				
+				Gson gson = new Gson();
 				gson.toJson(map, response.getWriter());
 			}
 			

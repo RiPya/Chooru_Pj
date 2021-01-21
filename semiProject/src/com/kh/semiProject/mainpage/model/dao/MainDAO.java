@@ -36,6 +36,11 @@ public class MainDAO {
 		}
 	}
 
+	/**메인 입양 후기 목록 조회service
+	 * @param conn
+	 * @return rList
+	 * @throws Exception
+	 */
 	public List<Board> selectReviewMain(Connection conn) throws Exception{
 		
 		List<Board> rList = null;
@@ -74,17 +79,139 @@ public class MainDAO {
 	 * @param conn
 	 * @return iList
 	 */
-	public List<Image> selectThumbMain(Connection conn) throws Exception {
+	public List<Image> selectReviewThumb(Connection conn) throws Exception {
 		
 		List<Image> iList = null;
 		
-		String query = prop.getProperty("selectThumbMain");
+		String query = prop.getProperty("selectReviewThumb");
 		/*SELECT * FROM IMAGE
 			WHERE BRD_NO IN
 				(SELECT BRD_NO
 					FROM (SELECT ROWNUM RNUM, V.*
 					 	       FROM(SELECT * FROM V_REVIEW WHERE BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V)
 					WHERE RNUM BETWEEN 1 AND 3)
+			AND FILE_LEVEL = 0*/
+		try {
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(query);
+			
+			iList = new ArrayList<Image>();
+			
+			while(rset.next()) {
+				Image img = new Image();
+				img.setFileName(rset.getString("FILE_NAME"));
+				img.setFilePath(rset.getString("FILE_PATH"));
+				img.setBrdNo(rset.getInt("BRD_NO"));
+				
+				iList.add(img);
+			}
+			
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return iList;
+	}
+
+	/**메인 공지사항 목록 조회service
+	 * @param conn
+	 * @return nList
+	 * @throws Exception
+	 */
+	public List<Board> selectNoticeMain(Connection conn) throws Exception{
+		
+		List<Board> nList = null;
+		
+		String query = prop.getProperty("selectNoticeMain");
+		/*SELECT TITLE, BRD_NO, BRD_CRT_DT
+			FROM (SELECT ROWNUM RNUM, V.*
+			 	       FROM(SELECT * 
+			 	       		FROM V_NOTICE 
+			 	       		WHERE BRD_STATUS = 'Y' 
+			 	       		ORDER BY BRD_NO DESC) V)
+			WHERE RNUM BETWEEN 1 AND 5*/
+		
+		try {
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(query);
+			
+			nList = new ArrayList<Board>();
+			while(rset.next()) {
+				Board temp = new Board();
+				
+				temp.setBrdTitle(rset.getString("TITLE"));
+				temp.setBrdNo(rset.getInt("BRD_NO"));
+				temp.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				
+				nList.add(temp);
+			}
+			
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return nList;
+	}
+
+	/**메인 입양/분양 목록 조회service
+	 * @param conn
+	 * @return aList
+	 * @throws Exception
+	 */
+	public List<Board> selectAdoptMain(Connection conn) throws Exception {
+
+		List<Board> aList = null;
+		
+		String query = prop.getProperty("selectAdoptMain");
+		/*SELECT TITLE, BRD_NO
+			FROM (SELECT ROWNUM RNUM, V.*
+			 	       FROM(SELECT * FROM BOARD WHERE BRD_STATUS = 'Y' AND BRD_TYPE ='b2'
+			 	       		ORDER BY BRD_NO DESC) V)
+			WHERE RNUM BETWEEN 1 AND 9*/
+		
+		try {
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(query);
+			
+			aList = new ArrayList<Board>();
+			while(rset.next()) {
+				Board temp = new Board();
+				
+				temp.setBrdTitle(rset.getString("TITLE"));
+				temp.setBrdNo(rset.getInt("BRD_NO"));
+				
+				aList.add(temp);
+			}
+			
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return aList;
+	}
+
+	/** 메인 입양 /분양 썸네일 목록 dao
+	 * @param conn
+	 * @return iList
+	 * @throws Exception
+	 */
+	public List<Image> selectAdoptThumb(Connection conn) throws Exception{
+		List<Image> iList = null;
+		
+		String query = prop.getProperty("selectAdoptThumb");
+		/*SELECT * FROM IMAGE
+			WHERE BRD_NO IN
+				(SELECT BRD_NO
+					FROM (SELECT ROWNUM RNUM, V.*
+					 	       FROM(SELECT * FROM BOARD WHERE BRD_STATUS = 'Y' AND BRD_TYPE ='b2'
+					 	       		ORDER BY BRD_NO DESC) V)
+					WHERE RNUM BETWEEN 1 AND 9)
 			AND FILE_LEVEL = 0*/
 		try {
 			stmt = conn.createStatement();
