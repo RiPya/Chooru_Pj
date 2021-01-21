@@ -198,12 +198,19 @@ int result = 0;
 		try {
 			pstmt = conn.prepareStatement(query);
 			
+			System.out.println(query);
+			System.out.println(brdNo);
+			
+			
 			pstmt.setInt(1, brdNo);
 			
 			rset = pstmt.executeQuery();
 						
 			if(rset.next()) {
 				free = new Board();
+				System.out.println("1 : " + free);
+				
+				
 				free.setBrdNo(rset.getInt("BRD_NO"));
 				free.setBrdTitle(rset.getString("TITLE"));
 				free.setBrdContent(rset.getString("CONTENT"));
@@ -212,7 +219,10 @@ int result = 0;
 				free.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
 				free.setBrdModify(rset.getTimestamp("BRD_MODIFY"));
 				free.setReadCount(rset.getInt("READ_COUNT"));
+				
+				System.out.println("2 : " + free);
 			}
+			
 		} finally {
 			close(rset);
 			close(pstmt);

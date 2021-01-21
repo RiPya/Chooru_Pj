@@ -196,11 +196,11 @@
 				<ul class="myActiveList">
 					<li>내 활동 조회</li>
 					<li><button
-							class="btn bg-white myActive <c:if test="${empty param.cd || param.cd == 'myActiveList'}">menu-active</c:if>"
+							class="btn bg-white myActive <c:if test="${empty param.my || param.my == 'myActiveList'}">menu-active</c:if>"
 							type="button">내가 쓴 글</button></li>
 					<li>|</li>
 					<li><button
-							class="btn bg-white myActive <c:if test="${param.cd == 'myActiveReply'}">menu-active</c:if>"
+							class="btn bg-white myActive <c:if test="${param.my == 'myActiveReply'}">menu-active</c:if>"
 							type="button">내가 쓴 댓글</button></li>
 				</ul>
 			</div>
@@ -223,26 +223,26 @@
 						<!-- db연결 후 -->
 						<!-- 자유게시판의 게시글이 없을 때 -->
 					<c:choose>
-						<c:when test="${empty fList}">  
+						<c:when test="${empty bList}">  
 							<tr>
 								<td colspan="6" align="center">존재하는 게시글이 없습니다.</td>
 							</tr>
 						</c:when>
 						<c:otherwise> <!-- 게시글이 있을 때 모두 출력-->
-							<c:forEach var="mypage" items="${list}">
+							<c:forEach var="mypage" items="${bList}">
 								<tr>
-									<td>${board.brdNo}</td>
-									<td class="cd-color">${board.brdType}</td>
+									<td>${mypage.brdNo}</td>
+									<td class="cd-color">${mypage.brdType}</td>
 									<td class="mypageTitle">
-										${board.title}
+										${mypage.brdTitle}
 										
-										<!-- 본문에 img가 있을 때 표시함 c:if 사용? -->
-										<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>		
-																			
-										<!-- 댓글 수 : vo 필드에 replyCount 넣기 -->
-										<span class="reply-count">[${board.replyCount}]</span>	
+										<c:forEach var="img" items="${iList}">
+							 				<c:if test="${mypage.brdNo == img.brdNo}">	
+							 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
+											</c:if>
+								 		</c:forEach>																			
 									</td>
-									<td class="mypageWriter">${board.nickName}</td>
+									<td class="mypageWriter">${mypage.nickName}</td>
 									<td> 
 									<!-- 날짜 출력 모양 지정 변수 선언 -->
 										<!-- *조건 확인용 오늘 날짜 -->
@@ -250,7 +250,7 @@
 											value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/> 
 										<!-- *조회한 글의 작성 날짜 모양-->
 									<fmt:formatDate var="createDate" 
-											value="${board.brdCrtDt}" pattern="yyyy-MM-dd"/>
+											value="${mypage.brdCrtDt}" pattern="yyyy-MM-dd"/>
 										
 										<c:choose> 	
 											<%-- 작성일과 오늘이 아닐 경우 : yyyy-MM-dd형태의 createDate 출력 --%>
@@ -261,11 +261,11 @@
 											<%-- 작성일이 오늘일 경우 : boardCreateDate를 HH:mm으로 시간만 출력 --%>
 										<c:otherwise>
 												<fmt:formatDate 
-													value="${board.brdCrtDt}" pattern="HH:mm"/>
+													value="${mypage.brdCrtDt}" pattern="HH:mm"/>
 											</c:otherwise>
 										</c:choose>	
 									</td>
-									<td>${board.readCount}</td>
+									<td>${mypage.readCount}</td>
 								</tr>
 							</c:forEach>
 						</c:otherwise>
@@ -279,31 +279,66 @@
 			<%---------------------- Pagination ----------------------%>
 			<%-- boardList.jsp에서 복붙한 거 놔두면 오류나서 메모장 파일에 옮겨놓음 --%>
 			<!-- cd가 없다면 href의 url 뒤에 -->
-
-
-			<!-- 임시 확인용 Pagination -->
+			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
+			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${cdStr}${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${cdStr}${searchStr}"/>
+			
+			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
+				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
+				integerOnly="true" : 정수로만 숫자를 표현(소수점 버림)
+			--%>
+			<%-- pInfo.pageSize : 10 --%>
+			<!-- < 화살표를 눌렀을 때 이전 페이징의 endPage가 prev가 되도록 -->
+			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
+			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${cdStr}${searchStr}"/>
+			
+			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
+			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
+			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${cdStr}${searchStr}"/>
+						
+			
 			<div class="my-5">
-
 				<ul class="pagination">
-					<li>
-						<!-- 첫 페이지로 이동(<<) --> <a class="page-link" href="#">&lt;&lt;</a>
-					</li>
-					<li>
-						<!-- 이전 페이지로 이동(<) --> <a class="page-link" href="#">&lt;</a>
-					</li>
-
-					<c:forEach var='i' begin="1" end="10">
-						<li><a
-							class="page-link <c:if test="${param.cp==i}">pag-active</c:if>"
-							href="#">${i}</a></li>
+				
+					<%-- 현재 페이지가 10페이지 초과인 경우 --%>
+					<c:if test="${pInfo.currentPage > pInfo.pageSize}">				
+						<li> <!-- 첫 페이지로 이동(<<) -->
+							<a class="page-link" href="${firstPage}">&lt;&lt;</a>
+						</li>
+						<li> <!-- 이전 페이지로 이동(<) -->
+							<a class="page-link" href="${prevPage}">&lt;</a>
+						</li>
+					</c:if>
+						
+					<!-- 페이지 목록 -->
+					<c:forEach var='page' begin="${pInfo.startPage}" end="${pInfo.endPage}">
+						<c:choose>
+						<c:when test="${pInfo.currentPage == page}">
+							<li> <!-- 현재 페이지인 경우 활성화 -->
+								<a class="page-link pag-active">${page}</a>
+							</li>
+						</c:when>
+						<c:otherwise>
+							<li>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${cdStr}${searchStr}">${page}</a>
+							</li>
+						</c:otherwise>
+						</c:choose>
 					</c:forEach>
-
-					<li>
-						<!-- 이전 페이지로 이동(>>) --> <a class="page-link" href="#">&gt;</a>
-					</li>
-					<li>
-						<!-- 마지막 페이지로 이동(>>) --> <a class="page-link" href="#}">&gt;&gt;</a>
-					</li>
+						
+					<%-- 다음 페이징의 첫번째 페이지가 마지막 페이지 미만일 경우 --%>	
+					<c:if test="${next <= pInfo.maxPage}">
+						<li> <!-- 이전 페이지로 이동(>>) -->
+							<a class="page-link" href="${nextPage}">&gt;</a>
+						</li>
+						<li> <!-- 마지막 페이지로 이동(>>) -->
+							<a class="page-link" href="${lastPage}">&gt;&gt;</a>
+						</li>
+					</c:if>
 				</ul>
 			</div>
 		</div>
@@ -316,7 +351,7 @@
 
 	<script>
 		$(document).ready(function() {
-
+			// console.log("${param.tp}");
 			/* 메뉴 클릭 관련 함수 */
 			/*파라미터에 cd(카테고리 여기서는 text())를 담아서 
 			(header.jsp의 게시판메뉴 활성화를 위해 tp(type)도 같이 보냄)
@@ -332,12 +367,14 @@
 
 				switch (category) {
 				case "내가 쓴 글": activeCode = "myActiveList"; 
+			 				   url = "${contextPath}/member/myActiveList.do?${tpCdStr}&cp=1&my=" + activeCode;
 							   break;
 				case "내가 쓴 댓글": activeCode = "myActiveReply"; 
+								url = "${contextPath}/member/myActiveReply.do?${tpCdStr}&cp=1&my=" + activeCode;
 								break;
 				}
+			
 
-			  url = "${contextPath}/member/myActiveList.do?${tpCdStr}&cp=1&my=" + activeCode;
 				//해당 카테고리(activeCode(내가쓴글, 내가쓴댓글))를 가지는 게시글 목록만 다시 출력하도록 요청
 				//해당 카테고리의 1페이지로 리셋해야 하기 때문에 cp=1
 				//cp(페이지), tp(게시판타입 b1 b2 b3 b4 adminMem b5 mypage), cd(카테고리)
@@ -364,7 +401,7 @@
 			case "b2" : brdType = "adoption"; break;
 			case "b3" : brdType = "review"; break;
 			case "b4" : brdType = "free"; break;
-			/* case "b5" : brdType = "information"; //고객센터도  */
+			case "b5" : brdType = "information"; break;
 			}
 			
 			
@@ -372,7 +409,7 @@
 					  "&cp=${pInfo.currentPage}&no=" + searchBrdNo; 
 						//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
 						//type : 각 목록의 게시판 type
-			location.href = url;     
+			location.href = url;
 		});
 	</script>
 </body>

@@ -10,6 +10,7 @@ import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.member.model.dao.MemberDAO;
 import com.kh.semiProject.member.model.vo.Member;
+import com.kh.semiProject.reply.model.vo.Reply;
 import com.sun.javafx.collections.MappingChange.Map;
 
 public class MemberService {
@@ -169,7 +170,7 @@ public class MemberService {
 		if(cp == null)	currentPage = 1;
 		else			currentPage = Integer.parseInt(cp);
 		
-		int listCount = dao.getPageInfo(conn, loginMember);
+		int listCount = dao.getListCount(conn, loginMember);
 		
 		close(conn);
 		return new PageInfo(currentPage, listCount);
@@ -182,10 +183,10 @@ public class MemberService {
 	 * @return bList
 	 * @throws Exception
 	 */
-	public List<Board> myActiveList(PageInfo pInfo, Member loginMember) throws Exception{
+	public List<Board> selectMyActiveList(PageInfo pInfo, Member loginMember) throws Exception{
 		Connection conn = getConnection();
 		
-		List<Board> bList = dao.myActiveList(conn, pInfo, loginMember);
+		List<Board> bList = dao.selectMyActiveList(conn, pInfo, loginMember);
 		
 		close(conn);
 		
@@ -207,4 +208,68 @@ public class MemberService {
 		close(conn);
 		return iList;
 	}
+
+
+	/** 비밀번호 확인 Servcie
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int checkPwd(Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		// 현재 비밀번호 확인 여부
+		int result = dao.checkCurrentPwd(conn, loginMember);
+		
+		close(conn);
+		return result;
+	}
+
+	/** 내 댓글 페이징처리 Service
+	 * @param cp
+	 * @param loginMember
+	 * @return pInfo
+	 * @throws Exception
+	 */
+	public PageInfo getReplyPageInfo(String cp, Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		int currentPage = 0;
+		
+		if(cp == null)	currentPage = 1;
+		else			currentPage = Integer.parseInt(cp);
+		
+		int listCount = dao.getReplyPageInfo(conn, loginMember);
+		
+		close(conn);
+		return new PageInfo(currentPage, listCount);
+	}
+
+	/** 내가 쓴 댓글 목록조회 Service
+	 * @param pInfo
+	 * @param loginMember
+	 * @return pList
+	 * @throws Exception
+	 */
+	public List<Reply> selectMyReplyList(PageInfo pInfo, Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		List<Reply> pList = dao.selectMyReplyList(conn, pInfo, loginMember);
+		
+		close(conn);
+		return pList;
+	}
+
+
+	/** 회원 이름 일치여부 Service
+	 * @param loginMember
+	 * @return
+	 * @throws Exception
+	 */
+	public int memberNameCheck(Member loginMember) throws Exception{
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
 }
