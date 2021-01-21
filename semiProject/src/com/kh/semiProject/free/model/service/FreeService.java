@@ -146,8 +146,11 @@ public class FreeService {
 	 */
 	public Board selectFree(int brdNo) throws Exception{
 		Connection conn = getConnection();
+		System.out.println("brdNo : "+ brdNo);
 		
 		Board free = dao.selectFree(conn, brdNo);
+		
+		System.out.println(free);
 		
 		if(free != null) {
 			int result = dao.increaseReadCount(conn, brdNo);

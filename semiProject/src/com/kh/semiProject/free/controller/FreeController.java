@@ -132,11 +132,15 @@ public class FreeController extends HttpServlet {
 				
 				Board free = service.selectFree(brdNo);
 				
+				System.out.println("free brNo " + brdNo);
+				System.out.println("free " + free); // ← ?
+				
 				if(free != null) {
 					//이미지는 따로 가져올 필요 없음. content에 이미 이미지 url이 있음.
 					
 					//리퀘스트로 review 보내기
 					request.setAttribute("free", free);
+
 
 					path = "/WEB-INF/views/free/freeView.jsp";
 					view = request.getRequestDispatcher(path);
@@ -144,7 +148,8 @@ public class FreeController extends HttpServlet {
 					
 				} else {
 					request.getSession().setAttribute("swalIcon", "error");
-					request.getSession().setAttribute("swalTitle", "게시판 상세 조회");
+					request.getSession().setAttribute("swalTitle", "삭제 혹은 블라인드 된 게시글입니다.");
+					response.sendRedirect(request.getHeader("referer"));
 				}
 				
 			}

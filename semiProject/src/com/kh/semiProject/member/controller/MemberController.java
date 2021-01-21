@@ -18,6 +18,7 @@ import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.member.model.service.MemberService;
 import com.kh.semiProject.member.model.vo.Member;
+import com.kh.semiProject.reply.model.vo.Reply;
 import com.sun.javafx.collections.MappingChange.Map;
 
 @WebServlet("/member/*")
@@ -236,6 +237,19 @@ public class MemberController extends HttpServlet {
 			else if(command.equals("/idFind1.do")) {
 				errorMsg = "아이디 찾기 과정에서 오류 발생";
 				
+				// 파라미터 얻어오기
+				String memberName = request.getParameter("memberName");
+				String email = request.getParameter("email");
+				
+				// 회원 번호 얻어오기
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				loginMember.setMemNm(memberName);
+				
+				// 가입자 이름 확인
+				int result = service.memberNameCheck(loginMember);
+				
 				path = "/WEB-INF/views/member/idFind1.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
@@ -277,16 +291,43 @@ public class MemberController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
-			// 마이페이지 연결 전 비밀번호 확인---------
 			
+			// 마이페이지 연결 전 비밀번호 확인---------
+			else if(command.equals("/myActiveListForm.do")) {
+				errorMsg = "비밀번호 확인 과정에서 오류 발생";
+				
+				String currentPwd = request.getParameter("currentPwd"); // 현재 비밀번호
+				
+				// 회원 정보
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				loginMember.setMemPw(currentPwd);
+				
+				int result = service.checkPwd(loginMember);
+				// System.out.println(result);
+				
+				if(result > 0) {
+					path = "myActiveList.do?tp=mypage";
+				
+				}else {
+					swalIcon = "error";
+					swalTitle = "비밀번호를 잘못 입력하셨습니다.";
+					path = request.getHeader("referer");
+				}
+				
+				session.setAttribute("swalIcon", swalIcon);
+				session.setAttribute("swalTitle", swalTitle);
+				response.sendRedirect(path);
+			}
 			
 			
 			// 마이페이지: 내 활동 정보 목록 :-----------------------------
 			//mypageCode가 myActive이면 내 활동 정보
 			else if(command.equals("/myActiveList.do")) {
 				errorMsg = "내 활동 정보 페이지 연결 과정에서 오류 발생";
-				
 				//activeCode가 myActiveList면 내가 쓴 글, myActiveReply이면 내가 쓴 댓글
+				
 				
 				// 세션에 로그인 되어있는 내 정보 가져오기
 				HttpSession session = request.getSession();
@@ -296,11 +337,13 @@ public class MemberController extends HttpServlet {
 				PageInfo pInfo = service.getPageInfo(cp, loginMember);
 				
 				// 게시글 목록조회 비즈니스 로직
-				List<Board> bList = service.myActiveList(pInfo, loginMember);
+				List<Board> bList = service.selectMyActiveList(pInfo, loginMember);
+				// System.out.println("내 게시글 목록 " + bList);
 				
 				// 게시글 목록에 썸네일 목록 조회 비즈니스 로직
 				if(bList != null) {
 					List<Image> iList = service.myActiveImage(pInfo, loginMember);
+					// System.out.println("내 게시글 이미지 " + iList);
 					
 					// 썸네일 목록이 비어있지 않을 때
 					if(!iList.isEmpty()) {
@@ -313,6 +356,30 @@ public class MemberController extends HttpServlet {
 				
 				// 활동 정보를 보여주는 서블릿
 				path = "/WEB-INF/views/member/myPage.jsp";
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+			
+			
+			else if(command.equals("/myActiveReply.do")) {
+				errorMsg = "내가 쓴 댓글 보기 페이지 연결 과정에서 오류 발생";
+				
+				// 세션에 로그인 되어있는 내 정보 가져오기
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				// 페이징 처리를 위한 Service 호출
+				PageInfo pInfo = service.getReplyPageInfo(cp, loginMember);
+				
+				// 댓글 목록조회 비즈니스 로직
+				List<Reply> pList = service.selectMyReplyList(pInfo, loginMember);
+				// System.out.println(pList);
+				
+				request.setAttribute("pList", pList);
+				request.setAttribute("pInfo", pInfo);
+				
+				// 활동 정보를 보여주는 서블릿
+				path = "/WEB-INF/views/member/myPage2.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}

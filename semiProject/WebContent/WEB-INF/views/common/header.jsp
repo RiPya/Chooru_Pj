@@ -262,16 +262,14 @@
 				</div>
 				
 				<div class="modal-body">								<!-- 임시로 연결 내글 목록 만든 후에는 비번 확인 → 성공 시 mypage로 -->
-					<form class="modal-checkPwd" method="POST" action="${contextPath}/member/myActiveList.do?tp=mypage">
+					<form class="modal-checkPwd" method="POST" action="${contextPath}/member/myActiveListForm.do"
+									onsubmit="return checkPwdValidate();">
 						<div class="col-md-6 offset-md-3">
 							<!-- 비밀번호 유효성 체크 영역 -->
 							<span id="checkPwd">&nbsp;</span>
 						</div>
-						<input type="password" class="form-control" id="checkPwd" name="checkPwd" placeholder="비밀번호">
+						<input type="password" class="form-control" id="currentPwd" name="currentPwd" placeholder="비밀번호">
 						<br>
-						<div class="modal-body-text">
-							<a href="#">비밀번호를 잊어버리셨나요?</a>
-						</div>
 						<br>
 						<button class="btn btn-lg btn-teal btn-block" type="submit">확인</button>
 					</form>
@@ -307,6 +305,13 @@
 					return false;
 				}
 			}
+ 
+ 		function checkPwdValidate(){
+ 			if($("#currentPwd").val().trim().length == 0){
+				swal({icon:"warning", title:"비밀번호를 입력해주세요."});
+				return false;
+ 			}
+ 		}
     
     </script>
 

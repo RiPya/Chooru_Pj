@@ -16,7 +16,7 @@ import com.kh.semiProject.member.model.vo.Member;
 
 @WebFilter(urlPatterns = {"/member/myPage.do", "/member/changePwd.do", "/member/secession.do",
 						  "/member/updateMember.do", "/member/updatePwd.do", "/member/updateStatus.do",
-						  "/adoption/*", "/review/*"})
+						  "/member/myActiveListForm.do", "/adoption/*", "/review/*"})
 public class LoginFilter implements Filter {
 
     public LoginFilter() {  }

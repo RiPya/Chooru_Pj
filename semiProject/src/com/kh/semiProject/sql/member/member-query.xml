@@ -65,6 +65,14 @@ PET_YN = ?
 WHERE MEM_NO = ?
 </entry>
 
+<!-- 내 글 목록 페이징처리를 위한 전체 글 조회 -->
+<entry key="getListCount">
+SELECT COUNT(*) 
+FROM V_MYACTIVE_LIST 
+WHERE BRD_STATUS = 'Y' 
+AND MEM_NO = ?
+</entry>
+
 <!-- 내 게시글 조회 -->
 <entry key="myActiveList">
 SELECT BRD_NO, BRD_TYPE, TITLE, N_NM, MEM_NO, READ_COUNT, BRD_CRT_DT, BRD_STATUS
@@ -78,7 +86,7 @@ WHERE RNUM BETWEEN ? AND ?
 
 <!-- 내 게시글 썸네일 조회 -->
 <entry key="myActiveImage">
-SELECT FILE_NAME, BRD_NO 
+SELECT FILE_NAME, BRD_NO, FILE_PATH
 FROM IMAGE 
 WHERE BRD_NO IN (SELECT BRD_NO 
 				 FROM(SELECT ROWNUM RNUM, V.*
@@ -89,4 +97,25 @@ WHERE BRD_NO IN (SELECT BRD_NO
         		  WHERE RNUM BETWEEN ? AND ?)
 AND FILE_LEVEL = 0
 </entry>
+
+<!-- 내 댓글조회 페이징 -->
+<entry key="getReplyPageInfo">
+SELECT COUNT(*) 
+FROM V_COMM
+WHERE COMM_STATUS = 'Y' 
+AND MEM_NO = ?
+</entry>
+
+
+<!-- 내 댓글 조회 -->
+<entry key="selectMyReplyList">
+SELECT COMM_NO, COMM_CONTENT, COMM_DATE, COMM_STATUS, TITLE, BRD_TYPE, BRD_NO
+FROM (SELECT ROWNUM RNUM, V.*
+        FROM(SELECT * FROM V_COMM
+           WHERE COMM_STATUS = 'Y' 
+           AND MEM_NO = ?
+           ORDER BY BRD_NO DESC) V)
+WHERE RNUM BETWEEN ? AND ?
+</entry>
+
 </properties>

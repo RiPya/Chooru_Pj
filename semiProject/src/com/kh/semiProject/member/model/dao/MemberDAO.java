@@ -16,6 +16,7 @@ import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
 import com.kh.semiProject.member.model.vo.Member;
+import com.kh.semiProject.reply.model.vo.Reply;
 import com.sun.javafx.collections.MappingChange.Map;
 
 public class MemberDAO {
@@ -282,10 +283,10 @@ public class MemberDAO {
 	 * @return listCount
 	 * @throws Exception
 	 */
-	public int getPageInfo(Connection conn, Member loginMember) throws Exception{
+	public int getListCount(Connection conn, Member loginMember) throws Exception{
 		int listCount = 0;
 		
-		String query = "SELECT COUNT(*) FROM V_MYACTIVE_LIST WHERE BRD_STATUS = 'Y' AND MEM_NO = ?";
+		String query = prop.getProperty("getListCount");
 		
 		try {
 			pstmt = conn.prepareStatement(query);
@@ -312,7 +313,7 @@ public class MemberDAO {
 	 * @return bList
 	 * @throws Exception
 	 */
-	public List<Board> myActiveList(Connection conn, PageInfo pInfo, Member loginMember) throws Exception{
+	public List<Board> selectMyActiveList(Connection conn, PageInfo pInfo, Member loginMember) throws Exception{
 		List<Board> bList = null;
 		
 		String query = prop.getProperty("myActiveList");
@@ -342,6 +343,8 @@ public class MemberDAO {
 				
 				bList.add(active);
 			}
+			// System.out.println("내 게시글 목록DAO " + bList);
+		
 		} finally {
 			close(rset);
 			close(pstmt);
@@ -379,10 +382,13 @@ public class MemberDAO {
 			while(rset.next()) {
 				Image img = new Image();
 				img.setFileName(rset.getString("FILE_NAME"));
+				img.setFilePath(rset.getString("FILE_PATH"));
 				img.setBrdNo(rset.getInt("BRD_NO"));
 				
 				iList.add(img);
 			}
+			// System.out.println("내 이미지 목록DAO " + iList);
+
 		}finally {
 			close(rset);
 			close(pstmt);
@@ -390,6 +396,78 @@ public class MemberDAO {
 		return iList;
 	}
 
+	/** 댓글 페이징 처리 DAO
+	 * @param conn
+	 * @param loginMember
+	 * @return listCount
+	 * @throws Exception
+	 */
+	public int getReplyPageInfo(Connection conn, Member loginMember) throws Exception{
+		int listCount = 0;
+		
+		String query = prop.getProperty("getReplyPageInfo");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, loginMember.getMemNo());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				listCount = rset.getInt(1);
+			}
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return listCount;
+		
+	}
 
-
+	/** 내가 쓴 댓글 목록 조회 DAO
+	 * @param conn
+	 * @param pInfo
+	 * @param loginMember
+	 * @return pList
+	 * @throws Exception
+	 */
+	public List<Reply> selectMyReplyList(Connection conn, PageInfo pInfo, Member loginMember) throws Exception{
+		List<Reply> pList = null;
+		
+		String query = prop.getProperty("selectMyReplyList");
+		
+		try {
+			int startRow = (pInfo.getCurrentPage() -1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() -1;
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, loginMember.getMemNo());
+			pstmt.setInt(2, startRow);
+			pstmt.setInt(3, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			pList = new ArrayList<Reply>();
+			
+			while(rset.next()) {
+				Reply reply = new Reply();
+				reply.setReplyNo(rset.getInt("COMM_NO"));
+				reply.setReplyContent(rset.getString("COMM_CONTENT"));
+				reply.setReplyDate(rset.getTimestamp("COMM_DATE"));
+				reply.setBrdNo(rset.getInt("BRD_NO"));
+				reply.setBrdTitle(rset.getString("TITLE"));
+				reply.setBrdType(rset.getString("BRD_TYPE"));
+				
+				pList.add(reply);
+			}
+			
+			// System.out.println("댓글 DAO " + pList);
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return pList;
+	}
 }
