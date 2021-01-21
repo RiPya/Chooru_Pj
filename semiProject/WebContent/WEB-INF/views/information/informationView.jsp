@@ -33,6 +33,7 @@
 
 /* board area */
 	#board-area{ 
+		min-height: 700px; /*반응형*/
 		margin-bottom : 100px; 
 	}
 	#board-content{ 
@@ -159,60 +160,50 @@
 </head>
 <body>
 
+			<%-- url 작성 시 붙여야 하는 str --%>
+	<!-- tp를 파라미터로 보낼 때 사용하는 변수 (cd X) -->
+	<c:set var="tpStr" value="tp=${param.tp}"/>
+	<!-- tp와 cd를 파라미터로 동시에 보낼 때 사용하는 변수 : 입양, 자유, 고객센터, 마이페이지는 필요함-->
+	<c:set var="tpCpNoStr" value="tp=${param.tp}&cp=${param.cp}&no=${param.no}"></c:set>
+
 	<!-- header.jsp -->
 	<jsp:include page="../common/header.jsp"></jsp:include>
 	
 	<div class="container my-5">
-	<div class="header-info">
-		<span class="form-info">고객 센터</span>
-		<span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
-	</div>
-	
-	<div class="container  my-5">
-		<div>
+		<div class="header-info">
+			<span class="form-info">고객 센터</span>
+			<span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
+		</div>
+	<div>
 			<div id="board-area">
 
 				<h3>
-				<!--Category ${info.infoCode} -->
-				<span class="mt-4 cd-color inline-block" id="code">신고</span>
+				<span class="mt-4 cd-color inline-block" id="code">${info.code}</span>
 				
-				<!--Title ${info.infoTitle} -->
-				<span class="mt-4 inline-block">광고 도배글 신고 </span>
+				<span class="mt-4 inline-block">${info.brdTitle}</span>
 				</h3>
 				<br>
 				
 				<p id="brd-second-area">
-				<!-- Writer ${info.nickName} -->
-					<span class="inline-block brd-second" id="writer">애옹이</span>
+					<span class="inline-block brd-second" id="writer">${info.nickName}</span>
 					
 					<!-- Date -->
 					<span class="brd-second inline-block">
-						2021-01-10 23:41:75
-						
-						<%-- <fmt:formatDate value="${info.brdCrtDt}" 
-														pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
-						<!-- 수정일을 굳이 상세 조회 때 출력해야하나? -->
-						<%--<br>
-						 마지막 수정일 : <fmt:formatDate value="${info.brdModify}" 
-																									pattern="yyyy년 MM월 dd일 HH:mm:ss"/> --%>
+						작성일 <fmt:formatDate value="${info.brdCrtDt}" pattern="yyyy년 MM월 dd일 HH:mm"/>
 					</span>
 					
 					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-					<!-- 댓글 ${info.replyCount} -->
-					<span class="float-right brd-second">댓글 2</span>
+					<span class="float-right brd-second">댓글 추가</span>
 					
-					<!-- 조회 ${info.readCount}-->
-			 		<span class="float-right brd-second">조회 12</span>
+			 		<span class="float-right brd-second">조회 ${info.readCount}</span>
 				</p>
 
 				<hr>
 
 				<!-- 썸머노트를 사용하면 content에 img파일에 <img>태그로 연결되기 때문에 
 						별도의 이미지 영역 필요 없음 -->
-				<!-- Content ${info.infoContent} -->
 				<div id="board-content">
-					고양이가 너무 귀여워요 <br>
-					키우고싶다 
+					${info.brdContent}
 				</div>
 				
 				<hr>
@@ -221,12 +212,12 @@
 				<div>
 					<%-- 로그인된 회원이 관리자인 경우 --%>
 					<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
-						<a href="#블라인드처리.do?${tpCdStr}" class="btn btn-danger float-right ml-1 mr-1">블라인드</a>
+						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button>
 					</c:if>
 					<%-- 로그인된 회원과 해당 글 작성자가 같은 경우--%>
-					<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>
+					<c:if test="${!empty loginMember && (info.nickName == loginMember.nickName)}">
 						<button id="deleteBtn" class="btn btn-secondary float-right" style="width: 75px;">삭제</button> 
-					<%-- </c:if> --%>
+					</c:if>
 					
 					
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
@@ -312,8 +303,16 @@
 	
 	
 	<script>
+	$(document).ready(function(){
+		// 삭제 버튼 클릭
+		$("#deleteBtn").on("click", function(){
+			if(confirm("정말 삭제하시겠습니까?")) {
+				location.href = "${contextPath}/information/delete.do?${tpCpNoStr}";
+			}
+		});
+	
 		//게시글의 카테고리 색상 정하는 즉시 실행 함수: 해당 td의 클래스 ="cd-color 
-		(function(){
+		(function(){	
 			$(".cd-color").each(function(index, item){
 				if($(item).text() == "문의" ){
 					$(item).css("color", "green");
@@ -322,6 +321,7 @@
 				}
 			});
 		})();
+	});
 	</script>
 </body>
 </html>

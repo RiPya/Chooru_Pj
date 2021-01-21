@@ -45,11 +45,6 @@
 	min-height: 540px;
 }
 
-
-
-
-
-
 /* 페이징바 */
 .pagination {
 	justify-content: center;
@@ -112,6 +107,26 @@
 	cursor : pointer;
 }
 
+/* 고객센터 라인 */
+.header-infomation {
+	width: 100%;
+	padding-top : 8px;
+	margin-bottom: 2rem;
+}
+.form-infomation {
+   font-size: 20px;
+   font-weight: bolder;
+   padding-right: 20px;
+} 
+.form-hr > hr{
+	height: 8px;
+	margin-bottom: .1rem;
+	display: inline-block;
+	background-color: teal;
+	border-radius: 1rem;
+}
+
+
 </style>
 
 </head>
@@ -129,7 +144,7 @@
 	<div class="container my-5">
 		<div class="header-info">
 			<span class="form-info">고객 센터</span>
-			<span class="form-hr" ><hr></span>
+			<span class="form-hr"><span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
 		</div>
 			
 		<div class="list-wrapper">
@@ -145,154 +160,149 @@
 					</tr>
 				</thead>
 				
-				<%-- 게시글 목록 출력 --%>
-				<tbody>
-				<%-- 확인용 --%>
-					<c:forEach var="info" begin="1" end="3">
-						<tr>
-							<td>302</td>
-							<td class="cd-color">신고</td>
-							<td class="info">
-								광고 도배글 신고 
-								<%--본문에 img가 있을 때 표시함 --%>
-								<!-- <i class="fas fa-file-image img-exist" style="color:darkgray;"></i> -->
-								<%--${info.replyCount} : 댓글 수 변수 vo에 넣기--%>
-								<span class="reply-count">(2)</span>	
-							</td>
-							<td>애옹이</td>
-							<td>2021-01-10</td>
-							<td>12</td>
-						</tr>
-						<tr>
-							<td>274</td>
-							<td class="cd-color">문의</td>
-							<td class="infoTitle">
-								입양 글 작성 관련 문의 
-								<%--본문에 img가 있을 때 표시함 --%>
-								<!-- <i class="fas fa-file-image img-exist" style="color:darkgray;"></i> -->
-								<%--${info.replyCount} : 댓글 수 변수 vo에 넣기--%>
-								<span class="reply-count">(2)</span>	
-							</td>
-							<td>애옹이</td>
-							<td>2021-01-09</td>
-							<td>4</td>
-						</tr>
-						<tr>
-							<td>240</td>
-							<td class="cd-color">문의</td>
-							<td class="infoTitle">
-								공지 이벤트 문의
-								<%--본문에 img가 있을 때 표시함 --%>
-								<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>
-								<%--${info.replyCount} : 댓글 수 변수 vo에 넣기--%>
-								<span class="reply-count">(1)</span>	
-							</td>
-							<td>애옹이</td>
-							<td>2021-01-08</td>
-							<td>11</td>
-						</tr>
-					</c:forEach>
-							<tr>
-									<td>230</td>
-									<td class="cd-color">신고</td>
-									<td class="infoTitle">
-										불량 회원 신고
-										<%--본문에 img가 있을 때 표시함 --%>
-										<!-- <i class="fas fa-file-image img-exist" style="color:darkgray;"></i> -->
-										<%--${info.replyCount} : 댓글 수 변수 vo에 넣기--%>
-										<!-- <span class="reply-count">[43]</span>	 -->
-									</td>
-									<td>애옹이</td>
-									<td>2021-01-01</td>
-									<td>9</td>
-							</tr>
-				
+				<%-- 게시글 목록 출력 --%>				
 				<!-- db연결 후 -->
 				<!-- 고객센터 게시판에 게시글이 없을 때 -->
-				<%-- <c:choose> 
-					<c:when test="${empty fList}">  
+				<c:choose> 
+					<c:when test="${empty ifList}">  
 						<tr>
 							<td colspan="6">존재하는 게시글이 없습니다.</td>
 						</tr>
 					</c:when>
-					<c:otherwise> --%>  <!-- 게시글이 있을 때 모두 출력--> 
+					<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> 
 					
-						<%-- 본인 글만 조회 (이렇게 하는거 맞나?) --%>
-						<%-- <c:if test="${!empty loginMember && (board.memberId == loginMember.memberId)}"> --%>		
-							<%-- <c:forEach var="info" items="${fList}">
+						<%-- 본인 글만 조회 --%>
+						 <c:forEach var="info" items="${ifList}">
+							 <c:if test="${!empty loginMember && (info.nickName == loginMember.nickName)}">
 								<tr>
-									<td>${info.infoBrdNo}</td>
-									<td class="cd-color">${info.infoCode}</td>
+									<td>${info.brdNo}</td>
+									<td class="cd-color">${info.code}</td>
 									<td class="infoTitle">
-										${info.infoTitle}
+										${info.brdTitle}
 										
-										<!-- 본문에 img가 있을 때 표시함 c:if 사용? -->
-										<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>		
+									<c:forEach var="img" items="${ifList}">
+						 				<c:if test="${info.brdNo == img.brdNo}">	
+						 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
+										</c:if>
+							 		</c:forEach>			
 																			
-										<!-- 댓글 수 : vo 필드에 replyCount 넣기 -->
-										<span class="reply-count">[${info.replyCount}]</span>	
+									<c:forEach var="comm" items="${commCounts}">
+										<c:if test='${comm.brdNo == info.brdNo}'>
+											<span class="reply-count">[${comm.count}]</span>
+										</c:if>	
+									</c:forEach>
+									
 									</td>
-									<td class="infoWriter">${info.memId}</td>
-									<td> 
-									<!-- 날짜 출력 모양 지정 변수 선언 -->
-										<!-- *조건 확인용 오늘 날짜 -->
+									<td class="infoWriter">${info.nickName}</td>
+									<td width="140px">
+									
+										<%-- 날짜 출력 모양 지정 변수 선언 --%>
+										<%-- *조건 확인용 오늘 날짜 --%>	
 										<fmt:formatDate var="today" 
 											value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/> 
 										<!-- *조회한 글의 작성 날짜 모양-->
-									<fmt:formatDate var="createDate" 
+										<fmt:formatDate var="createDate" 
 											value="${info.brdCrtDt}" pattern="yyyy-MM-dd"/>
 										
 										<c:choose> 	
-											작성일과 오늘이 아닐 경우 : yyyy-MM-dd형태의 createDate 출력
 											<c:when test="${createDate != today}">
-													${createDate}
+												${createDate}
 											</c:when> 
-											
-											<!-- 작성일이 오늘일 경우 : boardCreateDate를 HH:mm으로 시간만 출력 -->
-										<c:otherwise>
+		
+											<c:otherwise>
 												<fmt:formatDate 
 													value="${info.brdCrtDt}" pattern="HH:mm"/>
 											</c:otherwise>
 										</c:choose>	
-									</td>
-									<td>${info.readCount}</td>
-								</tr>
-							</c:forEach>
-							</c:if>	
+										</td>
+										<td>${info.readCount}</td>
+									</tr>
+									</c:if>
+
+									<%-- 본인 글이 아닐 경우 --%>
+									<c:if test="${!empty loginMember && info.nickName != loginMember.nickName && loginMember.grade != '0'.charAt(0)}">
+										<!-- <tr><td colspan="6">타 회원의 글 입니다 </td><tr> -->
+										<tr>
+											<td>${info.brdNo}</td>
+											<td class="cd-color">${info.code}</td>
+											<td class="infoTitle">
+												비밀 글 입니다.			
+						 					<i class="fas fa-lock" style="color:darkgray;"></i>
+										 	
+											<c:forEach var="comm" items="${commCounts}">
+												<c:if test='${comm.brdNo == info.brdNo}'>
+													<span class="reply-count">[${comm.count}]</span>
+												</c:if>	
+											</c:forEach>
+											
+											</td>
+											<td class="infoWriter">-</td>
+											<td width="140px">
+											
+											<%-- 날짜 출력 모양 지정 변수 선언 --%>
+											<%-- *조건 확인용 오늘 날짜 --%>	
+											<fmt:formatDate var="today" 
+												value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/> 
+											<!-- *조회한 글의 작성 날짜 모양-->
+											<fmt:formatDate var="createDate" 
+												value="${info.brdCrtDt}" pattern="yyyy-MM-dd"/>
+												
+											<c:choose> 	
+												<c:when test="${createDate != today}">
+													${createDate}
+												</c:when> 
+			
+												<c:otherwise>
+													<fmt:formatDate 
+														value="${info.brdCrtDt}" pattern="HH:mm"/>
+												</c:otherwise>
+											</c:choose>	
+											</td>
+											<td>${info.readCount}</td>
+										</tr>
+									</c:if>
+
+								</c:forEach>
 						
 						<%-- 로그인된 계정이 관리자 등급인 경우 --%>	
-						<%-- <c:if test="${!empty loginMember && loginMember.memberGrade == 0}"> --%>		
-							<%-- <c:forEach var="info" items="${fList}">
+						 <c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">	
+							 <c:forEach var="info" items="${ifList}">
 								<tr>
-									<td>${info.infoBrdNo}</td>
-									<td class="cd-color">${info.infoCode}</td>
+									<td>${info.brdNo}</td>
+									<td class="cd-color">${info.code}</td>
 									<td class="infoTitle">
-										${info.infoTitle}
+										${info.brdTitle}
 										
-										<!-- 본문에 img가 있을 때 표시함 c:if 사용? -->
-										<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>		
+										<c:forEach var="img" items="${ifList}">
+							 				<c:if test="${info.brdNo == img.brdNo}">	
+							 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
+											</c:if>
+								 		</c:forEach>	
 																			
-										<!-- 댓글 수 : vo 필드에 replyCount 넣기 -->
-										<span class="reply-count">[${info.replyCount}]</span>	
+									<!-- 글번호가 같을 때 댓글 수 추가 -->
+										<c:forEach var="comm" items="${commCounts}">
+											<c:if test='${comm.brdNo == free.brdNo}'>
+												<span class="reply-count">[${comm.count}]</span>
+											</c:if>	
+										</c:forEach>
 									</td>
-									<td class="infoWriter">${info.memId}</td>
-									<td> 
-									<!-- 날짜 출력 모양 지정 변수 선언 -->
-										<!-- *조건 확인용 오늘 날짜 -->
+									
+									<td class="infoWriter">${info.nickName}</td>
+									<td width="140px"> 
+									<%-- 날짜 출력 모양 지정 변수 선언 --%>
+										<%-- *조건 확인용 오늘 날짜 --%>
 										<fmt:formatDate var="today" 
 											value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/> 
-										<!-- *조회한 글의 작성 날짜 모양-->
+										<%-- *조회한 글의 작성 날짜 모양--%>
 									<fmt:formatDate var="createDate" 
 											value="${info.brdCrtDt}" pattern="yyyy-MM-dd"/>
 										
 										<c:choose> 	
-											작성일과 오늘이 아닐 경우 : yyyy-MM-dd형태의 createDate 출력
 											<c:when test="${createDate != today}">
 													${createDate}
 											</c:when> 
-											
-											<!-- 작성일이 오늘일 경우 : boardCreateDate를 HH:mm으로 시간만 출력 -->
-										<c:otherwise>
+					
+											<c:otherwise>
 												<fmt:formatDate 
 													value="${info.brdCrtDt}" pattern="HH:mm"/>
 											</c:otherwise>
@@ -303,7 +313,7 @@
 							</c:forEach>
 							</c:if>					 	
 					 </c:otherwise>
-					</c:choose> --%>
+					</c:choose>
 					
 				</tbody>
 			</table>
@@ -311,44 +321,96 @@
 
 
 			<%-- 로그인이 되어있는 경우 --%>
-	<%--c:if test="${!empty loginMember}" --%>
-				<button type="button" class="btn btn-teal float-right" id="insertBtn" 
-							onclick="location.href='${contextPath}/information/informationInsertForm.do?${tpStr}'">글쓰기</button>
-	<%--/c:if --%>
+		<c:if test="${!empty loginMember}">
+			<button type="button" class="btn btn-teal float-right" id="insertBtn" 
+							onclick="location.href='${contextPath}/information/insertForm.do?${tpStr}'">글쓰기</button>
+		</c:if>
 	
 			<%---------------------- Pagination ----------------------%>
 			<%-- boardList.jsp에서 복붙한 거 놔두면 오류나서 메모장 파일에 옮겨놓음 --%>
 			<!-- cd가 없다면 href의 url 뒤에 -->
 			
+			<%-- 파라미터의 sk(searchKey)와 sv(searchValue)가 비어있지 않을 때
+					 == 검색 후 페이징바 클릭 --%>
+			<c:choose>
+				<c:when test="${!empty param.sk && !empty param.sv}">
+				 	<c:url var="pageUrl" value="/search.do"/>
+				 	
+				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
+				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
+				</c:when>
+				
+				<%-- 비어있을 때 --%>
+				<c:otherwise>
+					<c:url var="pageUrl" value="/information/list.do"/>
+				</c:otherwise>
+			</c:choose>
 			
-			<!-- 임시 확인용 Pagination -->
+			
+			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
+			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${searchStr}"/>
+			
+			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
+				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
+				integerOnly="true" : 정수로만 숫자를 표현(소수점 버림)
+			--%>
+			<%-- pInfo.pageSize : 10 --%>
+			<!-- < 화살표를 눌렀을 때 이전 페이징의 endPage가 prev가 되도록 -->
+			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
+			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${searchStr}"/>
+			
+			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
+			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
+			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${searchStr}"/>
+			
+			
 			<div class="my-5">
-				<ul class="pagination">
+			<ul class="pagination">
+					<%-- 현재 페이지가 10페이지 초과인 경우 --%>
+					<c:if test="${pInfo.currentPage > pInfo.pageSize}">
 						<li> <!-- 첫 페이지로 이동(<<) -->
-							<a class="page-link" href="#">&lt;&lt;</a>
+							<a class="page-link" href="${firstPage}">&lt;&lt;</a>
 						</li>
 						<li> <!-- 이전 페이지로 이동(<) -->
-							<a class="page-link" href="#">&lt;</a>
+							<a class="page-link" href="${prevPage}">&lt;</a>
 						</li>
-						
-						<c:forEach var='i' begin="1" end="10">
-							<li>
-								<a class="page-link <c:if test="${param.cp==i}">pag-active</c:if>" 
-									href="#">${i}</a>
+					</c:if>
+					
+					<!-- 페이지 목록 -->
+					<c:forEach var='page' begin="${pInfo.startPage}" end="${pInfo.endPage}">
+						<c:choose>
+						<c:when test="${pInfo.currentPage == page}">
+							<li> <!-- 현재 페이지인 경우 활성화 -->
+								<a class="page-link pag-active">${page}</a>
 							</li>
-						</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<li>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${searchStr}">${page}</a>
+							</li>
+						</c:otherwise>
+						</c:choose>
+					</c:forEach>
 						
+					<%-- 다음 페이징의 첫번째 페이지가 마지막 페이지 미만일 경우 --%>	
+					<c:if test="${next <= pInfo.maxPage}">
 						<li> <!-- 이전 페이지로 이동(>>) -->
-							<a class="page-link" href="#">&gt;</a>
+							<a class="page-link" href="${nextPage}">&gt;</a>
 						</li>
 						<li> <!-- 마지막 페이지로 이동(>>) -->
-							<a class="page-link" href="#}">&gt;&gt;</a>
+							<a class="page-link" href="${lastPage}">&gt;&gt;</a>
 						</li>
-				</ul>
+					</c:if>
+					</ul>
 			</div>
 						
 		
-				<!-- 검색창 : type:게시판코드(자유는 b4), cd:자유카테고리(검색창에서 설정)-->
+				<!-- 검색창 : type:게시판코드(고객센터는 b5) -->
 				<!-- 게시판코드를 파라미터로 넘겨야 할까? -->
 			<div class="my-5">
 				<form action="${contextPath}/informationSearch.do?${tpStr}" method="GET" class="text-center " 
@@ -382,10 +444,8 @@
 
 
 	<script>
-		$(document).ready(function(){
-			
+		$(document).ready(function(){		
 				$(".info").on("click", function(){
-					
 					var url = "${contextPath}/information/list.do?${tpStr}&cp=1&cd=" + infoCode;
 									//cp(페이지), tp(게시판타입 b1 b2 b3 b4 adminMem b5 mypage), cd(카테고리)
 									//tpStr = tp=_
@@ -393,7 +453,8 @@
 					location.href = url;
 				});
 
-					//글 목록의 카테고리 색상 정하는 즉시 실행 함수: 해당 td의 클래스 ="cd-color 
+
+				// 글 목록의 카테고리 색상 정하는 즉시 실행 함수: 해당 td의 클래스 ="cd-color 
 				(function(){
 					$(".cd-color").each(function(index, item){
 						if($(item).text() == "문의" ){
@@ -406,16 +467,27 @@
 		});
 		
 
+		
+		
 		// 게시글 상세보기 기능 (jquery를 통해 작업)
 		$("#list-table td").on("click", function(){
+			
+			var infoNm = $(this).parent().children().eq(3).text();
+			var loginNm = "${loginMember.nickName}"; 
+			var loginAd = "${loginMember.grade}";
+			
 			//게시글 번호 얻어오기
 			var infoBrdNo = $(this).parent().children().eq(0).text();
-			
-			var url = "${contextPath}/information/view.do?${tpCdStr}&cp=${pInfo.currentPage}&no=" + infoBrdNo; 
-																	//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
+	
+			// 비밀글 조회 제어
+			if(infoNm == loginNm || loginAd == 0 ){	
+				var url = "${contextPath}/information/view.do?${tpStr}&cp=${pInfo.currentPage}&no=" + infoBrdNo; 
+																	//cp(페이지), tp(게시판타입 b5 고객센터), no 글번호
 																	//tpCdStr : "tp=_&cd=_"
-			location.href = url;     
+				location.href = url;     
+			}
 		});
+		
 		
 		// 고객센터 검색 jsp에서 사용
 		/* 		//검색 내용이 있을 경우 검색창에 해당 내용을 작성해두는 즉시 실행 함수
