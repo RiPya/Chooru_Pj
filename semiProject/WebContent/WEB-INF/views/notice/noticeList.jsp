@@ -263,7 +263,7 @@
 			<%-- 파라미터의 sk(searchKey)와 sv(searchValue)가 비어있지 않을 때  == 검색 후 페이징바 클릭 --%>
 			<c:choose>
 				<c:when test="${!empty param.sk && !empty param.sv}">
-				 	<c:url var="pageUrl" value="/search.do"/>
+				 	<c:url var="pageUrl" value="search/noticeSearch.do"/>
 				 	
 				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
 				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>

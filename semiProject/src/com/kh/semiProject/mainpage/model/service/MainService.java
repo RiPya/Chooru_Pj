@@ -33,11 +33,53 @@ public class MainService {
 	 * @return iList
 	 * @throws Exception
 	 */
-	public List<Image> selectThumbMain() throws Exception{
+	public List<Image> selectReviewThumb() throws Exception{
 		
 		Connection conn = getConnection();
 		
-		List<Image> iList = dao.selectThumbMain(conn);
+		List<Image> iList = dao.selectReviewThumb(conn);
+		
+		close(conn);
+		
+		return iList;
+	}
+
+	/**메인 공지사항 목록 조회 service
+	 * @return nList
+	 * @throws Exception
+	 */
+	public List<Board> selectNoticeMain() throws Exception{
+		Connection conn = getConnection();
+		
+		List<Board> nList = dao.selectNoticeMain(conn);
+		
+		close(conn);
+		
+		return nList;			
+	}
+
+	/**메인 입양/분양 목록 조회 service
+	 * @return aList
+	 * @throws Exception
+	 */
+	public List<Board> selectAdoptMain() throws Exception {
+		Connection conn = getConnection();
+		
+		List<Board> aList = dao.selectAdoptMain(conn);
+		
+		close(conn);
+		
+		return aList;
+	}
+
+	/**메인 입양/분양 목록 썸네일 목록 service
+	 * @return iList
+	 * @throws Exception
+	 */
+	public List<Image> selectAdoptThumb() throws Exception{
+		Connection conn = getConnection();
+		
+		List<Image> iList = dao.selectAdoptThumb(conn);
 		
 		close(conn);
 		
