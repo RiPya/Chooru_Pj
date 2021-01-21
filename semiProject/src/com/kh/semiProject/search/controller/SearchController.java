@@ -146,6 +146,34 @@ public class SearchController extends HttpServlet {
 			else if(command.equals("/noticeSearch.do")) {
 				errorMsg = "게시판 내 검색 과정에서 오류 발생";
 				
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("currentPage", currentPage);
+				map.put("keyValue", keyValue);
+				map.put("tpCondition", tpCondition);
+				map.put("cdCondition", cdCondition);
+				map.put("brdType", brdType);
+				
+				//1.페이징 처리를 위한 값 계산 service 호출
+				PageInfo pInfo = service.getSearchPage(map);
+				
+				map.put("pInfo", pInfo);
+				
+				//2.게시글 목록 조회 비즈니스 로직 수행
+				List<Board> nList = service.searchInsideList(map);
+				
+				if(nList != null) {
+					List<Image> iList = service.selectSearchThumbs(map);
+					
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+				}
+
+				request.setAttribute("nList", nList);
+				request.setAttribute("pInfo", pInfo);
+				
+				
 				path = "/WEB-INF/views/notice/noticeList.jsp";
 				//검색 과정은 모두 이 과정으로?
 				
@@ -171,7 +199,7 @@ public class SearchController extends HttpServlet {
 				map.put("pInfo", pInfo);
 				
 				//2.게시글 목록 조회 비즈니스 로직 수행
-				List<Adoption> aList = service.searchAoptList(map);
+				List<Adoption> aList = service.searchAdoptList(map);
 				
 				if(aList != null) {
 					List<Image> iList = service.selectSearchThumbs(map);
