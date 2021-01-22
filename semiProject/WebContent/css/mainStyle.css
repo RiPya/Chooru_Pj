@@ -74,10 +74,10 @@ div, td, tr, img, a { box-sizing : border-box;}
 }
 
 .main-left, .main-right {
-    width : 50%;
+    width : 48%;
     height: 600px;
     margin-top : 50px;
-    float : left;
+    float : left; 
 }
 
 /*게시판 색상 div*/
@@ -225,7 +225,7 @@ div, td, tr, img, a { box-sizing : border-box;}
 
 /* index(main) + main-down 반응형 @media */
 /* 990px 이하일 경우 스타일 지정 */
-@media screen and (max-width : 990px){
+@media screen and (max-width : 992px){
 	
 	/* main-up 메인 윗부분 */
 	/* 입양/분양 carousel 부분 div */
@@ -263,6 +263,15 @@ div, td, tr, img, a { box-sizing : border-box;}
  	  top : 960px;
 	}
 	
+	.noneAdopt{
+		font : 26px/800px "TmoneyRoundWindRegular";/*style size/height family*/
+		color : white;
+		text-align : center;
+		width : 100%;
+		height : 80%;
+		margin-top : 40px;
+}
+	
 	
 	/* ----------------------------------- */
 	/* 메인 아래 */
@@ -270,10 +279,12 @@ div, td, tr, img, a { box-sizing : border-box;}
 	/* main-down(메인의 밑부분) style */
 	/* <공통> */
 	.main-left, .main-right {
-    width : 100%;
-    height: 600px;
-    margin-top : 50px;
+    width : 80% !important;
+    height: 400px;
+    margin : 50px 10%;
     padding : 0;
+    clear : left;
+    
 	}
 
 	/* <공지사항 박스(왼)> */

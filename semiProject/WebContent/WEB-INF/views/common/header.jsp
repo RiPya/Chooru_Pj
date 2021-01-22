@@ -20,7 +20,7 @@
 		<script src="https://kit.fontawesome.com/2dd9466b88.js" crossorigin="anonymous"></script>
 	
 		<!-- header의 css + btn-teal 버튼 -->
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerStyle.css?ver=1.5">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerStyle.css?ver=1.8">
 
 		<!-- Postcodify 오픈 소스 -->
 		<script src="//d1p7wdleee1q2z.cloudfront.net/post/search.min.js"></script>
@@ -117,7 +117,7 @@
 	                  <li class="nav-item">  <!-- active 클래스를 주기 위해 현재 활성화된 게시판 타입(type)을 Controller에서 
 	                  																								출력화면으로 요청 위임할 때 request에 저장하기  -->
 	                          <a class="nav-link <c:if test="${param.tp == 'b1'}"> active </c:if>" 
-	                          		id="notice" href="${contextPath}/notice/list.do?tp=b1">공지사항</a>
+	                          		id="notice" href="${contextPath}/notice/list.do?tp=b1">공지 사항</a>
 	                  </li>
 	                  <li class="nav-item">
 	                          <a class="nav-link <c:if test="${param.tp == 'b2'}"> active </c:if>" 
@@ -129,7 +129,7 @@
 	                  </li>
 	                  <li class="nav-item">
 	                          <a class="nav-link <c:if test="${param.tp == 'b4'}"> active </c:if>" 
-	                          		id="free" href="${contextPath}/free/list.do?tp=b4">자유게시판</a>
+	                          		id="free" href="${contextPath}/free/list.do?tp=b4">자유 게시판</a>
 	                  </li>
 	                  
 	                  <c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0) }"> 
@@ -167,7 +167,7 @@
 	                  <!--로그인이 되어 있을 때-->
 	                	 <ul class="navbar-nav">
 	                          <li class="nav-item header-right-users">
-	                             <a class="nav-link" data-toggle="modal" href="#modal-checkPwd">
+	                             <a class="nav-link no-padding" data-toggle="modal" href="#modal-checkPwd">
 	                               <div class="icon-text" id="mypage">
 	                                   <i class="fas fa-user-alt 
 	                                   			<c:if test="${param.tp == 'mypage'}"> active </c:if>"

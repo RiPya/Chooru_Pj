@@ -15,7 +15,7 @@
 
 <!-- 공지사항 박스 -->
 				<div class=" main-down">
-            <div class="col-md-6 content main-left">
+            <div class="col-lg-6 content main-left">
             
                 <table class="table" id="main-notice">
                 <tr>
@@ -35,7 +35,7 @@
             </div>
             
             <!-- 입양 후기 박스 -->
-            <div class="col-md-6 content main-right">
+            <div class="col-lg-6 content main-right">
                 <table class="table" id="main-review">
                     <tr>
                         <th class="main-label">
