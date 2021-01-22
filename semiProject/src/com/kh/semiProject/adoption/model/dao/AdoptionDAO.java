@@ -108,6 +108,7 @@ public class AdoptionDAO {
 				adoption.setNickName(rset.getString("N_NM"));
 				adoption.setAdtBrdNo(rset.getInt("BRD_NO"));
 				
+				
 				aList.add(adoption);
 			}
 		} finally {
@@ -309,7 +310,7 @@ public class AdoptionDAO {
 			pstmt = conn.prepareStatement(query);
 			
 			pstmt.setInt(1, (int)map.get("brdNo"));
-			pstmt.setString(2, (String)map.get("category"));
+			pstmt.setString(2, (String)map.get("adtCode"));
 			pstmt.setString(3, (String)map.get("adtBreed"));
 			pstmt.setString(4, (String)map.get("adtGender"));
 			pstmt.setString(5, (String)map.get("adtAge"));

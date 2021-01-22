@@ -146,7 +146,7 @@ public class FreeService {
 	 */
 	public Board selectFree(int brdNo) throws Exception{
 		Connection conn = getConnection();
-		System.out.println("brdNo : "+ brdNo);
+		//System.out.println("brdNo : "+ brdNo);
 		
 		Board free = dao.selectFree(conn, brdNo);
 		
