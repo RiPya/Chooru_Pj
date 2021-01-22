@@ -508,10 +508,10 @@ public class MemberDAO {
 	 * @return result
 	 * @throws Exception
 	 */
-	public int emailCheck(Connection conn, Member member) throws Exception{
+	public int memberIdCheck(Connection conn, Member member) throws Exception{
 		int result = 0;
 		
-		String query = prop.getProperty("emailCheck");
+		String query = prop.getProperty("memberIdCheck");
 		
 		try {
 			pstmt = conn.prepareStatement(query);
@@ -532,4 +532,89 @@ public class MemberDAO {
 	}
 
 
+	/** 비밀번호 찾기 회원 일치용 DAO
+	 * @param conn
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int memberPwdCheck(Connection conn, Member member) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("memberPwdCheck");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, member.getMemId());
+			pstmt.setString(2, member.getMemNm());
+			pstmt.setString(3, member.getEmail());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return result;
+	}
+
+
+	/** 회원 비밀번호 찾기 DAO
+	 * @param conn
+	 * @param loginMember 
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int findPwd(Connection conn, Member loginMember) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("findPwd");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, loginMember.getMemPw());
+			pstmt.setInt(2, loginMember.getMemNo());
+			
+			result = pstmt.executeUpdate();
+		} finally {
+			close(pstmt);
+		}
+		return result;
+	}
+
+
+	/** 아이디 찾기 결과 DAO
+	 * @param conn
+	 * @param loginMember
+	 * @return result 
+	 * @throws Exception
+	 */
+	public String myId(Connection conn, Member member) throws Exception{
+		String memberId = null;
+		
+		String qeury = prop.getProperty("myId");
+		
+		try {
+			pstmt = conn.prepareStatement(qeury);
+			
+			pstmt.setString(1, member.getMemNm());
+			pstmt.setString(2, member.getEmail());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				memberId = rset.getString("MEM_ID");
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return memberId;
+	}
 }

@@ -91,7 +91,7 @@
 							<label for="email">* 이메일</label>
 						</div>
 						<div class="col-md-6" id="email-div">
-							<input type="email" class="form-control" id="email" name="email" placeholder="이메일" autocomplete="off" required>
+							<input type="email" class="form-control" id="email" name="email" placeholder="이메일" autocomplete="off" value="${loginMember.email}" required>
 						</div>
 						<button class="btn btn-secondary" type="button" id="certifyBtn">인증</button>
 						<div class="col-md-6 offset-md-3">
@@ -104,7 +104,7 @@
 							<label for="email">* 이메일 인증</label>
 						</div>
 						<div class="col-md-6">
-							<input type="text" class="form-control" id="certify" name="certify" placeholder="이메일 인증번호" autocomplete="off" required>
+							<input type="text" class="form-control" id="certify" name="certify" placeholder="이메일 인증번호" autocomplete="off">
 						</div>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkCertify">&nbsp;</span>

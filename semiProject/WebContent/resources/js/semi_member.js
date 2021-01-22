@@ -7,6 +7,7 @@ var validateCheck = {
     "phone": false,
     "nickName": false,
     "email": false,
+	"certify": false
 }
 
 // 아이디 유효성 검사
@@ -85,23 +86,30 @@ $("#email").on("input", function(){
 	}
 });
 
+var sendKey;
 
-var isCertification; //추후 인증 여부를 알기위한 값
-
-$("certifyBtn").on("click", function(){
+// 이메일 인증을 위한 검사
+$("#certifyBtn").on("click", function(){
 	var email = $("#email").val();//사용자 이메일
+	console.log(email)
+	console.log( getContextPath())
+	
 	if(email == "" || !validateCheck.email){//이메일이 입력 안 됐거나 유효성 검사에 실패한 경우
 		 swal({icon: "warning", title: "올바른 이메일을 입력하세요."});
 	} else {
 		 $.ajax({
 				type : 'post',
-				url : '${contextPath}/sendEmail.do',
+				url : getContextPath() + '/sendEmail.do',
 				data : {"email": email},
-				sucess : function(key){
+				async : false,
+				success : function(result){
 					$("#checkCertify").text("인증번호가 발송되었습니다.").css("color", "red");
-					isCertification = false;
+					validateCheck.certify = false;
+					console.log(result);
+					
+					sendKey = result;
 				},
-				else : function(){
+				error : function(){
 					console.log("인증번호 발송 과정에서 오류 발생");
 				}
 		});//이메일 전송 ajax 끝
@@ -109,6 +117,22 @@ $("certifyBtn").on("click", function(){
 });
 
 
+function getContextPath() {
+   var hostIndex = location.href.indexOf( location.host ) + location.host.length;
+   return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
+};
+
+
+// 인증 키 일치여부 확인
+$("#certify").on("propertychange change keyup paste input", function() {
+		if ($("#certify").val() == sendKey) {   //인증 키 값을 비교를 위해 텍스트인풋과 벨류를 비교
+			$("#checkCertify").text("인증 성공!").css("color", "green");
+			validateCheck.certify = true;  //인증 성공여부 check
+		} else {
+			$("#checkCertify").text("인증번호 불일치!").css("color", "red");
+			validateCheck.certify = false; //인증 실패
+		}
+	});
 
 
 
@@ -231,6 +255,7 @@ function validate(){
             // 어떤 key값 중 하나라도 false가 나왔을 때
 
             var msg;
+			var msf;
             switch(key){
                 case "id": msg="아이디가"; break;
                 case "pwd1": 
@@ -240,9 +265,13 @@ function validate(){
                 case "email": msg="이메일이"; break;
                 case "nickName": msg="닉네임이"; break;
             }
-            swal(msg + " 유효하지 않습니다.");
-
-            $("#" + key).focus();
+			if(key == certify){
+				swal({icon: "warning",
+					  title: "이메일 인증이 완료되지 않았습니다."});
+			}else{
+	            swal(msg + " 유효하지 않습니다.");
+			}
+	        $("#" + key).focus();
 
             return false;
         }
@@ -285,12 +314,44 @@ function updateMyInfoValidate(){
         updateCheck.email = true;
     }
     
+		
     // 닉네임 유효성 검사
     var regExp3 = /^[\w\Wㄱ-ㅎㅏ-ㅣ가-힣]{2,20}$/;
     if(!regExp3.test($("#nickName").val())){
         updateCheck.nickName = false;
     }else{
         updateCheck.nickName = true;
+    }
+
+    // updateCheck 내부에 저장된 값 검사
+    for(var key in updateCheck){
+        if(!updateCheck[key]){ // false인 경우
+            swal("일부 값이 유효하지 않습니다.");
+            return false;
+        };
+    }
+}
+
+
+// 아이디 찾기 유효성검사
+function IdFindValidate(){
+    var updateCheck = { "name": false,
+                        "email": false}
+
+    // 이름 유효성 검사
+    var regExp1 = /^[가-힇]{2,10}$/;
+    if(!regExp1.test($("#name").val())){
+        updateCheck.name = false;
+    }else{
+        updateCheck.name = true;
+    }
+
+    // 이메일 유효성 검사
+    var regExp4 =  /^[\w]{4,}@[\w]+(\.[\w]+){1,3}$/;
+    if(!regExp4.test($("#email").val())){
+        updateCheck.email = false;
+    }else{
+        updateCheck.email = true;
     }
 
     // updateCheck 내부에 저장된 값 검사

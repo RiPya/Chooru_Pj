@@ -126,11 +126,43 @@ WHERE RNUM BETWEEN ? AND ?
 </entry>
 
 
-<!-- 이메일 일치여부 -->
-<entry key="emailCheck">
+<!-- 아이디찾기 회원 일치여부 -->
+<entry key="memberIdCheck">
 SELECT COUNT(*)
 FROM MEMBER
 WHERE MEM_NM = ?
 AND EMAIL = ?
+AND (GRADE = '0' OR GRADE = '1')
 </entry>
+
+<!-- 아이디찾기 결과 -->
+<entry key="myId">
+SELECT MEM_ID
+FROM MEMBER
+WHERE MEM_NM = ?
+AND EMAIL = ?
+AND (GRADE = '0' OR GRADE = '1')
+</entry>
+
+<!-- 비밀번호 찾기 회원 일치여부 -->
+<entry key="memberPwdCheck">
+SELECT COUNT(*)
+FROM MEMBER
+WHERE MEM_ID = ?
+AND MEM_NM = ?
+AND EMAIL = ?
+AND (GRADE = '0' OR GRADE = '1')
+</entry>
+
+
+<!-- 비밀번호 찾기 -->
+<entry key="findPwd">
+UPDATE MEMBER SET
+MEM_PW = ?
+WHERE MEM_NM = ?
+AND MEM_ID = ?
+AND EMAIL = ?
+AND (GRADE = '0' OR GRADE = '1')
+</entry>
+
 </properties>

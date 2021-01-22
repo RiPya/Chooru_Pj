@@ -146,7 +146,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 								<h6>메일주소:</h6>
 							</div>
 							<div class="inputArea inputType">
-								<input type="text" class="form-control" id="email" name="email"
+								<input type="email" class="form-control" id="email" name="email"
 									placeholder="인증 받을 메일주소">
 							</div>
 							<div class="inputArea inputButton">
