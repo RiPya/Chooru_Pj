@@ -86,10 +86,21 @@ div { box-sizing: border-box; }
 }
 
 .icon-text {
-    width : 40px;
+    min-width : 40px;
     height : 60px;
     margin-top : 0px; 
 }
+
+#nickname {
+	display: block;
+	min-width : 40px;
+}
+
+.no-padding {
+	padding : 10px 0px !important;
+}
+
+
 #cs-icon, #logout-icon { 
     font-size : 40px; 
     color : rgb(51,51,51);
@@ -155,11 +166,20 @@ div { box-sizing: border-box; }
 
 /*------------------- header 반응형 @media ---------------------*/
 /* nav는 기본 부트스트랩 내의 반응형 사용 + header-right 부분 추가*/
+
+/* 1150px 이하일 경우 스타일 지정 */
+@media screen and (max-width : 1160px){
+	.header-nav .nav-link { width : 90px;  }
+	#search-input { width : 100px;}
+	#searchInput { width : 160px; }
+}
+
 /* 990px 이하일 경우 스타일 지정 */
-@media screen and (max-width : 990px){
+@media (max-width : 990px){
     .header-nav .nav-link {
         font-size : 20px;
         text-align: center;
+        width : 100%;
     }
 
     .header-right {
@@ -168,6 +188,10 @@ div { box-sizing: border-box; }
         height : 80px; 
         line-height: 0;
     }    
+    
+    .no-padding {
+			padding : 8px 0px !important;
+		}	
 
 /*  .header-right > ul { display : inline-block !important; }
     .header-right > ul > li { 
@@ -180,11 +204,13 @@ div { box-sizing: border-box; }
     .header-right > ul { display : inline-block !important; }
     .header-right-users { 
     	float: left !important; 
-    	margin-left : 16px;
+    	margin-left : 5px;
     }
     .header-right-users #mypage, #login { margin-top : 5px; }
     #nickname, #login>span { margin-top : 5px; }
     .header-right-users #cs-page, #logout { margin-right : 3px; }
+    #logout { margin-left : 10px;}
+
 
 }
 

@@ -10,7 +10,7 @@
     <title>Semi Project</title>
     
     <%-- header에 넣으면 안됨 / css파일은 WEB-INF 밖에? --%>
-		<link rel="stylesheet" href="css/mainStyle.css?ver=2.5" type="text/css">
+		<link rel="stylesheet" href="css/mainStyle.css?ver=2.6" type="text/css">
 </head>
 <body>
     <!-- header.jsp include -->
@@ -195,7 +195,19 @@
 				selectAdoptList();
 			});
 
-
+			
+			$(window).resize(function(){
+	    		if($(window).width() < 992) {
+	    			$(".carousel-control-next-icon").addClass("sr-only");
+	    			$(".carousel-control-prev-icon").addClass("sr-only");
+	    		}
+	    });
+			$(window).resize(function(){
+	    		if($(window).width() > 992) {
+	    			$(".carousel-control-next-icon").removeClass("sr-only");
+	    			$(".carousel-control-prev-icon").removeClass("sr-only");
+	    		}
+	    });
 
     
 </script>
