@@ -98,46 +98,38 @@
 					var aList = map.aList;
 					var iList = map.iList;
 					
+					//carousel div 내부 리셋
+					for(var i=1; i<=3; i++){
+						$("#carousel"+i).html();
+					}
 					
-					if(aList == null){ //aList가 없을 때
-						$(".carousel-inner").html();
-						var wrapper = $("<div>").addClass("carousel-item main-adopt");
-						var adopt = $("<div>").addClass("main-adopt-div");
+					if(aList.length == 0){ //aList가 없을 때
 						
-						var url = "${pageContext.request.contextPath}/css/yamung_logo_2.png";
-						var img = $("<img>").add("d-block w-100").attr("src", url);
+						for(var i=1; i<=3; i++){
+								var noneAdopt = $("<div>").addClass("noneAdopt").text("아직 입양/분양 게시글이 없습니다.");
+								$("#carousel"+i).append(noneAdopt);
+						} 
 						
-						for(var i=0; i<3; i++){
-							adopt.append(img);
-						}
-						wrapper.append(adopt);
-						
-						$(".carousel-inner").append(wrapper);
 					}//aList가 없을 때 if문 끝
 					
 					else {//aList가 있을 때
 						<%-- 아래 div(main-adopt)
 									<div class="carousel-item main-adopt <c:if test="${i == 0}">active</c:if>">
 											<div class="main-adopt-div">
-	                       <img class="d-block w-100" alt="${adoption.adoptBrdTitle}" 
-	                       															src="#" />
-	                       <span class="sr-only">${adoption.adoptBrdNo }</span>
+	                       <img class="d-block w-100" alt="${adoption.adoptBrdTitle}" src="#" />
 	                   	</div>
 											<div class="main-adopt-div">
-	                       <img class="d-block w-100" alt="${adoption.adoptBrdTitle}" 
-	                       															src="#" />
-	                       <span class="sr-only">${adoption.adoptBrdNo }</span>
+	                       <img class="d-block w-100" alt="${adoption.adoptBrdTitle}" src="#" />
 	                   	</div>
 	                   	<div class="main-adopt-div">
-	                       <img class="d-block w-100" alt="${adoption.adoptBrdTitle}" 
-	                       															src="#" />
-	                       <span class="sr-only">${adoption.adoptBrdNo }</span>
+	                       <img class="d-block w-100" alt="${adoption.adoptBrdTitle}" src="#" />
 	                   	</div>
 									</div>
 							 --%>	
+							 
 							//carousel div 번호 추가를 위한 변수 
  							var count = 1;
-							 
+							
 							$.each(aList, function(index, item){
 								
 								var adopt = $("<div>").addClass("main-adopt-div")
@@ -176,6 +168,13 @@
 									if(index == 3*count-1) count++;									
 									
 							}); //carousel 만드는 for문 끝
+							
+							for(var i=1; i<=3; i++){
+								if($("#carousel"+i).html().trim().length == 0){
+									var noneAdopt = $("<div>").addClass("noneAdopt").text("입양/분양 글 보러 오세요.");
+									$("#carousel"+i).append(noneAdopt);
+								}
+							} 
 							
 						}//else문 끝(list 있을 때)
 					
