@@ -97,17 +97,16 @@ h4 {
 				<h4 style="padding-left: 50px">비밀번호 찾기</h4>
 
 				<div class="container">
-					<form method="POST" action="myIdFind.do"
-						onsubmit="return IdFindValidate();" class="form-horizontal"
+					<form method="POST" action="myIdFind.do" class="form-horizontal"
 						role="form">
 						<div class="area text-area">
 							<h6>비밀번호가 변경되었습니다.</h6>
 						</div>
 
 						<div class="area button-area">
-							<button type="submit" class="btn btn-teal">로그인 하기</button>
-							<button type="button" class="btn btn-darkteal">아이디 찾기</button>
-							<button type="menu" class="btn btn-secondary">메인 페이지로</button>
+							<button type="submit" class="btn btn-teal find">로그인 하기</button>
+							<button type="button" class="btn btn-darkteal find">아이디 찾기</button>
+							<button type="menu" class="btn btn-secondary find">메인 페이지로</button>
 						</div>
 					</form>
 				</div>
@@ -115,6 +114,29 @@ h4 {
 		</div>
 	</div>
 	<jsp:include page="../common/footer.jsp"></jsp:include>
+	<script>
+		$(document).ready(function(){
+			$(".find").on("click", function(){
+				var text = $(this).text();
+
+				var click = "";
+				var url = "";
+
+				switch(text){
+					case "로그인 하기": click = "";
+										url = "${contextPath}/member/login.do";
+										break;
+					case "비밀번호 찾기": click = "";
+										url = "${contextPath}/member/idFind1.do";
+										break;
+					case "메인 페이지로": click = "";
+										 url = "${contextPath}/index.jsp";
+										 break;
+				}
+			})
+		});
+
+	</script>
 </body>
 
 </html>

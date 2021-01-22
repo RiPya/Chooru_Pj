@@ -185,7 +185,7 @@
 		<br><br>		
 		
 		<!-- 회원 관련 Javascript 코드를 모아둘 wsp_member.js 파일을 작성 -->
-		<script src="${contextPath}/resources/js/semi_member.js?ver=350"></script>
+		<script src="${contextPath}/resources/js/semi_member.js?ver=250"></script>
 	</div>
 		<!-- footer -->
 		<jsp:include page="../common/footer.jsp"></jsp:include>

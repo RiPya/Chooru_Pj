@@ -249,29 +249,8 @@ public class MemberController extends HttpServlet {
 			else if(command.equals("/idFind1.do")) {
 				errorMsg = "아이디 찾기 과정에서 오류 발생";
 				
-				// 파라미터 얻어오기
-				String memberName = request.getParameter("memberName");
-				String email = request.getParameter("email");
 				
-				// 회원 번호 얻어오기
-				HttpSession session = request.getSession();
-				Member loginMember = (Member)session.getAttribute("loginMember");
-				
-				loginMember.setEmail(email);
-				
-				Member member = new Member();
-				member.setMemNm(memberName);
-				member.setEmail(loginMember.getEmail());
-				
-				// 회원 확인
-				int result = service.emailCheck(member);
-				
-				if(result > 0) { // 이메일이 받아져왔을때
-					path = "/WEB-INF/views/member/idFind1.jsp";
-				}else {
-					swalIcon = "error";
-					swalTitle = "이메일 입력을 다시 확인해주세요.";
-				}
+				path = "/WEB-INF/views/member/idFind1.jsp";
 				
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
@@ -281,23 +260,94 @@ public class MemberController extends HttpServlet {
 			else if(command.equals("/myIdFind.do")) {
 				errorMsg = "아이디 찾기 과정에서 오류 발생";
 				
-				path = "/WEB-INF/views/member/idFind2.jsp";
+				// 파라미터 얻어오기
+				String memberName = request.getParameter("memberName");
+				String email = request.getParameter("email");
+				
+				Member member = new Member();
+				member.setMemNm(memberName);
+				member.setEmail(email);
+				
+				 System.out.println("이름: " + memberName);
+				 System.out.println("이메일: " + email);
+				
+				// 회원 확인
+				int result = service.memberIdCheck(member);
+				System.out.println("값 받아짐? "+ result);
+					PrintWriter out = response.getWriter();
+					out.append(result+"");
+				
+			}
+			
+			else if(command.equals("/myIdFind2.do")) {
+				errorMsg = "아이디 찾기 과정에서 오류 발생";
+				
+				// 파라미터 얻어오기
+				String memberName = request.getParameter("memberName");
+				String email = request.getParameter("email");
+				
+				Member member = new Member();
+				member.setMemNm(memberName);
+				member.setEmail(email);
+				
+				
+				String memberId = service.myId(member);
+				
+				if(!memberId.isEmpty()) {
+					System.out.println("아이디찾기 결과: " + memberId);
+					request.setAttribute("memberId", memberId);
+					
+					path = "/WEB-INF/views/member/idFind2.jsp";
+				}else {
+					swalIcon = "error";
+					swalTitle = "이메일 입력을 다시 확인해주세요.";
+					request.setAttribute("swalIcon", swalIcon);
+					request.setAttribute("swalTitle", swalTitle);
+					path = "/myIdFind.do";
+				}
+				
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}
 			
+			
 			// 비밀번호찾기 페이지1 : 찾기 (인증) 폼으로 연결 --------------
 			else if(command.equals("/pwdFind1.do")) {
 				errorMsg = "비밀번호 찾기 과정에서 오류 발생";
+				
 				
 				path = "/WEB-INF/views/member/pwdFind1.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}
 			
+			
 			// 비밀번호 찾기 페이지2 : 인증 완료 후 비밀번호 변경 폼으로 연결
 			else if(command.equals("/myPwdFind.do")) {
 				errorMsg = "비밀번호 찾기 과정에서 오류 발생";
+				
+				String memberId = request.getParameter("memberId");
+				String memberName = request.getParameter("memberName");
+				String email = request.getParameter("email");
+				
+				// 객체에 파라미터 값 담기
+				Member member = new Member();
+				member.setMemId(memberId);
+				member.setMemNm(memberName);
+				member.setEmail(email);
+				
+				// 비즈니스 로직
+				int result = service.memberPwdCheck(member);
+				
+				if(result > 0) {
+					
+				}else {
+					swalIcon = "error";
+					swalTitle = "이메일 입력을 다시 확인해주세요.";
+				}
+				
+				request.setAttribute("swalIcon", swalIcon);
+				request.setAttribute("swalTitle", swalTitle);
 				
 				path = "/WEB-INF/views/member/pwdFind2.jsp";
 				view = request.getRequestDispatcher(path);
@@ -308,11 +358,33 @@ public class MemberController extends HttpServlet {
 			else if(command.equals("/pwdFindResult.do")) {
 				errorMsg = "비밀번호 변경 과정에서 오류 발생";
 				
+				// 새로운 비밀번호
+				String newPwd = request.getParameter("newPwd1"); // 새 비밀번호
+				
+				HttpSession session = request.getSession();
+				Member loginMember = (Member)session.getAttribute("loginMember");
+				
+				loginMember.setMemPw(newPwd);
+				
+				// 비즈니스 로직 처리
+				int result = service.findPwd(loginMember);
+				
+				if(result > 0) { // 비밀번호 변경 성공
+					swalIcon = "success";
+					swalTitle = "비밀번호가 변경되었습니다.";
+				}else { // 비밀번호 변경 실패
+					swalIcon = "error";
+					swalTitle = "비밀번호 변경에 실패하였습니다.";
+				}
+				
+				response.sendRedirect(request.getHeader("referer"));
+				
+				
 				path = "/WEB-INF/views/member/pwdFind3.jsp";
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}
-			
+						
 			
 			// 마이페이지 연결 전 비밀번호 확인---------
 			else if(command.equals("/myActiveListForm.do")) {

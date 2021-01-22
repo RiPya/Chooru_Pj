@@ -115,7 +115,7 @@ padding:5px;
 				<br>
 
 				<div class="container">
-					<form method="POST" action="${contextPath}/member/myIdFind.do"
+					<form method="POST" action="${contextPath}/member/myIdFind2.do"
 						onsubmit="return IdFindValidate();" class="form-horizontal"
 						role="form">
 
@@ -136,12 +136,14 @@ padding:5px;
 								<h6>메일주소:</h6>
 							</div>
 							<div class="inputArea inputType">
-								<input type="text" class="form-control" id="email" name="email"
+								<input type="email" class="form-control" id="email" name="email"
 									placeholder="인증 받을 메일주소">
 							</div>
 							<div class="inputArea inputButton">
-								<button type="button" class="btn btn-info" onclick="">인증
-									하기</button>
+								<button type="button" class="btn btn-info" id="certifyBtn">인증하기</button>
+							</div>
+							<div class="col-md-6 offset-md-3">
+								<span id="checkCertify">&nbsp;</span>
 							</div>
 						</div>
 
@@ -151,11 +153,11 @@ padding:5px;
 								<h6>인증 번호:</h6>
 							</div>
 							<div class="inputArea inputType">
-								<input type="number" class="form-control" id="adduction"
-									name="adduction" placeholder="메일로 받은 인증번호">
+								<input type="text" class="form-control" id="certify"
+									name="certify" placeholder="메일로 받은 인증번호">
 							</div>
 							<div class="inputArea inputButton" style="float: right;">
-								<button type="button" class="btn btn-secondary">인증
+								<button type="button" class="btn btn-secondary" id="certifyCheck">인증
 									확인</button>
 							</div>
 						</div>
@@ -168,6 +170,8 @@ padding:5px;
 			</div>
 		</div>
 	</div>
+	
+	<script src="${contextPath}/resources/js/idFind.js"></script>
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 
 	<script>

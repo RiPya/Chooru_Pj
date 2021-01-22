@@ -278,17 +278,63 @@ public class MemberService {
 	}
 
 
-	/** 회원 이메일 일치여부 Service 
+	/** 아이디찾기 회원 일치여부 Service 
 	 * @param member
 	 * @return result
 	 * @throws Exception
 	 */
-	public int emailCheck(Member member) throws Exception{
+	public int memberIdCheck(Member member) throws Exception{
 		Connection conn = getConnection();
 		
-		int result = dao.emailCheck(conn, member);
+		int result = dao.memberIdCheck(conn, member);
 		
 		close(conn);
 		return result;
+	}
+
+
+	/** 비밀번호 찾기 회원 일치여부 Service
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int memberPwdCheck(Member member) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.memberPwdCheck(conn, member);
+		
+		close(conn);
+		return result;
+	}
+
+
+	/** 회원 비밀번호 찾기 변경 Service
+	 * @param loginMember
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public int findPwd(Member loginMember) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.findPwd(conn, loginMember);
+		
+		close(conn);
+		return result;
+	}
+
+
+	/** 아이디찾기 결과 Service
+	 * @param loginMember
+	 * @return result
+	 * @throws Exception
+	 */
+	public String myId(Member member) throws Exception{
+		Connection conn = getConnection();
+		
+		String memberId = dao.myId(conn, member);
+		
+		close(conn);
+		return memberId;
 	}
 }

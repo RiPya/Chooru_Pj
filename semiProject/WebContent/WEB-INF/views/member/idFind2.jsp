@@ -101,13 +101,13 @@ h4 {
 						onsubmit="return IdFindValidate();" class="form-horizontal"
 						role="form">
 						<div class="area text-area">
-							<h6>아이디는 ***** 입니다.</h6>
+							<h6>아이디는 "${memberId}" 입니다.</h6>
 						</div>
 
 						<div class="area button-area">
 							<button type="submit" class="btn btn-teal">로그인 하기</button>
 							<button type="button" class="btn btn-darkteal">비밀번호 찾기</button>
-							<button type="menu" class="btn btn-secondary">메인 페이지로</button>
+							<button type="button" class="btn btn-secondary">메인 페이지로</button>
 						</div>
 					</form>
 				</div>
@@ -115,6 +115,11 @@ h4 {
 		</div>
 	</div>
 	<jsp:include page="../common/footer.jsp"></jsp:include>
+	
+	<script>
+	
+	
+	</script>
 </body>
 
 </html>
