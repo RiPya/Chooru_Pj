@@ -34,6 +34,9 @@
 		border-radius: 1rem;
 	}
 	
+	#email-div, #certifyBtn { display : inline-block !important;}
+	#certifyBtn { border-radius : 15px; }
+	
 </style>
 </head>
 <body>
@@ -122,17 +125,30 @@
 						<div class="col-md-4">
 							<label for="email">* 이메일</label>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6" id="email-div">
 							<input type="email" class="form-control" id="email" name="email" placeholder="이메일" autocomplete="off" required>
 						</div>
+						<button class="btn btn-secondary" type="button" id="certifyBtn">인증</button>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkEmail">&nbsp;</span>
 						</div>
 					</div>			
+					<!-- 이메일 인증 -->
+					<div class="row mb-3 form-row">
+						<div class="col-md-4">
+							<label for="email">* 이메일 인증</label>
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="certify" name="certify" placeholder="이메일 인증번호" autocomplete="off" required>
+						</div>
+						<div class="col-md-6 offset-md-3">
+							<span id="checkCertify">&nbsp;</span>
+						</div>
+					</div>	
 					
 					<div class="row mb-3 form-row">
 						<div class="col-md-4">
-							<label for="nickName">닉네임</label>
+							<label for="nickName">* 닉네임</label>
 						</div>
 						<div class="col-md-6">
 							<input type="nickName" class="form-control" id="nickName" name="nickName" autocomplete="off" placeholder="닉네임" required>

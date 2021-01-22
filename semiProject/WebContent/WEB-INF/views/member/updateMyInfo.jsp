@@ -16,7 +16,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
 <style>
-
+#email-div, #certifyBtn { display : inline-block !important;}
+#certifyBtn { border-radius : 15px; }
 	
 </style>
 </head>
@@ -87,15 +88,28 @@
 					<!-- 이메일 -->
 					<div class="row mb-3 form-row">
 						<div class="col-md-4">
-							<label for="email">이메일</label>
+							<label for="email">* 이메일</label>
 						</div>
-						<div class="col-md-6">
-							<input type="email" class="form-control" id="email" name="email" autocomplete="off" value="${loginMember.email}" required>
+						<div class="col-md-6" id="email-div">
+							<input type="email" class="form-control" id="email" name="email" placeholder="이메일" autocomplete="off" required>
 						</div>
+						<button class="btn btn-secondary" type="button" id="certifyBtn">인증</button>
 						<div class="col-md-6 offset-md-3">
 							<span id="checkEmail">&nbsp;</span>
 						</div>
 					</div>			
+					<!-- 이메일 인증 -->
+					<div class="row mb-3 form-row">
+						<div class="col-md-4">
+							<label for="email">* 이메일 인증</label>
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" id="certify" name="certify" placeholder="이메일 인증번호" autocomplete="off" required>
+						</div>
+						<div class="col-md-6 offset-md-3">
+							<span id="checkCertify">&nbsp;</span>
+						</div>
+					</div>		
 					
 					<div class="row mb-3 form-row">
 						<div class="col-md-4">
