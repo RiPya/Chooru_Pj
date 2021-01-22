@@ -97,7 +97,7 @@ div {
 
 .secession-area {
 	width: 70%;
-	height: 85%;
+	height: 84%;
 	padding-top: 35px;
 	margin: auto;
 	background-color: #F6F6F6;
@@ -108,9 +108,14 @@ div {
 	margin-bottom: 20px;
 }
 
-#newPwd2, .btn-size {
-	width: 500px !important;
+#btn-area {
+	margin : 0 15%;
 }
+
+#currentPwd{
+	margin-bottom : 10px;
+}
+
 </style>
 </head>
 
@@ -140,10 +145,10 @@ div {
 			</div>
 			<br> <br>
 
-			<form method="POST" action="updateStatus.do" class="form-horizontal"
-				role="form">
+			<div class="secession-area">
+				<form method="POST" action="updateStatus.do" class="form-horizontal"
+						role="form" onsubmit="return scValidate();">
 				<!-- 비밀번호 입력 -->
-				<div class="secession-area">
 					<div class="col-md-12">
 						<textarea class="form-control" readonly rows="10" cols="100"
 							style="resize: none;">
@@ -176,23 +181,32 @@ div {
 					</div>
 					<bR>
 					<!-- 새 비밀번호 확인 -->
-					<div class="row mb-4 form-row" style="padding-left: 150px;">
+					<div class="row mb-4 form-row" id="btn-area">
 						<input type="password" class="form-control" id="currentPwd"
-							name="currentPwd" placeholder="비밀번호(password)"> <br>
-						<br>
+							name="currentPwd" placeholder="비밀번호(password)">
 						<button type="submit" class="btn btn-secondary btn-block btn-size">
 							탈퇴</button>
 						<button type="button" class="btn btn-teal btn-block btn-size"
 							onclick="location.href='myActiveList.do';">돌아가기</button>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
 
 		</div>
 	</div>
 
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 	<script src="${contextPath}/resources/js/semi_member.js"></script>
+	
+	<script>
+		function scValidate(){
+			if($("#currentPwd").val().trim().length == 0) {
+				swal({icon:"warning", title:"비밀번호를 입력해주세요."});
+				$("#currentPwd").focus();
+				return false;
+			}
+		};
+	</script>
 
 </body>
 

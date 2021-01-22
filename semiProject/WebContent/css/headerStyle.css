@@ -192,6 +192,10 @@ div { box-sizing: border-box; }
     .no-padding {
 			padding : 8px 0px !important;
 		}	
+		
+		.right-margin{
+			margin-right : 8px;
+		}
 
 /*  .header-right > ul { display : inline-block !important; }
     .header-right > ul > li { 

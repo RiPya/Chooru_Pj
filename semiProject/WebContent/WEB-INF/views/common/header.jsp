@@ -167,7 +167,7 @@
 	                  <!--로그인이 되어 있을 때-->
 	                	 <ul class="navbar-nav">
 	                          <li class="nav-item header-right-users">
-	                             <a class="nav-link no-padding" data-toggle="modal" href="#modal-checkPwd">
+	                             <a class="nav-link" data-toggle="modal" href="#modal-checkPwd">
 	                               <div class="icon-text" id="mypage">
 	                                   <i class="fas fa-user-alt 
 	                                   			<c:if test="${param.tp == 'mypage'}"> active </c:if>"
@@ -284,6 +284,17 @@
     $(function(){
 		 
     });
+    
+   	(function(){
+   		if($("#nickname").text().trim().length > 3){
+   			$("#mypage").parent().addClass("no-padding");
+   		} else {
+   			if($("#mypage").parent().hasClass("no-padding")){
+  	 			$("#mypage").parent().removeClass("no-padding");
+   			}
+   			$("#mypage").parent().addClass("right-margin");
+   		} 
+   	})();
 		
 /*-------------------------------------------------------------------------------*/
 
