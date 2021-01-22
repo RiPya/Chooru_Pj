@@ -318,6 +318,13 @@
 				</div>
 			</div>
 		</div>
+	
+	
+	<script>
+		// 댓글 활용 (ajax)
+		var brdNo = ${adoption.adtBrdNo};
+	</script>
+	
 	<jsp:include page="../common/reply.jsp"></jsp:include>
 
 	</div>

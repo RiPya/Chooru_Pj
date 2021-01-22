@@ -266,56 +266,16 @@
                     	onclick="location.href='${header.referer}'">뒤로가기</button>
 				</div>
 			</div>
-
-
-		</div>
-		
-			<!-- 댓글 영역 -->
-		<div id="replyContentArea">
-			<div id="reply-write-area">
-				<form action="#" method="post" onsubmit="">
-					<textarea id="reply-textarea" name="reply">
-					</textarea>
-					<button class="btn btn-teal float-right replyBtnArea" type="submit">등록</button>
-					<span class="float-right rCount">0/600</span>
-				</form>
-			</div>
-			
-<%-- 			<c:if test="${!empty replyList}"> --%>
-			<table id="reply-list">
-				
-<%-- 					<c:forEach var="reply" items="${replyList}" > --%>
-				<c:forEach var="r" begin="0" end="3">
-						<tr>
-							<td class="replyNo sr-only">${reply.replyNo}</td> 
-							<td class="rWriter" >댓글을써요써요써요요</td> <%-- ${reply.replyWriter} --%>
-							<td class="rContent"><%-- ${reply.replyCotent} --%>
-								당신은 날 설레게 만들어<br>
-								조용한 내 마음 자꾸만 춤추게 해<br>
-								얼마나 얼마나 날 떨리게 하는지<br>
-								당신이 이 밤을 항상 잠 못 들게 해<br>
-								매일 같은 밤 너를 생각하면서 유치한 노랠 들으며 심장이 춤을 추면서<br>
-								오오 난 너를 기다리면서 유치한 노랠 부르며 심장이 춤을 추면서 워
-							</td>
-							<td class="rDate">21.01.08. 11:46:28
-								<%-- <fmt:formatDate value="${reply.commDate}" pattern="yy-MM-dd HH:mm:ss"/> --%>
-							</td>
-							<td class="deleteReply">
-<%-- 								<c:if test="${!empty loginMember && loginMember.nNm == reply.replyWriter }"> --%>
-									<a href="${contentPath}/reply/delete.do?${tpCdStr}&cp=${param.cp}&no=${param.no}">
-										<i class="fas fa-times"></i></a>
-<%-- 								</c:if> --%>
-							</td>
-						</tr>
-					</c:forEach>
-				
-				</table>
-<%-- 			</c:if> --%>
-		
 		</div>
 
+ 	<%-- Reply --%>
+	<script>
+		var brdNo = ${free.brdNo};
+	</script>
+	
+	<jsp:include page="../common/reply.jsp"></jsp:include>
 
-
+	<%-- footer --%>
 	</div>
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 	

@@ -155,7 +155,7 @@ public class AdoptionController extends HttpServlet {
 				errorMsg = "게시글 등록 과정에서 오류 발생";
 			
 				// 1. 게시글 정보 얻어와서 저장 (파라미터)
-				String category = request.getParameter("category");
+				//String category = request.getParameter("category");
 				String title = request.getParameter("title");
 				String address = request.getParameter("address");
 				String adtNote = request.getParameter("adtNote");
@@ -164,6 +164,7 @@ public class AdoptionController extends HttpServlet {
 				String adtGender = request.getParameter("adtGender");
 				String adtYn = request.getParameter("adtYn");
 				String adtVaccination = request.getParameter("adtVaccination");
+				String code = request.getParameter("category");
 				
 				// String 타입의 날짜를 Date형으로 변환
 				String adtStr = request.getParameter("adtDate");
@@ -221,7 +222,7 @@ public class AdoptionController extends HttpServlet {
 					// 5. VO 생성 대신 Map 객체를 이용하여
 					//    얻어온 정보 + 이미지를 List Map에 담기
 					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("category", category);
+					map.put("adtCode", code);
 					map.put("title", title);
 					map.put("address", address);
 					map.put("adtNote", adtNote);
