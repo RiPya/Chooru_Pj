@@ -309,50 +309,16 @@
                     	onclick="location.href='${header.referer}'">뒤로가기</button>
 				</div>
 			</div>
-
-
 		</div>
-		
-			<!-- 댓글 영역 -->
-		<div id="replyContentArea">
-			<div id="reply-write-area">
-				<form action="#" method="post" onsubmit="">
-					<textarea id="reply-textarea" name="reply">
-					</textarea>
-					<button class="btn btn-teal float-right replyBtnArea" type="submit">등록</button>
-					<span class="float-right rCount">0/600</span>
-				</form>
-			</div>
 			
-<%-- 			<c:if test="${!empty replyList}"> --%>
-			<table id="reply-list">
-				
-<%-- 					<c:forEach var="reply" items="${replyList}" > --%>
-				<c:forEach var="r" begin="0" end="1">
-						<tr>
-							<td class="replyNo sr-only">${reply.replyNo}</td> 
-							<td class="rWriter" >댓글을써요써요써요요</td> <%-- ${reply.replyWriter} --%>
-							<td class="rContent"><%-- ${reply.replyCotent} --%>
-								너무 귀여워요ㅠㅠㅠㅠㅠ.
-							</td>
-							<td class="rDate">21.01.08. 11:46:28
-								<%-- <fmt:formatDate value="${reply.commDate}" pattern="yy-MM-dd HH:mm:ss"/> --%>
-							</td>
-							<td class="deleteReply">
-<%-- 								<c:if test="${!empty loginMember && loginMember.nNm == reply.replyWriter }"> --%>
-									<a href="${contentPath}/reply/delete.do?${tpNoStr}&cp=${param.cp}">
-										<i class="fas fa-times"></i></a>
-<%-- 								</c:if> --%>
-							</td>
-						</tr>
-					</c:forEach>
-				
-				</table>
-<%-- 			</c:if> --%>
-		
-		</div>
+ 	<%-- Reply --%>
+	<script>
+		var brdNo = ${review.brdNo};
+	</script>
+	
+	<jsp:include page="../common/reply.jsp"></jsp:include>
 
-
+	<%-- footer --%>
 	</div>
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 	
