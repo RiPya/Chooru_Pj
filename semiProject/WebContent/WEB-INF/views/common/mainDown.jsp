@@ -78,7 +78,7 @@
 				dataType : "JSON",
 				success : function(nList){
 					
-					if(nList == null){ //nList가 없을 때
+					if(nList.length == 0){ //nList가 없을 때
 						/* <tr>
 	                <th class="empty-main" colspan="3">존재하는 공지사항이 없습니다.</th>
 	            </tr> */
@@ -144,7 +144,7 @@
 					var rList = map.rList;
 					var iList = map.iList;
 					
-					if(rList == null){ //rList가 없을 때
+					if(rList.length == 0){ //rList가 없을 때
 					/* <tr>
                    <th class="empty-main" colspan="3">존재하는 입양후기가 없습니다.</th>
                </tr> */
