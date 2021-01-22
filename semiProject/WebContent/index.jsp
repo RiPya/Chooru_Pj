@@ -196,6 +196,7 @@
 			});
 
 			
+			/* carousel 화살표 작은 화면에서 안 보이게 하기 */
 			$(window).resize(function(){
 	    		if($(window).width() < 992) {
 	    			$(".carousel-control-next-icon").addClass("sr-only");
@@ -208,6 +209,13 @@
 	    			$(".carousel-control-prev-icon").removeClass("sr-only");
 	    		}
 	    });
+			
+			(function(){
+				if($(window).width() < 992) {
+	    			$(".carousel-control-next-icon").addClass("sr-only");
+	    			$(".carousel-control-prev-icon").addClass("sr-only");
+	    		}
+			})();		
 
     
 </script>
