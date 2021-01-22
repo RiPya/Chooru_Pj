@@ -85,6 +85,33 @@ $("#email").on("input", function(){
 	}
 });
 
+
+var isCertification; //추후 인증 여부를 알기위한 값
+
+$("certifyBtn").on("click", function(){
+	var email = $("#email").val();//사용자 이메일
+	if(email == "" || !validateCheck.email){//이메일이 입력 안 됐거나 유효성 검사에 실패한 경우
+		 swal({icon: "warning", title: "올바른 이메일을 입력하세요."});
+	} else {
+		 $.ajax({
+				type : 'post',
+				url : '${contextPath}/sendEmail.do',
+				data : {"email": email},
+				sucess : function(key){
+					$("#checkCertify").text("인증번호가 발송되었습니다.").css("color", "red");
+					isCertification = false;
+				},
+				else : function(){
+					console.log("인증번호 발송 과정에서 오류 발생");
+				}
+		});//이메일 전송 ajax 끝
+	}
+});
+
+
+
+
+
 // 비밀번호 유효성 검사
 // 영어 대, 소문자 + 숫자, 총 6~12글자
 $("#pwd1, #pwd2").on("input", function(){
