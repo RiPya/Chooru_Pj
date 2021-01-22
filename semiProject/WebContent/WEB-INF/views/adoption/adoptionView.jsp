@@ -78,7 +78,7 @@
 		align: center;
 	} */
 	
-	#replyContentArea{ 
+/* 	#replyContentArea{ 
 		width: 100%; 
 		min-height : 500px;
 	}
@@ -143,7 +143,7 @@
 	
 	#replyListArea{
 		list-style-type: none;
-	}
+	} */
 	
 	.form-adoption {
 		padding-right: 20px;
@@ -303,9 +303,9 @@
  						<c:otherwise>
 							<c:url var="goToList" value="list.do">
 								<c:if test="${!empty param.cd}">
-									<c:param name="cp">${param.cp}</c:param>
+									<c:param name="cd">${param.cd}</c:param>
 								</c:if>
-								<c:param name="cd">${param.cd}</c:param>
+								<c:param name="cp">${param.cp}</c:param>
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
 						</c:otherwise>
@@ -314,56 +314,15 @@
 					<a href="${goToList}" class="btn btn-teal float-right" style="width: 75px;">목록</a>
 					<button type="button" class="btn btn-dark float-right ml-1 mr-1"
                     	onclick="location.href='${header.referer}'">뒤로가기</button>
+				
 				</div>
 			</div>
-
-
 		</div>
-		
-			<!-- 댓글 영역 -->
-		<div id="replyContentArea">
-			<div id="reply-write-area">
-				<form action="#" method="post" onsubmit="">
-					<textarea id="reply-textarea" name="reply">
-					</textarea>
-					<button class="btn btn-teal float-right replyBtnArea" type="submit">등록</button>
-					<span class="float-right rCount">0/600</span>
-				</form>
-			</div>
-			
-<%-- 			<c:if test="${!empty replyList}"> --%>
-			<table id="reply-list">
-				
-<%-- 					<c:forEach var="reply" items="${replyList}" > --%>
-				<c:forEach var="r" begin="0" end="1">
-						<tr>
-							<td class="replyNo sr-only"><%-- ${reply.replyNo} --%></td> 
-							<td class="rWriter" >댓글을써요써요써요요</td> <%-- ${reply.replyWriter} --%>
-							<td class="rContent"><%-- ${reply.replyCotent} --%>
-								입양 원합니다.
-							</td>
-							<td class="rDate">21.01.08. 11:46:28
-								<%-- <fmt:formatDate value="${reply.commDate}" pattern="yy-MM-dd HH:mm:ss"/> --%>
-							</td>
-							<td class="deleteReply">
-<%-- 								<c:if test="${!empty loginMember && loginMember.nNm == reply.replyWriter }"> --%>
-									<a href="${contentPath}/reply/delete.do?${tpCpNoStr}&cp=${param.cp}&no=${param.no}">
-										<i class="fas fa-times"></i></a>
-<%-- 								</c:if> --%>
-							</td>
-						</tr>
-					</c:forEach>
-				
-				</table>
-<%-- 			</c:if> --%>
-		
-		</div>
-
-
+	<jsp:include page="../common/reply.jsp"></jsp:include>
 
 	</div>
-	<jsp:include page="../common/footer.jsp"></jsp:include>
 	
+	<jsp:include page="../common/footer.jsp"></jsp:include>
 	
 	<script>
 	
