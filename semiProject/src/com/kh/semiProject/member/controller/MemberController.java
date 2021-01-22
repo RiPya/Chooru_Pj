@@ -153,7 +153,19 @@ public class MemberController extends HttpServlet {
 				int result = service.nickNameDupCheck(nickName);
 				
 				response.getWriter().print(result);
-				//System.out.println(result);
+				// System.out.println("닉네임: " + result);
+			}
+			
+			// 이메일 중복검사 Controller -----------------------
+			else if(command.equals("/emailDupCheck.do")) {
+				// 이메일 중복검사용 파라미터
+				String email = request.getParameter("email");
+				// System.out.println("입력: " + email);
+				
+				int result = service.emailDupCheck(email);
+				
+				response.getWriter().print(result);
+				// System.out.println(result);
 			}
 
 			// 로그인 작업을 위한 Controller ----------------------
@@ -245,12 +257,22 @@ public class MemberController extends HttpServlet {
 				HttpSession session = request.getSession();
 				Member loginMember = (Member)session.getAttribute("loginMember");
 				
-				loginMember.setMemNm(memberName);
+				loginMember.setEmail(email);
 				
-				// 가입자 이름 확인
-				int result = service.memberNameCheck(loginMember);
+				Member member = new Member();
+				member.setMemNm(memberName);
+				member.setEmail(loginMember.getEmail());
 				
-				path = "/WEB-INF/views/member/idFind1.jsp";
+				// 회원 확인
+				int result = service.emailCheck(member);
+				
+				if(result > 0) { // 이메일이 받아져왔을때
+					path = "/WEB-INF/views/member/idFind1.jsp";
+				}else {
+					swalIcon = "error";
+					swalTitle = "이메일 입력을 다시 확인해주세요.";
+				}
+				
 				view = request.getRequestDispatcher(path);
 				view.forward(request, response);
 			}

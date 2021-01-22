@@ -240,6 +240,7 @@ public class MemberDAO {
 			if(rset.next()) {
 				result = rset.getInt(1);
 			}
+			// System.out.println("dao1: " +  result);
 		} finally {
 			close(rset);
 			close(pstmt);
@@ -247,6 +248,35 @@ public class MemberDAO {
 		return result;
 	}
 
+	/** 이메일 중복확인 DAO
+	 * @param conn
+	 * @param email
+	 * @return result
+	 * @throws Exception
+	 */
+	public int emailDupCheck(Connection conn, String email) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("emailDupCheck");
+		// System.out.println(email);
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, email);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+			// System.out.println("dao2: " +  result);
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return result;
+	}
 
 	/** 내 정보 수정 DAO
 	 * @param conn
@@ -470,4 +500,36 @@ public class MemberDAO {
 		}
 		return pList;
 	}
+
+	
+	/** 회원 이메일 확인여부 DAO
+	 * @param conn
+	 * @param member
+	 * @return result
+	 * @throws Exception
+	 */
+	public int emailCheck(Connection conn, Member member) throws Exception{
+		int result = 0;
+		
+		String query = prop.getProperty("emailCheck");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, member.getMemNm());
+			pstmt.setString(2, member.getEmail());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result = rset.getInt(1);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return result;
+	}
+
+
 }

@@ -64,9 +64,25 @@ $("#email").on("input", function(){
         $("#checkEmail").text("이메일 형식이 유효하지 않습니다.").css("color", "red");
         validateCheck.email = false;
     }else{
-        $("#checkEmail").text("유효한 이메일 형식입니다.").css("color", "green");
-        validateCheck.email = true;
-    }
+        // $("#checkEmail").text("유효한 이메일 형식입니다.").css("color", "green");
+        $.ajax({
+			url:"emailDupCheck.do",
+			data: {"email" : value},
+			type: "post",
+			success: function(result){
+				if(result == 0){
+					$("#checkEmail").text("사용 가능한 이메일입니다.").css("color", "green");
+					validateCheck.email = true;
+				}else{
+					$("#checkEmail").text("이미 사용중인 이메일입니다.").css("color", "red");
+					validateCheck.email = false;
+				}
+			},
+			error:function(){
+				console.log("이메일 중복검사 실패");
+			}
+		});
+	}
 });
 
 // 비밀번호 유효성 검사
@@ -255,6 +271,6 @@ function updateMyInfoValidate(){
         if(!updateCheck[key]){ // false인 경우
             swal("일부 값이 유효하지 않습니다.");
             return false;
-        }
+        };
     }
 }
