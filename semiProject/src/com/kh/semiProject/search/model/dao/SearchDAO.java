@@ -490,6 +490,65 @@ public class SearchDAO {
 		return fList;
 	}
 
+	/**고객센터 내부 검색 board 리스트 dao
+	 * @param conn
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Board> searchInfoList(Connection conn, Map<String, Object> map) throws Exception {
+		List<Board> ifList = null;;
+		
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		String cdCondition = (String)map.get("cdCondition");//code 조건문
+		if(cdCondition.equals("none")) cdCondition = " ";
+		
+		String query =
+			"SELECT BRD_NO, INFO_TYPE, TITLE, N_NM, BRD_CRT_DT, READ_COUNT "
+			+ "FROM (SELECT ROWNUM RNUM, V.* "
+			 	     + "FROM(SELECT * FROM V_INFORMATION  "
+			 	       		+ "WHERE " + keyValue + cdCondition
+			 	       		+ " AND BRD_STATUS = 'Y' ORDER BY BRD_NO DESC) V) "
+			+ "WHERE RNUM BETWEEN ? AND ?";
+		
+		//System.out.println(query);
+		
+		try {
+			//SQL 구문 조건절에 대입할 변수 생성
+			 PageInfo pInfo = (PageInfo)map.get("pInfo");
+			
+		 	 int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+		 	 int endRow = startRow + pInfo.getLimit() - 1;
+			
+		 	 pstmt = conn.prepareStatement(query);
+			
+	         pstmt.setInt(1, startRow);
+	         pstmt.setInt(2, endRow);
+	         
+	         rset = pstmt.executeQuery();
+	         
+	         ifList = new ArrayList<Board>();
+	         
+	         while(rset.next()) {
+	        	 Board board = new Board();
+	        	 board.setBrdNo(rset.getInt("BRD_NO"));
+	        	 board.setCode(rset.getString("INFO_TYPE"));
+	        	 board.setBrdTitle(rset.getString("TITLE"));
+	        	 board.setNickName(rset.getString("N_NM"));
+	        	 board.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+	        	 board.setReadCount(rset.getInt("READ_COUNT"));
+	        	 
+	        	 ifList.add(board);
+	         }
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return ifList;
+	}
+
 	
 
 }

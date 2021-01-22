@@ -198,8 +198,8 @@ int result = 0;
 		try {
 			pstmt = conn.prepareStatement(query);
 			
-			System.out.println(query);
-			System.out.println(brdNo);
+			//System.out.println(query);
+			//System.out.println(brdNo);
 			
 			
 			pstmt.setInt(1, brdNo);
@@ -208,7 +208,7 @@ int result = 0;
 						
 			if(rset.next()) {
 				free = new Board();
-				System.out.println("1 : " + free);
+				//System.out.println("1 : " + free);
 				
 				
 				free.setBrdNo(rset.getInt("BRD_NO"));
@@ -220,7 +220,7 @@ int result = 0;
 				free.setBrdModify(rset.getTimestamp("BRD_MODIFY"));
 				free.setReadCount(rset.getInt("READ_COUNT"));
 				
-				System.out.println("2 : " + free);
+				//System.out.println("2 : " + free);
 			}
 			
 		} finally {

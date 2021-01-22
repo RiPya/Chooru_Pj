@@ -103,8 +103,6 @@ public class SearchService {
 			tpCondition = " V_REVIEW "; break;
 		case "b4" : //자유 게시판
 			tpCondition = " V_FREE "; break;
-		case "b5" : //고객센터
-			tpCondition = " V_INFORMATION "; break;
 		case "all" :
 		default : //전체
 			tpCondition = " V_SEARCH "; break;
@@ -120,6 +118,7 @@ public class SearchService {
 	 * @throws Exception
 	 */
 	public String getCdCondition(String code) throws Exception {
+		
 		String cdCondition = null;
 		
 		if(code == null) code = "all";//코드 없는 경우
@@ -142,7 +141,7 @@ public class SearchService {
 			cdCondition = " AND FREE_CODE = 'frReview' "; break;
 		case "frInfo" : //일상
 			cdCondition = " AND FREE_CODE = 'frInfo' "; break;
-		//고객센터 카테고리
+			
 		//추가
 		case "all" :
 		default : //adtAll, frAll, null값
@@ -184,7 +183,7 @@ public class SearchService {
 		case "b1" : bList = dao.searchNoticeList(conn, map); break; //공지사항
 		case "b3" : bList = dao.searchReviewList(conn, map); break; //입양 후기
 		case "b4" : bList = dao.searchFreeList(conn, map); break;//자유
-		case "b5" : break; //고객센터
+		case "b5" : bList = dao.searchInfoList(conn, map); break; //고객센터
 		}
 
 		close(conn);

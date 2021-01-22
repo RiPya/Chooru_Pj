@@ -180,7 +180,7 @@
 									<td class="infoTitle">
 										${info.brdTitle}
 										
-									<c:forEach var="img" items="${ifList}">
+									<c:forEach var="img" items="${iList}">
 						 				<c:if test="${info.brdNo == img.brdNo}">	
 						 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
 										</c:if>
@@ -273,7 +273,7 @@
 									<td class="infoTitle">
 										${info.brdTitle}
 										
-										<c:forEach var="img" items="${ifList}">
+										<c:forEach var="img" items="${iList}">
 							 				<c:if test="${info.brdNo == img.brdNo}">	
 							 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
 											</c:if>
@@ -334,7 +334,7 @@
 					 == 검색 후 페이징바 클릭 --%>
 			<c:choose>
 				<c:when test="${!empty param.sk && !empty param.sv}">
-				 	<c:url var="pageUrl" value="/search.do"/>
+				 	<c:url var="pageUrl" value="/search/infoSearch.do"/>
 				 	
 				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
 				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
@@ -413,8 +413,8 @@
 				<!-- 검색창 : type:게시판코드(고객센터는 b5) -->
 				<!-- 게시판코드를 파라미터로 넘겨야 할까? -->
 			<div class="my-5">
-				<form action="${contextPath}/informationSearch.do?${tpStr}" method="GET" class="text-center " 
-																																id="searchForm">
+				<form action="${contextPath}/search/infoSearch.do" method="GET" class="text-center " 
+										onsubmit="return infoValidate();" id="searchForm">
 					<!-- cd -->
 					<select name="cd" class="form-control sf-margin" style="width: 110px; display: inline-block;">
 						<option value="infoQuest">문의</option>
@@ -426,9 +426,10 @@
 						<option value="writer">글쓴이</option>
 					</select>
 					
-					<input type="text" name="sv" class="form-control sf-margin" 
+					<input type="text" name="sv" class="form-control sf-margin" id="searchInfo"
 							placeholder="검색어를 입력하세요." style="width: 25%; display: inline-block;">
-							
+					<input type=text name="tp" class="sr-only" value="b5"><!-- tp 보내는 input -->
+					
 					<button class="form-control btn btn-teal" style="width: 70px; display: inline-block;">
 						<i class="fas fa-search" id="search-in-icon"></i><!--찾기아이콘-->
 					</button>
@@ -446,7 +447,7 @@
 	<script>
 		$(document).ready(function(){		
 				$(".info").on("click", function(){
-					var url = "${contextPath}/information/list.do?${tpStr}&cp=1&cd=" + infoCode;
+					var url = "${contextPath}/information/list.do?${tpStr}${searchStr}&cp=1&cd=" + infoCode;
 									//cp(페이지), tp(게시판타입 b1 b2 b3 b4 adminMem b5 mypage), cd(카테고리)
 									//tpStr = tp=_
 					
@@ -481,7 +482,7 @@
 	
 			// 비밀글 조회 제어
 			if(infoNm == loginNm || loginAd == 0 ){	
-				var url = "${contextPath}/information/view.do?${tpStr}&cp=${pInfo.currentPage}&no=" + infoBrdNo; 
+				var url = "${contextPath}/information/view.do?${tpStr}${searchStr}&cp=${pInfo.currentPage}&no=" + infoBrdNo; 
 																	//cp(페이지), tp(게시판타입 b5 고객센터), no 글번호
 																	//tpCdStr : "tp=_&cd=_"
 				location.href = url;     
@@ -490,7 +491,7 @@
 		
 		
 		// 고객센터 검색 jsp에서 사용
-		/* 		//검색 내용이 있을 경우 검색창에 해당 내용을 작성해두는 즉시 실행 함수
+ 		//검색 내용이 있을 경우 검색창에 해당 내용을 작성해두는 즉시 실행 함수
 				(function(){
 					//cd:자유카테고리(검색창에서 설정): INFO_CODE
 					//파라미터 중 cd, sk, sv가 있을 경우 변수가 저장됨 → 출력
@@ -522,8 +523,18 @@
 						}
 					});
 					//검색창에 검색어 출력
-					$("input[name=sv]").val(searchValue);
-				})(); */
+					$("#searchInfo").val(searchValue);
+				})();
+		
+				/* 검색창 유효성 검사 */
+		 		function infoValidate() {
+					if ($("#searchInfo").val().trim().length == 0) {
+						swal({icon:"warning", title:"검색어를 입력해 주세요."});
+						$("#searchInfo").focus();
+						return false;
+					}
+				} 
+		
 		
 	</script>
 </body>

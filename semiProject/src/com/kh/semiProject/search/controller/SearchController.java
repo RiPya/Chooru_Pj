@@ -69,7 +69,7 @@ public class SearchController extends HttpServlet {
 			//게시판 타입 : b1(공지) b2(입양) b3(후기) b4(자유) b5(고객센터) 
 			//mypage(마이페이지) adminMem(회원관리)
 			String brdType = request.getParameter("tp");
-			System.out.println(brdType);
+			//System.out.println(brdType);
 
 			//입양/분양, 자유, 고객센터에서 사용
 			String code = request.getParameter("cd");
@@ -313,6 +313,52 @@ public class SearchController extends HttpServlet {
 				request.setAttribute("pInfo", pInfo);
 				
 				path = "/WEB-INF/views/free/freeList.jsp";
+				//검색 과정은 모두 이 과정으로?
+				
+				view = request.getRequestDispatcher(path);
+				view.forward(request, response);
+			}
+			
+			
+			//고객센터 검색----------------------------------
+			else if(command.equals("/infoSearch.do")) {
+				errorMsg = "게시판 내 검색 과정에서 오류 발생";
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("currentPage", currentPage);
+				map.put("keyValue", keyValue);
+				map.put("tpCondition", tpCondition);
+				map.put("cdCondition", cdCondition);
+				map.put("brdType", brdType);
+				
+				//1.페이징 처리를 위한 값 계산 service 호출
+				PageInfo pInfo = service.getSearchPage(map);
+				
+				map.put("pInfo", pInfo);
+				
+				//2.게시글 목록 조회 비즈니스 로직 수행
+				List<Board> ifList = service.searchInsideList(map);
+				
+				if(ifList != null) {
+					List<Image> iList = service.selectSearchThumbs(map);
+					
+					if(!iList.isEmpty()) {
+						request.setAttribute("iList", iList);
+					}
+					
+					//댓글 수 확인
+					//comm이라는 map에 brdNo, count(댓글 수) 반환
+					List<Map<String, String>> commCounts = service.selectReplyCount(map);
+					if(!commCounts.isEmpty()) {
+						request.setAttribute("commCounts", commCounts);
+					}
+				}
+
+				request.setAttribute("ifList", ifList);
+				request.setAttribute("pInfo", pInfo);
+				
+				path = "/WEB-INF/views/information/informationList.jsp";
 				//검색 과정은 모두 이 과정으로?
 				
 				view = request.getRequestDispatcher(path);

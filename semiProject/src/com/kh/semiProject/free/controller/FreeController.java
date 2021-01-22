@@ -83,7 +83,7 @@ public class FreeController extends HttpServlet {
 			String brdType = request.getParameter("tp");
 			
 			
-			//입양 후기 목록(list) 연결 Controller
+			//자유게시판 목록(list) 연결 Controller
 			if(command.equals("/list.do")) {
 				errorMsg = "게시판 목록 조회 과정에서 오류 발생";
 				
@@ -132,8 +132,8 @@ public class FreeController extends HttpServlet {
 				
 				Board free = service.selectFree(brdNo);
 				
-				System.out.println("free brNo " + brdNo);
-				System.out.println("free " + free); // ← ?
+				//System.out.println("free brNo " + brdNo);
+				//System.out.println("free " + free); // ← ?
 				
 				if(free != null) {
 					//이미지는 따로 가져올 필요 없음. content에 이미 이미지 url이 있음.
