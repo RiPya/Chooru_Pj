@@ -54,6 +54,13 @@ WHERE N_NM = ?
 AND (GRADE = '1' OR GRADE = '8')
 </entry>
 
+<!-- 이메일 중복 -->
+<entry key="emailDupCheck">
+SELECT COUNT(*) FROM MEMBER
+WHERE EMAIL = ?
+AND (GRADE = '1' OR GRADE = '8')
+</entry>
+
 <!-- 회원정보 수정 -->
 <entry key="updateMyInfo">
 UPDATE MEMBER SET
@@ -118,4 +125,12 @@ FROM (SELECT ROWNUM RNUM, V.*
 WHERE RNUM BETWEEN ? AND ?
 </entry>
 
+
+<!-- 이메일 일치여부 -->
+<entry key="emailCheck">
+SELECT COUNT(*)
+FROM MEMBER
+WHERE MEM_NM = ?
+AND EMAIL = ?
+</entry>
 </properties>

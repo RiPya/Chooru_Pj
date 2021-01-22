@@ -132,12 +132,29 @@ public class MemberService {
 		Connection conn = getConnection();
 		
 		int result = dao.nickNameDupCheck(conn, nickName);
+		// System.out.println("service1: " + result);
 		
 		close(conn);
 		return result;
 	}
 
 
+	/** 이메일 중복 Service
+	 * @param email
+	 * @return result
+	 * @throws Exception
+	 */
+	public int emailDupCheck(String email) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.emailDupCheck(conn, email);
+		// System.out.println("service2: " + result);
+		
+		close(conn);
+		return result;
+	}
+
+	
 	/** 내 정보 수정 Service
 	 * @param member
 	 * @return result
@@ -261,15 +278,17 @@ public class MemberService {
 	}
 
 
-	/** 회원 이름 일치여부 Service
-	 * @param loginMember
-	 * @return
+	/** 회원 이메일 일치여부 Service 
+	 * @param member
+	 * @return result
 	 * @throws Exception
 	 */
-	public int memberNameCheck(Member loginMember) throws Exception{
-		// TODO Auto-generated method stub
-		return 0;
+	public int emailCheck(Member member) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.emailCheck(conn, member);
+		
+		close(conn);
+		return result;
 	}
-
-
 }
