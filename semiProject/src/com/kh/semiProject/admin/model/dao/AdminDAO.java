@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.member.model.vo.Member;
 
@@ -184,6 +185,121 @@ public class AdminDAO {
 			close(pstmt);
 		}
 		return result;		
+	}
+	
+	
+	
+	/** 회원 관리 게시글 pInfo
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 */
+	public int getBrdCount(Connection conn) throws Exception {
+		
+		int listCount = 0;
+		
+		String query
+		= "SELECT COUNT(*) FROM BOARD WHERE BRD_STATUS = 'N' OR BRD_STATUS = 'B'";
+		
+		try {
+			stmt = conn.createStatement();
+			rset = stmt.executeQuery(query);
+			
+			if(rset.next()) {
+				listCount = rset.getInt(1);
+			}
+			
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return listCount;
+	}
+
+	
+	
+	/**회원 관리 게시글 목록 조회 dao
+	 * @param conn
+	 * @param pInfo
+	 * @return
+	 * @throws Exception
+	 */
+	/*V_STATUS		"SELECT BRD_NO, BRD_TYPE, TITLE, MEM_ID,"
+					+ " N_NM, BRD_CRT_DT, BRD_STATUS"
+					+ " FROM BOARD"
+					+ " JOIN MEMBER USING(MEM_NO)"
+					+ " WHERE BRD_STATUS = 'N' OR BRD_STATUS = 'B'"*/
+	
+	public List<Board> selectBrdList(Connection conn, PageInfo pInfo) throws Exception{
+		
+		List<Board> bList = null;
+		
+		String query = "SELECT * "
+					+ "FROM (SELECT ROWNUM RNUM, V.* "
+							+ "FROM(SELECT * FROM V_STATUS "
+								+	"ORDER BY BRD_NO DESC) V) "
+		 	       	+ "WHERE RNUM BETWEEN ? AND ? ";
+		
+		try {
+			//sql 구문 조건절에 대입할 변수 생성
+			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() - 1;
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			bList = new ArrayList<Board>();
+			
+			while(rset.next()) {
+				Board board = new Board();
+				
+				board.setBrdNo(rset.getInt("BRD_NO"));
+				board.setBrdType(rset.getString("BRD_TYPE"));
+				board.setBrdTitle(rset.getString("TITLE"));
+				board.setNickName(rset.getString("MEM_ID") + "/" + rset.getString("N_NM"));
+				board.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				board.setBrdStatus(rset.getString("BRD_STATUS").charAt(0));
+				
+				bList.add(board);
+			}
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return bList;
+	}
+
+	/** 회원 관리 게시글 상태 변경 dao
+	 * @param conn
+	 * @param brdNoList
+	 * @param status 
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateBrdStatus(Connection conn, String brdNoList, String status) throws Exception {
+		
+		int result = 0;
+		
+		String query = "UPDATE BOARD SET BRD_STATUS = ? WHERE BRD_NO IN (" + brdNoList + ")";
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, status);
+			
+			result = pstmt.executeUpdate();
+			
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
 	}
 	
 	

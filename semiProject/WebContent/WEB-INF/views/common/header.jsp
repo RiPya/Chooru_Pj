@@ -20,7 +20,7 @@
 		<script src="https://kit.fontawesome.com/2dd9466b88.js" crossorigin="anonymous"></script>
 	
 		<!-- header의 css + btn-teal 버튼 -->
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerStyle.css?ver=1.8">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css/headerStyle.css?ver=1.9">
 
 		<!-- Postcodify 오픈 소스 -->
 		<script src="//d1p7wdleee1q2z.cloudfront.net/post/search.min.js"></script>
@@ -135,7 +135,7 @@
 	                  <c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0) }"> 
 	                   <li class="nav-item"> <!-- 관리인 로그인시에만 보임 -->
 	                           <a class="nav-link <c:if test="${param.tp == 'adminMem'}"> active </c:if>" 
-	                           	id="admin-mem" href="${contextPath}/admin/adminMem.do?tp=adminMem">회원 관리</a>
+	                           	id="admin-mem" href="${contextPath}/admin/adminMem.do?tp=adminMem">관리자페이지</a>
 	                   </li>
 	                  </c:if>
 	              </ul>

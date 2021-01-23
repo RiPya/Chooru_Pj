@@ -16,6 +16,7 @@ import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
+import com.kh.semiProject.member.model.vo.Member;
 import com.kh.semiProject.search.model.service.SearchService;
 
 
@@ -365,6 +366,63 @@ public class SearchController extends HttpServlet {
 				view.forward(request, response);
 			}
 			
+			//관리자 페이지 : 회원 검색
+			else if(command.equals("/memStatus.do")) {
+				errorMsg = "회원 검색 과정에서 오류 발생";
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("currentPage", currentPage);
+				map.put("keyValue", keyValue);
+				map.put("code", code);
+				
+				PageInfo pInfo = service.getadminPage(map);
+				
+				map.put("pInfo", pInfo);
+				
+				//2.게시글 목록 조회 비즈니스 로직 수행
+				List<Member> mList = service.selectMemberList(map);
+				
+				request.setAttribute("mList", mList);
+				request.setAttribute("pInfo", pInfo);
+				
+	            path = "/WEB-INF/views/admin/adminMem.jsp";
+	            view = request.getRequestDispatcher(path);
+	            view.forward(request, response);
+			}
+			
+			//관리자 페이지 : 블라인드/삭제 게시글 검색
+			else if(command.equals("/brdStatus.do")) {
+				errorMsg = "블라인드/삭제 게시글 검색 과정에서 오류 발생";
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				System.out.println("왔니?");
+				System.out.println(code);
+				
+				map.put("currentPage", currentPage);
+				map.put("keyValue", keyValue);
+				map.put("code", code);
+				
+				PageInfo pInfo = service.getadminPage(map);
+				
+				map.put("pInfo", pInfo);
+				
+
+				List<Board> bList = service.selectBrdList(map);
+				
+				System.out.println("blist: "+bList);
+				
+				request.setAttribute("bList", bList);
+				request.setAttribute("pInfo", pInfo);
+				
+				
+	            path = "/WEB-INF/views/admin/adminBrdStatus.jsp";
+	            view = request.getRequestDispatcher(path);
+	            view.forward(request, response);
+				
+			}
+			
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -376,13 +434,6 @@ public class SearchController extends HttpServlet {
 			view.forward(request, response);
 			
 		}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
