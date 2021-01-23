@@ -1,6 +1,7 @@
 package com.kh.semiProject.admin.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kh.semiProject.admin.model.service.AdminService;
+import com.kh.semiProject.member.model.vo.Member;
+import com.kh.semiProject.common.model.vo.PageInfo;
 
 @WebServlet("/admin/*")
 public class AdminController extends HttpServlet {
@@ -71,9 +74,36 @@ public class AdminController extends HttpServlet {
 			if(command.equals("/adminMem.do")) {
 	            errorMsg = "회원 관리 페이지 연결 과정에서 오류 발생";
 	            
+				//1.페이징 처리를 위한 값 계산 service 호출
+				PageInfo pInfo = service.getPageInfo(cp);
+				
+				//2.게시글 목록 조회 비즈니스 로직 수행
+				List<Member> mList = service.selectMemberList(pInfo);
+				//pInfo에 있는 currentPage, limit을 사용해야지만
+				//현재 페이지에 맞는 게시글 목록만 조회할 수 있음
+	            //System.out.println("m" + mList);
+				request.setAttribute("mList", mList);
+				request.setAttribute("pInfo", pInfo);
+				
 	            path = "/WEB-INF/views/admin/adminMem.jsp";
 	            view = request.getRequestDispatcher(path);
 	            view.forward(request, response);
+	         }
+			
+			
+			// 회원 등급 변경 Controller -------------------------------
+			else if(command.equals("/updateAdminMem.do")){
+	            errorMsg = "게시글 삭제 과정에서 오류 발생";
+	            
+	            String numberList = request.getParameter("numberList"); // 회원 번호가 담겨있음
+	            //System.out.println(numberList);
+	            
+	            String grade = request.getParameter("grade");
+	            //System.out.println(grade);
+	            
+	            int result = service.updateMemGrade(numberList, grade);
+	            System.out.println(result);
+	            response.getWriter().print(result);
 	         }
 			
 			

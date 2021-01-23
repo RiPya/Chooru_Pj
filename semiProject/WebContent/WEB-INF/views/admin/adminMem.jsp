@@ -149,7 +149,7 @@ tr, td {
 				
 				<%-- 게시글 목록 출력 --%>
 				<tbody>
-				<%-- 확인용 --%>
+<%-- 				확인용
 					<c:forEach var="info" begin="1" end="3">
 								<tr>
 									<td>0</td>
@@ -204,10 +204,10 @@ tr, td {
 						<td>010-1234-5678</td>
 						<td>mgr01@naver.com</td>
 						
-					</tr>
+					</tr> --%>
 					
 				<!-- db연결 후 -->
-<%-- 					<!-- 회원이 없을 때 -->
+				<!-- 회원이 없을 때 -->
 				<c:choose>
 					<c:when test="${empty mList}">  
 						<tr>
@@ -215,13 +215,13 @@ tr, td {
 						</tr>
 					</c:when>
 					<c:otherwise> <!-- 회원이 있을 때 모두 출력-->
-						<c:forEach var="info" items="${mList}">
+						<c:forEach var="member" items="${mList}">
 							<tr>
 								<td>${member.memNo}</td>
 								<td>${member.memId}</td>
-								<td>${member.memNickName}</td>
-								<td>${member.memName}</td>
-								<td>${member.memGrade}</td>
+								<td>${member.nickName}</td>
+								<td>${member.memNm}</td>
+								<td>${member.grade}</td>
 								<td>${member.enrollDate}</td>
 								<td>${member.phone}</td>
 								<td>${member.email}</td>
@@ -241,53 +241,105 @@ tr, td {
 							</tr>
 						</c:forEach>
 					</c:otherwise>
-				</c:choose> --%>
+				</c:choose>
 					
 				</tbody>
 			</table>
-				<div class="my-4">
-				<form method="GET" class="text-right" id="gradeForm">
-					<select class="form-control sf-margin" id="select-grade" style="width: 80px; display: inline-block;">
+				<div class="my-4"> 				
+				<form action="#" method="GET" class="text-right" id="gradeForm">
+					<select name="grade" class="form-control sf-margin" id="select-grade" style="width: 80px; display: inline-block;">
 						<option value="grade">등급</option>
-						<option value="0">0</option>
-						<option value="1">1</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
+						<option class="memGrade" value="0">0</option>
+						<option class="memGrade" value="1">1</option>
+						<option class="memGrade" value="8">8</option>
+						<option class="memGrade" value="9">9</option>
 					</select> 	
-					<button id="btn-select-grade" class="form-control btn btn-teal" style="width: 80px; display: inline-block;">변경</button>
+					<button id="changeGradeBtn" class="form-control btn btn-teal" style="width: 80px; display: inline-block;">변경</button>
 				</form>
 			</div>
 		</div>
 
 	
-			<%---------------------- Pagination ----------------------%>
-			<%-- boardList.jsp에서 복붙한 거 놔두면 오류나서 메모장 파일에 옮겨놓음 --%>
-			<!-- cd가 없다면 href의 url 뒤에 -->
+			<%-- 파라미터의 sk(searchKey)와 sv(searchValue)가 비어있지 않을 때  == 검색 후 페이징바 클릭 --%>
+			<c:choose>
+				<c:when test="${!empty param.sk && !empty param.sv}">
+				 	<c:url var="pageUrl" value="search/noticeSearch.do"/>
+				 	
+				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
+				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
+				</c:when>
+				
+					<%-- 비어있을 때 --%>
+				<c:otherwise>
+					<c:url var="pageUrl" value="/notice/list.do"/>
+				</c:otherwise>
+			</c:choose>
+			
+			<c:if test="${!empty param.cd}">
+				<c:set var="cdStr" value="&cd=${param.cd}"/>
+			</c:if>
 			
 			
-			<!-- 임시 확인용 Pagination -->
+			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
+			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${cdStr}${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${cdStr}${searchStr}"/>
+			
+			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
+				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
+				integerOnly="true" : 정수로만 숫자를 표현(소수점 버림)
+			--%>
+			<%-- pInfo.pageSize : 10 --%>
+			<!-- < 화살표를 눌렀을 때 이전 페이징의 endPage가 prev가 되도록 -->
+			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
+			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${cdStr}${searchStr}"/>
+			
+			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
+			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
+			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
+			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${cdStr}${searchStr}"/>
+						
+			
 			<div class="my-5">
 				<ul class="pagination">
+				
+					<%-- 현재 페이지가 10페이지 초과인 경우 --%>
+					<c:if test="${pInfo.currentPage > pInfo.pageSize}">				
 						<li> <!-- 첫 페이지로 이동(<<) -->
 							<a class="page-link" href="#">&lt;&lt;</a>
 						</li>
 						<li> <!-- 이전 페이지로 이동(<) -->
 							<a class="page-link" href="#">&lt;</a>
 						</li>
+					</c:if>
 						
-						<c:forEach var='i' begin="1" end="10">
-							<li>
-								<a class="page-link <c:if test="${param.cp==i}">pag-active</c:if>" 
-									href="#">${i}</a>
+					<!-- 페이지 목록 -->
+					<c:forEach var='page' begin="${pInfo.startPage}" end="${pInfo.endPage}">
+						<c:choose>
+						<c:when test="${pInfo.currentPage == page}">
+							<li> <!-- 현재 페이지인 경우 활성화 -->
+								<a class="page-link pag-active">${page}</a>
 							</li>
-						</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<li>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${cdStr}${searchStr}">${page}</a>
+							</li>
+						</c:otherwise>
+						</c:choose>
+					</c:forEach>
 						
+					<%-- 다음 페이징의 첫번째 페이지가 마지막 페이지 미만일 경우 --%>	
+					<c:if test="${next <= pInfo.maxPage}">
 						<li> <!-- 이전 페이지로 이동(>>) -->
-							<a class="page-link" href="#">&gt;</a>
+							<a class="page-link" href="${nextPage}">&gt;</a>
 						</li>
 						<li> <!-- 마지막 페이지로 이동(>>) -->
-							<a class="page-link" href="#}">&gt;&gt;</a>
+							<a class="page-link" href="${lastPage}">&gt;&gt;</a>
 						</li>
+					</c:if>
 				</ul>
 			</div>
 
@@ -296,7 +348,44 @@ tr, td {
 	<!-- footer -->
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 
-	<script>
+	<script>	
+	
+	$("#changeGradeBtn").on("click", function(){
+        
+        var list = []; //객체
+        var grade = $("select[name=grade] option:selected").val();
+        
+        $("input:checkbox[name='check']:checked").length
+         
+        $('input[type="checkbox"]:checked').each(function (index) {
+					if($(this).val() != "on"){
+          	list.push($(this).val());
+          }   
+        });
+        
+        //console.log(list);
+        
+				$.ajax({
+				  url : "${contextPath}/admin/updateAdminMem.do",
+				  data : {"numberList" : list.join(),
+					  			"grade" : grade },                              
+				  type : "post",
+					success : function(result){
+						if(result > 0){ 
+          		swal({"icon" : "success", "title" : "등급이 변경 되었습니다"});
+          		
+          		location.reload();   
+						}
+  	      },
+         error : function(){
+            console.log("등급 변경 실패");
+         }
+      });   
+				
+     }); // ajax 끝
+
+//---------------------------------------
+	
 		$(document).ready(function(){
 			$(".memAdmin").on("click", function(){
 				var url = "${contextPath}/adminMem/list.do?${tpStr}&cp=1&cd=" + memAdminCode;
