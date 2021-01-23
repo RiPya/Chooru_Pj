@@ -28,6 +28,7 @@
 	   font-size: 20px;
 	   font-weight: bolder;
 	   padding-right: 20px;
+	   font-family: 'TmoneyRoundWindRegular';
 	} 
 	.form-hr > hr{
 		height: 8px;

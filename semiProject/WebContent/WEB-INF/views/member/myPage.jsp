@@ -31,60 +31,22 @@
 
 <style>
 
-/* 마이페이지 버튼 영역 */
-/* .myPage-menu {
-	top: 0;
-	left: 0;
-	height: auto;
-	width: 100%;
-} */
-.menu-wrapper {
-	top: 1px;
-	left: 0;
-	height: auto;
-	width: 100%;
-}
-
-.menu>li {
-	display: inline-block;
-	margin: 10px;
-}
-
-/*메뉴에서 게시판명 폰트 조정*/
-.menu li:first-of-type {
-	font-size: 20px;
-	font-weight: bold;
-}
-
-#insertBtn {
-	margin-top: 5px;
-}
-
-.menu>li>button {
-	border-radius: 20px;
-	text-decoration: none;
-	color: teal;
-	padding: 6px 12px;
-	display: block;
-}
-
-.menu>li>button:hover {
-	background-color: teal;
-	color: white;
-}
-
 /* 내 활동 조회 버튼 */
+
 .myActiveList>li {
 	display: inline-block;
 	margin: 10px;
+	font-family: 'TmoneyRoundWindRegular'; 
 }
 
 .myActiveList li:first-of-type {
-	font-weight: bold;
+	font-weight: bold; 
+	font-size: 18px;
 }
 
-#insertBtn {
-	margin-top: 5px;
+.myActiveList>li>button{
+	padding-top :0;
+	padding-button:0;
 }
 
 .myActiveList>li>button:hover {
@@ -232,7 +194,7 @@
 							<c:forEach var="mypage" items="${bList}">
 								<tr>
 									<td>${mypage.brdNo}</td>
-									<td class="cd-color">${mypage.brdType}</td>
+									<td class="typeTd">${mypage.brdType}</td>
 									<td class="mypageTitle">
 										${mypage.brdTitle}
 										
@@ -278,10 +240,13 @@
 
 			<%---------------------- Pagination ----------------------%>
 			<%-- boardList.jsp에서 복붙한 거 놔두면 오류나서 메모장 파일에 옮겨놓음 --%>
-			<!-- cd가 없다면 href의 url 뒤에 -->
+			
+		 	<c:url var="pageUrl" value="member/myActiveList.do"/>
+		 	<c:set var="cdMyStr" value="&cd=${param.cd}&my=${param.my}"/>
+			
 			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
-			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${cdStr}${searchStr}"/>
-			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${cdStr}${searchStr}"/>
+			<c:set var="firstPage" value="${pageUrl}?${tpStr}&cp=1${cdMyStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpStr}&cp=${pInfo.maxPage}${cdMyStr}"/>
 			
 			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
 				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
@@ -292,13 +257,13 @@
 			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
 			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
 			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
-			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${cdStr}${searchStr}"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpStr}&cp=${prev}${cdMyStr}"/>
 			
 			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
 			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
 			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
 			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
-			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${cdStr}${searchStr}"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpStr}&cp=${next}${cdMyStr}"/>
 						
 			
 			<div class="my-5">
@@ -324,7 +289,7 @@
 						</c:when>
 						<c:otherwise>
 							<li>
-								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${cdStr}${searchStr}">${page}</a>
+								<a class="page-link" href="${pageUrl}?${tpStr}&cp=${page}${cdMyStr}">${page}</a>
 							</li>
 						</c:otherwise>
 						</c:choose>
@@ -373,7 +338,6 @@
 								url = "${contextPath}/member/myActiveReply.do?${tpCdStr}&cp=1&my=" + activeCode;
 								break;
 				}
-			
 
 				//해당 카테고리(activeCode(내가쓴글, 내가쓴댓글))를 가지는 게시글 목록만 다시 출력하도록 요청
 				//해당 카테고리의 1페이지로 리셋해야 하기 때문에 cp=1
@@ -397,20 +361,40 @@
 			var brdType = ""; /*주소용 게시판  */
 			
 			switch(type) {
-			case "b1" : brdType = "notice"; break;
-			case "b2" : brdType = "adoption"; break;
-			case "b3" : brdType = "review"; break;
-			case "b4" : brdType = "free"; break;
-			case "b5" : brdType = "information"; break;
+			case "공지사항" : brdType = "notice"; break;
+			case "입양/분양" : brdType = "adoption"; break;
+			case "입양 후기" : brdType = "review"; break;
+			case "자유게시판" : brdType = "free"; break;
+			case "고객센터" : brdType = "information"; break;
 			}
 			
 			
 			var url = "${contextPath}/" + brdType + "/view.do?tp=" + type + 
-					  "&cp=${pInfo.currentPage}&no=" + searchBrdNo; 
+					  "&from=myL&cp=${pInfo.currentPage}&no=" + searchBrdNo; 
 						//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
 						//type : 각 목록의 게시판 type
 			location.href = url;
 		});
+		
+		
+		(function(){
+			$(".typeTd").each(function(index, item){
+				var brdType = $(item).text();
+				
+				switch(brdType){
+				case "b1" : $(item).text("공지사항"); break;
+				case "b2" : $(item).text("입양/분양"); break;
+				case "b3" : $(item).text("입양 후기"); break;
+				case "b4" : $(item).text("자유게시판"); break;
+				case "b5" : $(item).text("고객센터"); break;
+				}
+			});
+		})();
+		
+		
+		
+		
+		
 	</script>
 </body>
 </html>
