@@ -8,20 +8,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>비밀번호 찾기</title>
 
-<!-- Bootstrap core CSS -->
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-
-<!-- Bootstrap core JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
-	integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
-	crossorigin="anonymous"></script>
-
-<!-- sweetalert : alert창을 꾸밀 수 있게 해주는 라이브러리 https://sweetalert.js.org/ -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 <style>
 html, body {
 	height: 100%;
@@ -82,6 +68,17 @@ h4 {
 	background-color: #013838 !important;
 	color: rgb(250, 255, 250) !important;
 }
+
+.loginBtn{
+	width: 125px;
+	height: 38px;
+}
+
+.button-area{
+	width: 410px;
+	height: 40px;
+	margin-left: 0 auto;
+}
 </style>
 
 
@@ -97,18 +94,15 @@ h4 {
 				<h4 style="padding-left: 50px">비밀번호 찾기</h4>
 
 				<div class="container">
-					<form method="POST" action="myIdFind.do" class="form-horizontal"
-						role="form">
 						<div class="area text-area">
 							<h6>비밀번호가 변경되었습니다.</h6>
 						</div>
 
-						<div class="area button-area">
-							<button type="submit" class="btn btn-teal find">로그인 하기</button>
-							<button type="button" class="btn btn-darkteal find">아이디 찾기</button>
-							<button type="menu" class="btn btn-secondary find">메인 페이지로</button>
+						<div class="button-area">
+							<a class="btn nav-link btn-teal loginBtn float-left ml-1 mr-1" data-toggle="modal" href="#modal-container-1" >로그인 하기</a>
+							<button type="button" class="btn btn-darkteal float-left ml-1 mr-1 find">아이디 찾기</button>
+							<button type="button" class="btn btn-secondary float-left ml-1 mr-1 find" >메인 페이지로</button>
 						</div>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -123,16 +117,14 @@ h4 {
 				var url = "";
 
 				switch(text){
-					case "로그인 하기": click = "";
-										url = "${contextPath}/member/login.do";
-										break;
-					case "비밀번호 찾기": click = "";
+					case "아이디 찾기": click = "";
 										url = "${contextPath}/member/idFind1.do";
 										break;
 					case "메인 페이지로": click = "";
 										 url = "${contextPath}/index.jsp";
 										 break;
 				}
+				location.href = url;
 			})
 		});
 

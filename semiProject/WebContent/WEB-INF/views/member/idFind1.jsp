@@ -43,7 +43,7 @@ div {
 }
 
 #content-main {
-height:550px;
+	height: 650px;
 line-height: 50px;
 	background-color: #F6F6F6;
 }
@@ -171,7 +171,7 @@ padding:5px;
 		</div>
 	</div>
 	
-	<script src="${contextPath}/resources/js/idFind.js"></script>
+	<script src="${contextPath}/resources/js/idFind.js?ver=212"></script>
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 
 	<script>

@@ -303,6 +303,12 @@ public class MemberService {
 		
 		int result = dao.memberPwdCheck(conn, member);
 		
+		if(result > 0) {
+			int result1 = dao.memFindNo(conn,member);
+			
+			result = result1;
+		}
+		
 		close(conn);
 		return result;
 	}
@@ -314,10 +320,13 @@ public class MemberService {
 	 * @return result
 	 * @throws Exception
 	 */
-	public int findPwd(Member loginMember) throws Exception{
+	public int findPwd(Member member) throws Exception{
 		Connection conn = getConnection();
 		
-		int result = dao.findPwd(conn, loginMember);
+		int result = dao.findPwd(conn, member);
+		
+		if(result > 0)	commit(conn);
+		else			rollback(conn);
 		
 		close(conn);
 		return result;
