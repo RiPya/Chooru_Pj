@@ -125,7 +125,7 @@ function selectReplyList(){
 		type : "post",
 		dataType : "JSON",
 		success : function(rpList){
-			console.log(rpList);
+			//console.log(rpList);
 			
 			$("#reply-list").html("");
 			

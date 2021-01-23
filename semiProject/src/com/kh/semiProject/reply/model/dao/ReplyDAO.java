@@ -59,7 +59,7 @@ public class ReplyDAO {
 				reply.setReplyNo(rset.getInt("COMM_NO"));
 				reply.setReplyContent(rset.getString("COMM_CONTENT"));
 				reply.setReplyDate(rset.getTimestamp("COMM_DATE"));
-				reply.setNickName(rset.getString("MEM_NM"));
+				reply.setNickName(rset.getString("N_NM"));
 			
 				rpList.add(reply);
 
@@ -73,7 +73,7 @@ public class ReplyDAO {
 		return rpList;
 	}
 
-	/** 댓글 삽임 DAO
+	/** 댓글 삽입 DAO
 	 * @param conn
 	 * @param reply
 	 * @return result
