@@ -159,10 +159,16 @@ AND (GRADE = '0' OR GRADE = '1')
 <entry key="findPwd">
 UPDATE MEMBER SET
 MEM_PW = ?
-WHERE MEM_NM = ?
-AND MEM_ID = ?
-AND EMAIL = ?
+WHERE MEM_NO = ?
 AND (GRADE = '0' OR GRADE = '1')
 </entry>
 
+
+<!-- 비밀번호 찾기 진행 중, 회원번호 가져오기 -->
+<entry key="memFindNo">
+SELECT MEM_NO
+FROM MEMBER
+WHERE MEM_ID = ?
+AND (GRADE = '0' OR GRADE = '1')
+</entry>
 </properties>

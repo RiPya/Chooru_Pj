@@ -43,7 +43,7 @@ div {
 }
 
 #content-main {
-	height: 550px;
+	height: 650px;
 	line-height: 50px;
 	background-color: #F6F6F6;
 }
@@ -107,7 +107,7 @@ padding: 5px;
 				<br>
 
 				<div class="container">
-					<form method="POST" action="${contextPath}/member/myPwdFind.do"
+					<form method="POST" action="${contextPath}/member/myPwdFind2.do"
 						onsubmit="return PwdFindValidate();" class="form-horizontal"
 						role="form">
 
@@ -120,6 +120,9 @@ padding: 5px;
 								<input type="password" class="form-control" id="newPwd1"
 									name="newPwd1" placeholder="새 비밀번호 입력">
 							</div>
+						<div class="col-md-6 offset-md-3">
+							<span id="checkPwd1">&nbsp;</span>
+						</div>							
 						</div>
 
 						<!-- 새 비밀번호 확인 -->
@@ -131,8 +134,12 @@ padding: 5px;
 								<input type="password" class="form-control" id="newPwd2"
 									name="newPwd2" placeholder="새 비밀번호 확인">
 							</div>
+						<div class="col-md-6 offset-md-3">
+							<span id="checkPwd2">&nbsp;</span>
+						</div>							
+						<input type = "text" class="sr-only" name="memNo" value="${param.memNo}" id="memNo">
 						</div>
-						<br><br>
+						<br>
 						<button type="submit" class="btn btn-teal btn-block btn-lg">확인</button>
 						<button type="button" class="btn btn-secondary btn-block btn-lg">돌아가기</button>
 					</form>
@@ -140,6 +147,7 @@ padding: 5px;
 			</div>
 		</div>
 	</div>
+	<script src="${contextPath}/resources/js/pwdFind.js"></script>		
 	<jsp:include page="../common/footer.jsp"></jsp:include>
 
 	<script>

@@ -43,7 +43,7 @@ div {
 }
 
 #content-main {
-	height: 550px;
+	height: 650px;
 	line-height: 50px;
 	background-color: #F6F6F6;
 }
@@ -94,7 +94,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 	width: 75%
 }
 
-#memberId, #memberName {
+#memId, #memberName {
 	width: 67%
 }
 </style>
@@ -114,8 +114,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 				<br>
 
 				<div class="container">
-					<form method="POST" action="${contextPath}/member/myPwdFind.do"
-						onsubmit="return PwdFindValidate();" class="form-horizontal"
+					<form method="POST" action="${contextPath}/member/myPwdFindForm2.do"
+						onsubmit="return myInfoFindValidate();" class="form-horizontal"
 						role="form">
 
 						<!-- 회원 아이디 -->
@@ -124,8 +124,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 								<h6>아이디:</h6>
 							</div>
 							<div class="inputArea inputType1">
-								<input type="text" class="form-control" id="memberId"
-									name="memberId" placeholder="아이디 입력">
+								<input type="text" class="form-control" id="memId"
+									name="memId" placeholder="아이디 입력">
 							</div>
 						</div>
 
@@ -150,8 +150,10 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 									placeholder="인증 받을 메일주소">
 							</div>
 							<div class="inputArea inputButton">
-								<button type="button" class="btn btn-info" onclick="">인증
-									하기</button>
+								<button type="button" class="btn btn-info" id="certifyBtn">인증하기</button>
+							</div>
+							<div class="col-md-6 offset-md-3">
+								<span id="checkCertify">&nbsp;</span>
 							</div>
 						</div>
 
@@ -161,15 +163,16 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 								<h6>인증 번호:</h6>
 							</div>
 							<div class="inputArea inputType">
-								<input type="number" class="form-control" id="adduction"
-									name="adduction" placeholder="메일로 받은 인증번호">
+								<input type="text" class="form-control" id="certify"
+									name="certify" placeholder="메일로 받은 인증번호">
 							</div>
 							<div class="inputArea inputButton" style="float: right;">
-								<button type="button" class="btn btn-secondary">인증 확인</button>
+								<button type="button" class="btn btn-secondary" id="certifyCheck">인증 확인</button>
 							</div>
 						</div>
 						<br>
-
+						
+						<input type = "text" class="sr-only" name="memNo" id="memNo">
 						<button type="submit" class="btn btn-teal btn-block btn-lg">비밀번호
 							찾기</button>
 					</form>
@@ -177,11 +180,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 			</div>
 		</div>
 	</div>
+	<script src="${contextPath}/resources/js/pwdFind.js"></script>	
 	<jsp:include page="../common/footer.jsp"></jsp:include>
-
-	<script>
-		
-	</script>
 
 
 </body>

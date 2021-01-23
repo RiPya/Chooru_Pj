@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import com.kh.semiProject.wrapper.EncryptWrapper;
 
 @WebFilter(urlPatterns = {"/member/login.do", "/member/signUp.do", "/member/updatePwd.do", "/member/updateStatus.do"
-							,"/member/myActiveListForm.do"})
+							,"/member/myActiveListForm.do", "/member/myPwdFind2.do"})
 public class EncryptFilter implements Filter {
 
     public EncryptFilter() {

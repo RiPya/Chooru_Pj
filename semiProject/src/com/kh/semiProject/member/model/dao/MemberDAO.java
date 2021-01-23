@@ -532,7 +532,7 @@ public class MemberDAO {
 	}
 
 
-	/** 비밀번호 찾기 회원 일치용 DAO
+	/** 비밀번호 찾기 회원 이메일 확인여부 DAO
 	 * @param conn
 	 * @param member
 	 * @return result
@@ -543,6 +543,7 @@ public class MemberDAO {
 		
 		String query = prop.getProperty("memberPwdCheck");
 		
+		// System.out.println("dao 쿼리: " + query );
 		try {
 			pstmt = conn.prepareStatement(query);
 			
@@ -555,6 +556,8 @@ public class MemberDAO {
 			if(rset.next()) {
 				result = rset.getInt(1);
 			}
+			
+			// System.out.println("dao 쿼리값: " + result);
 		}finally {
 			close(rset);
 			close(pstmt);
@@ -570,7 +573,7 @@ public class MemberDAO {
 	 * @return result
 	 * @throws Exception
 	 */
-	public int findPwd(Connection conn, Member loginMember) throws Exception{
+	public int findPwd(Connection conn, Member member) throws Exception{
 		int result = 0;
 		
 		String query = prop.getProperty("findPwd");
@@ -578,10 +581,13 @@ public class MemberDAO {
 		try {
 			pstmt = conn.prepareStatement(query);
 			
-			pstmt.setString(1, loginMember.getMemPw());
-			pstmt.setInt(2, loginMember.getMemNo());
+			pstmt.setString(1, member.getMemPw());
+			pstmt.setInt(2, member.getMemNo());
 			
 			result = pstmt.executeUpdate();
+			
+			System.out.println("비밀번호 결과값 DAO: " + result);
+			
 		} finally {
 			close(pstmt);
 		}
@@ -616,5 +622,35 @@ public class MemberDAO {
 			close(pstmt);
 		}
 		return memberId;
+	}
+
+
+	/** 비밀번호 찾기 중 회원 번호 담아오기 DAO
+	 * @param conn
+	 * @param member
+	 * @return result1 
+	 * @throws Exception
+	 */
+	public int memFindNo(Connection conn, Member member) throws Exception{
+		int result1 = 0;
+		
+		String query = prop.getProperty("memFindNo");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setString(1, member.getMemId());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result1 = rset.getInt("MEM_NO");
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return result1;
 	}
 }
