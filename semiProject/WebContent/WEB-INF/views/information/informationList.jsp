@@ -17,10 +17,10 @@
 }
 
 .form-info {
-   font-size: 20px;
+   font-size: 22px;
    font-weight: bolder;
    padding-right: 20px;
-   
+   font-family: 'TmoneyRoundWindRegular';
 } 
 
 .form-hr > hr {

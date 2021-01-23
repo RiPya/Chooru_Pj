@@ -26,6 +26,7 @@
 .menu li:first-of-type {
 	font-size : 20px;
 	font-weight : bold;
+	font-family: 'TmoneyRoundWindRegular';  
 }
 
 #insertBtn{

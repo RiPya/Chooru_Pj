@@ -220,8 +220,23 @@
 					</c:if>
 					
 					
-					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
-					 <c:choose> 
+					 <c:choose>
+					 <%-- 마이페이지(내글 목록)에서 왔을 때 --%>
+					 	<c:when test="${!empty param.from && param.from == 'myL'}">
+					 		<c:url var="goToList" value="/member/myActiveList.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="my">${param.my}</c:param>
+					 		</c:url>
+					 	</c:when>
+					 <%-- 마이페이지(내 댓글 목록)에서 왔을 때 --%>
+					 	<c:when test="${!empty param.from && param.from == 'myR'}">
+					 		<c:url var="goToList" value="/member/myActiveReply.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="my">${param.my}</c:param>
+					 		</c:url>
+					 	</c:when>
 						<%-- 이전 목록이 전체 검색일 때 파라미터에 sl 있음 --%>
 						<c:when test="${!empty param.from && param.from == 's'}">
 							<c:url var="goToList" value="/search/search.do">
@@ -231,6 +246,7 @@
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
 						</c:when>
+						<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
 						<c:when test="${empty param.from && !empty param.sv && !empty param.sk}">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨
@@ -262,8 +278,6 @@
 					</c:choose> 
 					
 					<a href="${goToList}" class="btn btn-teal float-right" style="width: 75px;">목록</a>
-					<button type="button" class="btn btn-dark float-right ml-1 mr-1"
-                    	onclick="location.href='${header.referer}'">뒤로가기</button>
 				</div>
 			</div>
 		</div>

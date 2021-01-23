@@ -20,9 +20,10 @@
 	}
 
 	.form-signUp{
-		font-size: 18px;
+		font-size: 22px;
 		font-weight: bolder;
 		padding-right: 20px;
+		font-family: 'TmoneyRoundWindRegular';
 	}
 
 	.form-hr > hr{

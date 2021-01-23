@@ -61,6 +61,7 @@ div {
 	font-size: 18px;
 	font-weight: bolder;
 	padding-right: 20px;
+	font-family: 'TmoneyRoundWindRegular';
 }
 
 .header-secession {

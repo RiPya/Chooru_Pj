@@ -19,7 +19,7 @@
    font-size: 20px;
    font-weight: bolder;
    padding-right: 20px;
-   
+		font-family: 'TmoneyRoundWindRegular';   
 } 
 
 .form-hr > hr {
@@ -222,6 +222,22 @@
 					
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
 					 <c:choose> 
+					 <%-- 마이페이지(내글 목록)에서 왔을 때 --%>
+					 	<c:when test="${!empty param.from && param.from == 'myL'}">
+					 		<c:url var="goToList" value="/member/myActiveList.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="my">${param.my}</c:param>
+					 		</c:url>
+					 	</c:when>
+					 <%-- 마이페이지(내 댓글 목록)에서 왔을 때 --%>
+					 	<c:when test="${!empty param.from && param.from == 'myR'}">
+					 		<c:url var="goToList" value="/member/myActiveReply.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="my">${param.my}</c:param>
+					 		</c:url>
+					 	</c:when>
 						<%-- 이전 목록이 전체 검색일 때 파라미터에 sl 있음 --%>
 						<c:when test="${!empty param.from && param.from == 's'}">
 							<c:url var="goToList" value="/search/search.do">
