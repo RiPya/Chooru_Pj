@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import com.kh.semiProject.admin.model.dao.AdminDAO;
+import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.member.model.vo.Member;
 
@@ -93,4 +94,61 @@ public class AdminService {
 		return result;
 	}
 
+	/** 관리 블라인드/삭제 게시글 pInfo
+	 * @param cp
+	 * @return
+	 * @throws Exception
+	 */
+	public PageInfo getBrdPInfo(String cp) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		int currentPage = 0;
+		if(cp == null) currentPage = 1;
+		else currentPage = Integer.parseInt(cp);
+		
+		int listCount = dao.getBrdCount(conn);
+		
+		close(conn);
+		
+		return new PageInfo(currentPage, listCount);
+	}
+
+	
+	/** 회원 게시글 관리 목록 service
+	 * @param pInfo
+	 * @return bList
+	 * @throws Exception
+	 */
+	public List<Board> selectBrdList(PageInfo pInfo) throws Exception {
+		Connection conn = getConnection();
+		
+		List<Board> bList = dao.selectBrdList(conn, pInfo);
+		
+		close(conn);
+		
+		return bList;
+	}
+
+	
+	/** 회원 관리 게시글 상태 변경
+	 * @param brdNoList
+	 * @param status 
+	 * @return result
+	 * @throws Exception
+	 */
+	public int updateBrdStatus(String brdNoList, String status) throws Exception{
+		Connection conn = getConnection();
+		
+		int result = dao.updateBrdStatus(conn, brdNoList, status);
+		
+		if(result > 0) commit(conn);
+		else rollback(conn);
+		
+		return result;
+	}
 }
+
+	
+	
+

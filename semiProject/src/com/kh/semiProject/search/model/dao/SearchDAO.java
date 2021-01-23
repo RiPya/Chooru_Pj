@@ -14,6 +14,7 @@ import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
+import com.kh.semiProject.member.model.vo.Member;
 
 
 public class SearchDAO {
@@ -547,6 +548,177 @@ public class SearchDAO {
 		}
 		
 		return ifList;
+	}
+	
+	
+	//-----------------------------관리자 페이지---------------------------------
+	/** 관리자 페이지 회원 관리 페이지 뷰 dao 
+	 * @param conn
+	 * @param map
+	 * @return listCount
+	 * @throws Exception
+	 */
+	public int getMemCount(Connection conn, Map<String, Object> map) throws Exception {
+		int listCount = 0;
+		
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		
+		String query = "SELECT COUNT(*) FROM MEMBER "
+				+ "WHERE " + keyValue;	
+
+		System.out.println(query);
+		
+		try {
+			stmt = conn.createStatement();
+			rset = stmt.executeQuery(query);
+			
+			if(rset.next()) {
+				listCount = rset.getInt(1);
+			}
+			
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return listCount;
+	}
+
+	/** 회원 검색 목록 조회 dao
+	 * @param conn
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Member> selectMemberList(Connection conn, Map<String, Object> map) throws Exception{
+		List<Member> mList = null;
+		
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		
+		String query =
+				"SELECT RNUM, MEM_NO, MEM_ID, N_NM, MEM_NM, GRADE, ENROLL_DATE, PHONE, EMAIL "
+				+ "FROM (SELECT ROWNUM RNUM, V.* "
+				 	     +  "FROM(SELECT * " 
+				 	       	    + "FROM V_MEMBER "
+				 	       	    + "WHERE " + keyValue
+				 	       		+ " ORDER BY MEM_NO DESC) V) "
+				+ "WHERE RNUM BETWEEN ? AND ? ";
+
+		try {
+			PageInfo pInfo = (PageInfo)map.get("pInfo");
+			
+			// sql 구문 조건절에 대입할 변수
+			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() - 1;
+			
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			mList = new ArrayList<Member>();
+			
+			while(rset.next()) {
+				Member member = new Member();
+				
+				member.setMemNo(rset.getInt("MEM_NO"));
+				member.setMemId(rset.getString("MEM_ID"));
+				member.setNickName(rset.getString("N_NM"));
+				member.setMemNm(rset.getString("MEM_NM"));
+				member.setGrade(rset.getString("GRADE").charAt(0));
+				member.setEnrollDate(rset.getDate("ENROLL_DATE"));
+				member.setPhone(rset.getString("PHONE"));
+				member.setEmail(rset.getString("EMAIL"));
+				
+				mList.add(member);
+				// System.out.println("mList");
+			}
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return mList;
+	}
+	
+	
+	
+	/**회원 관리 게시글 목록 검색 조회 dao
+	 * @param conn
+	 * @param map
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Board> selectBrdList(Connection conn, Map<String, Object> map) throws Exception {
+		
+		List<Board> bList = null;
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		
+		String query = "SELECT * "
+					+ "FROM (SELECT ROWNUM RNUM, V.* "
+							+ "FROM(SELECT * FROM V_STATUS "
+								+	"WHERE " + keyValue
+								+	" ORDER BY BRD_NO DESC) V) "
+		 	       	+ "WHERE RNUM BETWEEN ? AND ? ";
+		try {
+			PageInfo pInfo = (PageInfo)map.get("pInfo");
+			//sql 구문 조건절에 대입할 변수 생성
+			int startRow = (pInfo.getCurrentPage() - 1) * pInfo.getLimit() + 1;
+			int endRow = startRow + pInfo.getLimit() - 1;
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, startRow);
+			pstmt.setInt(2, endRow);
+			
+			rset = pstmt.executeQuery();
+			
+			bList = new ArrayList<Board>();
+			
+			while(rset.next()) {
+				Board board = new Board();
+				
+				board.setBrdNo(rset.getInt("BRD_NO"));
+				board.setBrdType(rset.getString("BRD_TYPE"));
+				board.setBrdTitle(rset.getString("TITLE"));
+				board.setNickName(rset.getString("MEM_ID") + "/" + rset.getString("N_NM"));
+				board.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				board.setBrdStatus(rset.getString("BRD_STATUS").charAt(0));
+				
+				bList.add(board);
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		return bList;
+	}
+
+	public int getBrdCount(Connection conn, Map<String, Object> map) throws Exception{
+		
+		int listCount = 0;
+		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		
+		String query
+			= "SELECT COUNT(*) FROM V_STATUS WHERE (BRD_STATUS = 'N' OR BRD_STATUS = 'B') AND "
+					+ keyValue;
+
+		try {
+			stmt = conn.createStatement();
+			rset = stmt.executeQuery(query);
+			
+			if(rset.next()) {
+				listCount = rset.getInt(1);
+			}
+			
+		} finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return listCount;
 	}
 
 	

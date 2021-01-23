@@ -10,6 +10,7 @@ import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.image.model.vo.Image;
+import com.kh.semiProject.member.model.vo.Member;
 import com.kh.semiProject.search.model.dao.SearchDAO;
 
 public class SearchService {
@@ -69,8 +70,15 @@ public class SearchService {
 			keyValue = " (TITLE LIKE '%' || '" + searchValue + "' || '%' "
 						+ "OR CONTENT LIKE '%' || '" + searchValue + "' || '%') ";		
 			break;
-		case "writer" : //내용
+		case "writer" : //글쓴이 / 닉네임
 			keyValue = " N_NM LIKE '%' || '" + searchValue + "' || '%' ";
+			break;
+		case "memId" : //아이디
+			keyValue = " MEM_ID LIKE '%' || '" + searchValue + "' || '%' "; 
+			break;
+		case "memAll" : //아이디 + 닉네임
+			keyValue = " (MEM_ID LIKE '%' || '" + searchValue + "' || '%' "
+					+ " OR N_NM LIKE '%' || '" + searchValue + "' || '%') ";
 			break;
 		case "allKey" : //'전체' 검색
 		case "all" : //전체 (전체 검색 + 고객센터는 무조건 이쪽으로)
@@ -141,7 +149,7 @@ public class SearchService {
 			cdCondition = " AND FREE_CODE = 'frReview' "; break;
 		case "frInfo" : //일상
 			cdCondition = " AND FREE_CODE = 'frInfo' "; break;
-			
+		//
 		//추가
 		case "all" :
 		default : //adtAll, frAll, null값
@@ -241,6 +249,75 @@ public class SearchService {
 		
 		return commCounts;
 	}
+
+
+	//-----------------------------관리자 페이지---------------------------------
+	/** 관리자 페이지 회원 관리 페이지 뷰 service 
+	 * @param map
+	 * @return pInfo
+	 * @throws Exception
+	 */
+	public PageInfo getadminPage(Map<String, Object> map) throws Exception{
+		Connection conn = getConnection();
+		
+		int currentPage = 0;
+		if(map.get("currentPage") == null) {
+			currentPage = 1;
+		} else {
+			currentPage = Integer.parseInt((String)map.get("currentPage"));
+		}
+		//현재 페이지 전달
+		map.put("currentPage", currentPage);
+		
+		//DB에서 조건을 만족하는 게시글 수를 조회하기
+		int listCount = 0;
+		
+		String code = (String)map.get("code");
+		switch(code) {
+		case "adMem" : listCount = dao.getMemCount(conn, map); break;
+		case "adBrd" : listCount = dao.getBrdCount(conn, map); break;
+		}
+
+		close(conn);
+		
+		return new PageInfo((int)map.get("currentPage"), listCount);
+	}
+
+
+	/** 회원 검색 목록 조회 Service
+	 * @param pInfo
+	 * @param map 
+	 * @return mList
+	 * @throws Exception
+	 */
+	public List<Member> selectMemberList(Map<String, Object> map) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		List<Member> mList = dao.selectMemberList(conn, map);
+		
+		close(conn);
+		
+		return mList;
+	}
+
+
+	/**회원 게시글 관리 검색 목록 service
+	 * @param map
+	 * @return bList
+	 * @throws Exception
+	 */
+	public List<Board> selectBrdList(Map<String, Object> map) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		List<Board> bList = dao.selectBrdList(conn, map);
+		
+		close(conn);
+		
+		return bList;
+	}
+
 
 
 

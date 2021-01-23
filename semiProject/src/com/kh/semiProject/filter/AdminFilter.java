@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import com.kh.semiProject.member.model.vo.Member;
 
-@WebFilter(urlPatterns= {"/notice/insertForm.do", "/notice/insert.do", 
+@WebFilter(urlPatterns= {"/notice/insertForm.do", "/notice/insert.do",  "/admin/*", "/search/memStatus.do", "/search/brdStatus.do",
 		                 "/notice/updateForm.do", "/notice/update.do", "/notice/delete.do"})
 public class AdminFilter implements Filter {
 

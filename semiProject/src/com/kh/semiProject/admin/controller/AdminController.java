@@ -1,6 +1,7 @@
 package com.kh.semiProject.admin.controller;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.kh.semiProject.admin.model.service.AdminService;
 import com.kh.semiProject.member.model.vo.Member;
+import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 
 @WebServlet("/admin/*")
@@ -93,7 +95,7 @@ public class AdminController extends HttpServlet {
 			
 			// 회원 등급 변경 Controller -------------------------------
 			else if(command.equals("/updateAdminMem.do")){
-	            errorMsg = "게시글 삭제 과정에서 오류 발생";
+	            errorMsg = "회원 등급 변경 과정에서 오류 발생";
 	            
 	            String numberList = request.getParameter("numberList"); // 회원 번호가 담겨있음
 	            //System.out.println(numberList);
@@ -143,9 +145,75 @@ public class AdminController extends HttpServlet {
 			}
 			
 			
+			//게시글 관리 페이지 연결
+			else if(command.equals("/adminBrd.do")) {
+				errorMsg = "게시글 관리 조회 과정에서 오류 발생";
+		        
+				//System.out.println("연결2");
+				
+				PageInfo pInfo = service.getBrdPInfo(cp);
+				
+				//System.out.println("pinfo: "+pInfo);
+			
+				
+				List<Board> bList = service.selectBrdList(pInfo);
+				
+				//System.out.println("blist: "+bList);
+				
+				request.setAttribute("bList", bList);
+				request.setAttribute("pInfo", pInfo);
+				
+				
+	            path = "/WEB-INF/views/admin/adminBrdStatus.jsp";
+	            view = request.getRequestDispatcher(path);
+	            view.forward(request, response);
+			}
+			
+			
+			//게시글 상태 변경 controller
+			else if(command.equals("/updateBrdSt.do")) {
+				errorMsg = "게시글 상태 변경 과정에서 오류 발생";
+				
+				//System.out.println("넘어왔어");
+				
+				String brdNoList = request.getParameter("checkList");
+				
+				String status = request.getParameter("status");
+				
+				int result = service.updateBrdStatus(brdNoList, status);
+				
+				
+	            System.out.println(result);
+	            response.getWriter().print(result);
+				
+				//System.out.println(result);
+//				
+//				if(result > 0) {
+//					swalIcon = "success";
+//					swalTitle = "게시글 상태 변경 성공";
+//					path = "adminBrd.do?tp=adminMem&cd=adBrd";
+//				} else {
+//					swalIcon = "error";
+//					swalTitle = "게시글 상태 변경 실패";
+//					
+//					//이전 페이지의 상세 주소 
+//					path = request.getHeader("referer");
+//				}
+//				request.getSession().setAttribute("swalIcon", swalIcon);
+//	            request.getSession().setAttribute("swalTitle", swalTitle);
+//
+//				response.sendRedirect(path);
+			}
 			
 			
 		} catch (Exception e) {
+			e.printStackTrace();
+			
+			//예외 발생 시 errorPage.jsp로 요청 위임
+			path = "/WEB-INF/views/common/errorPage.jsp";
+			request.setAttribute("errorMsg", errorMsg);
+			view = request.getRequestDispatcher(path);
+			view.forward(request, response);
 		}
 	
 	
