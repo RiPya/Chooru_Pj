@@ -58,36 +58,44 @@ public class SearchService {
 		if(searchKey == null) searchKey = "all"; //고객센터, 전체 검색
 		//System.out.println(searchKey);
 		
-		//검색 조건(searchKey)에 따라 SQL 조합
-		switch(searchKey) {
-			/* 주의) '%searchValue%' 부분에 searchValue를 변수를 사용해 문자열로 만들려면
-			 * 아래와 같이 "'%' || '" + 변수 + "' || '%'" 형태로 해야 함
-			 * 그래야 DB에서 정상적으로 sql 구문이 수행함*/
-		case "title" :	 //제목
-			keyValue = " TITLE LIKE '%' || '" + searchValue + "' || '%' ";
-			break;
-		case "titcont" : //제목+내용
-			keyValue = " (TITLE LIKE '%' || '" + searchValue + "' || '%' "
-						+ "OR CONTENT LIKE '%' || '" + searchValue + "' || '%') ";		
-			break;
-		case "writer" : //글쓴이 / 닉네임
-			keyValue = " N_NM LIKE '%' || '" + searchValue + "' || '%' ";
-			break;
-		case "memId" : //아이디
-			keyValue = " MEM_ID LIKE '%' || '" + searchValue + "' || '%' "; 
-			break;
-		case "memAll" : //아이디 + 닉네임
-			keyValue = " (MEM_ID LIKE '%' || '" + searchValue + "' || '%' "
-					+ " OR N_NM LIKE '%' || '" + searchValue + "' || '%') ";
-			break;
-		case "allKey" : //'전체' 검색
-		case "all" : //전체 (전체 검색 + 고객센터는 무조건 이쪽으로)
-		default : 
-			keyValue = " (TITLE LIKE '%' || '" + searchValue + "' || '%' "
-					+ "OR CONTENT LIKE '%' || '" + searchValue + "' || '%' "
-					+ "OR N_NM LIKE '%' || '" + searchValue + "' || '%') ";
-			break;
+		System.out.println(searchValue);
+		
+		if(searchValue != "") {
+			//검색 조건(searchKey)에 따라 SQL 조합
+			switch(searchKey) {
+				/* 주의) '%searchValue%' 부분에 searchValue를 변수를 사용해 문자열로 만들려면
+				 * 아래와 같이 "'%' || '" + 변수 + "' || '%'" 형태로 해야 함
+				 * 그래야 DB에서 정상적으로 sql 구문이 수행함*/
+			case "title" :	 //제목
+				keyValue = " TITLE LIKE '%' || '" + searchValue + "' || '%' ";
+				break;
+			case "titcont" : //제목+내용
+				keyValue = " (TITLE LIKE '%' || '" + searchValue + "' || '%' "
+							+ "OR CONTENT LIKE '%' || '" + searchValue + "' || '%') ";		
+				break;
+			case "writer" : //글쓴이 / 닉네임
+				keyValue = " N_NM LIKE '%' || '" + searchValue + "' || '%' ";
+				break;
+			case "memId" : //아이디
+				keyValue = " MEM_ID LIKE '%' || '" + searchValue + "' || '%' "; 
+				break;
+			case "memAll" : //아이디 + 닉네임
+				keyValue = " (MEM_ID LIKE '%' || '" + searchValue + "' || '%' "
+						+ " OR N_NM LIKE '%' || '" + searchValue + "' || '%') ";
+				break;
+			case "allKey" : //'전체' 검색
+			case "all" : //전체 (전체 검색 + 고객센터는 무조건 이쪽으로)
+			default : 
+				keyValue = " (TITLE LIKE '%' || '" + searchValue + "' || '%' "
+						+ "OR CONTENT LIKE '%' || '" + searchValue + "' || '%' "
+						+ "OR N_NM LIKE '%' || '" + searchValue + "' || '%') ";
+				break;
+			}
+		} else {
+			keyValue = "none";
 		}
+		
+		System.out.println(keyValue);
 		
 		return keyValue;
 	}

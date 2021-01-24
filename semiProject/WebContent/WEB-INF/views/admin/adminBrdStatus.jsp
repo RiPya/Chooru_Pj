@@ -126,8 +126,14 @@
 
 			<div class="my-4">
 				<form action="${contextPath}/search/brdStatus.do" method="GET" class="text-right" 
-							onsubmit="return brdValidate();" id="searchForm">
+						<%--	onsubmit="return brdValidate();" --%> id="searchForm">
 					<!-- cd -->
+					<select name="sts" class="form-control sf-margin" style="width:120px; display: inline-block;">
+						<option value="'Y','N','B'">전체</option>
+						<option value="'Y'">일반(Y)</option>
+						<option value="'N'">삭제(N)</option>
+						<option value="'B'">블라인드(B)</option>
+					</select>
 					<select name="sk" id="selectSrch" class="form-control sf-margin" style="width: 90px; display: inline-block;">
 						<option value="title">제목</option>
 						<option value="memId">아이디</option>
@@ -168,7 +174,7 @@
 					<c:choose>
 						<c:when test="${empty bList}">  
 							<tr>
-								<td colspan="6" align="center">삭제 또는 블라인드 된 게시글이 없습니다.</td>
+								<td colspan="7" align="center">해당되는 게시글이 없습니다.</td>
 							</tr>
 						</c:when>
 						<c:otherwise> <!-- 게시글이 있을 때 모두 출력-->
@@ -374,9 +380,17 @@
 		(function(){
 			var searchKey = "${param.sk}";
 			var searchValue = "${param.sv}";
+			var searchSts = "${param.sts}";
 			
 			//.each문 반복 접근문
 			//검색창 select의 option을 반복 접근
+			$("select[name=sts] > option").each(function(index, item){
+				//검색조건일 경우 selected 추가
+				if($(item).val() == searchSts){
+					$(item).prop("selected", true);
+				}
+			});
+			
 			$("select[name=sk] > option").each(function(index, item){
 				//검색조건일 경우 selected 추가
 				if($(item).val() == searchKey){
@@ -388,14 +402,14 @@
 		})();
 		
 		
-		//검색 validate
+/* 		//검색 validate
 		function brdValidate(){
 			if($("#searchBrd").val().trim().length == 0){
 				alert("검색어를 입력하세요.");
 				$("#searchBrd").focus();
 				return false;
 			}
-		}
+		} */
 		
 	</script>
 
