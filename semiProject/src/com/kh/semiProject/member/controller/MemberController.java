@@ -198,7 +198,7 @@ public class MemberController extends HttpServlet {
 				HttpSession session = request.getSession();
 				
 				// 로그인이 성공했을 때만 Session에 로그인 정보 추가
-				if(loginMember != null) {
+				if(loginMember != null && loginMember.getGrade() != '8') {
 					// 30분동안 동작이 없을 경우 Session 만료
 					session.setMaxInactiveInterval(60*30);
 					
@@ -224,6 +224,13 @@ public class MemberController extends HttpServlet {
 					// 생성된 쿠키를 클라이언트로 전달
 					// → 응답 성공 시 클라이언트 컴퓨터에 쿠키파일 자동저장
 					response.addCookie(cookie);
+					
+					// 정지회원
+				}else if(loginMember.getGrade() == '8') {
+					session.setAttribute("swalIcon", "warning");
+					session.setAttribute("swalTitle", "로그인 실패");
+					session.setAttribute("swalText", "정지된 회원입니다.");
+				
 				}else {
 					session.setAttribute("swalIcon", "error");
 					session.setAttribute("swalTitle", "로그인 실패");
@@ -627,12 +634,12 @@ public class MemberController extends HttpServlet {
 				
 				// loginMember 객체에 현재 비밀번호 세팅
 				loginMember.setMemPw(currentPwd);
-				System.out.println("로그인멤 " + loginMember);
+				// System.out.println("로그인멤 " + loginMember);
 				
 				// 비즈니스 로직 수행
 				int result = service.updateStatus(loginMember);
 				
-				System.out.println("뭐임?: " + result);
+				// System.out.println("뭐임?: " + result);
 				if(result > 0) {
 					swalIcon = "success";
 					swalTitle = "탈퇴되었습니다.";
