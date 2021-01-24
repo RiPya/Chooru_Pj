@@ -97,6 +97,8 @@ public class MemberService {
 		if(result > 0) {
 			result = dao.updateStatus(conn, loginMember.getMemNo());
 			
+			System.out.println("service: " + result);
+			
 			if(result > 0)	commit(conn);
 			else			rollback(conn);
 		}else {

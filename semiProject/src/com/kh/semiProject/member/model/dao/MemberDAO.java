@@ -183,6 +183,8 @@ public class MemberDAO {
 			pstmt.setInt(1, memNo);
 			
 			result = pstmt.executeUpdate();
+			
+			System.out.println("dao: " + result);
 		} finally {
 			close(pstmt);
 		}

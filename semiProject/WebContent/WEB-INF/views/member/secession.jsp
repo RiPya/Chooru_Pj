@@ -183,8 +183,8 @@ div {
 					<bR>
 					<!-- 새 비밀번호 확인 -->
 					<div class="row mb-4 form-row" id="btn-area">
-						<input type="password" class="form-control" id="currentPwd"
-							name="currentPwd" placeholder="비밀번호(password)">
+						<input type="password" class="form-control" id="cuPwd"
+							name="cuPwd" placeholder="비밀번호(password)">
 						<button type="submit" class="btn btn-secondary btn-block btn-size">
 							탈퇴</button>
 						<button type="button" class="btn btn-teal btn-block btn-size"
@@ -201,9 +201,9 @@ div {
 	
 	<script>
 		function scValidate(){
-			if($("#currentPwd").val().trim().length == 0) {
+			if($("#cuPwd").val().trim().length == 0) {
 				swal({icon:"warning", title:"비밀번호를 입력해주세요."});
-				$("#currentPwd").focus();
+				$("#cuPwd").focus();
 				return false;
 			}
 		};
