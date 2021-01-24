@@ -31,7 +31,7 @@
 /*메뉴에서 게시판명 폰트 조정*/
 .menu li:first-of-type {
 	font-size : 22px;
-	font-weight: bold;
+	font-weight: bolder;
 	font-family: 'TmoneyRoundWindRegular';
 }
 
@@ -111,7 +111,7 @@
 	transform : translate(-50%, -50%);
 }
 
-#adoptionList > .list-card > .card-body { }
+#adoptionList > .list-card > .card-body {margin : 0 10px 10px 10px;}
 .card-body > p { margin:0; }
 
 .card-body > .adoptTitle,
@@ -121,8 +121,13 @@
 	text-align : center;
 }
 
-.card-body > .adtCode { font-size : 14px;}
-.card-body > .adoptTitle { font-size : 18px;}
+.card-body > .adtCode {
+	margin-bottom : 8px; 
+	font-size : 1.2rem; 
+	}
+	
+.card-body > .adoptTitle { font-size : 1.2rem;}
+
 .card-body > .card-text { 
 	font-size : 14px; 
 	color : rgb(51,51,51); 
@@ -132,8 +137,10 @@
 .card-body > .adopt-yn > span {
 	display : inline-block;
 	font-weight : bold; 
-	width : 60px;
-	border-radius : 5px;
+	width : 58px;
+	height : 28px;
+	line-height : 28px;
+	border-radius : 8px;
 	text-align : center;
 }
 
@@ -246,8 +253,8 @@
 						  </div>
 						  <div class="card-body">
 						  	<p class="card-title adtCode">[${adoption.adtCode}]</p>
-						    <p class="card-title adoptTitle" style="height:60px;">${adoption.adtBrdTitle}</p>
-						    <p class="card-text adopt-yn" style="text-align : right;"><span>${adoption.adtYn}</span></p>
+						    <p class="card-title adoptTitle" style="height:50px;">${adoption.adtBrdTitle}</p>
+						    <p class="card-text adopt-yn" style="text-align : right;"><span>${adoption.adtYn}</span></p><br>
 						    <p class="card-text adopt-breed">품종 : ${adoption.adtBreed}</p>
 						    <p class="card-text adopt-gender">성별 : ${adoption.adtGender}</p>
 						    <p class="card-text adopt-age">나이 : ${adoption.adtAge}(추정)</p>
@@ -532,11 +539,7 @@
 				return false;
 			}
 		} 
-		
-		
-		
-		
-		
+
 	</script>
 
 </body>

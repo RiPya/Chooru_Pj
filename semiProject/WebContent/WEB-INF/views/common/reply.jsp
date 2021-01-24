@@ -77,7 +77,7 @@
 	<div id="reply-write-area">
 		<form action="#" method="post" onsubmit="">
 			<textarea id="reply-textarea" name="reply"></textarea>
-			<button id="addReply" class="btn btn-teal float-right replyBtnArea" type="submit">등록</button>
+			<button id="addReply" class="btn btn-teal float-right replyBtnArea" type="button">등록</button>
 		</form>
 	</div>
 			
@@ -183,11 +183,13 @@ $("#addReply").on("click", function(){
 				if(result > 0){
 					
 					// 댓글 작성 내용 삭제
-					$("#replyContent").val("");
+					$("#reply-textarea").val("");
+					selectReplyList();
+					
 					
 					swal({"icon" : "success", "title" : "댓글 등록 성공"});
 					
-					selectReplyList();
+					
 				
 				}
 				
