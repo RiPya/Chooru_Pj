@@ -181,7 +181,7 @@
 							<c:forEach var="board" items="${bList}">
 								<tr>
 									<td width="90px">${board.brdNo}</td>
-									<td class="brdType">${board.brdType}</td>
+									<td class="brdType" width="110px">${board.brdType}</td>
 									<td class="brdTitle">
 										${board.brdTitle}
 									</td>
@@ -410,6 +410,22 @@
 				return false;
 			}
 		} */
+		
+		
+		(function(){
+			$(".brdType").each(function(index, item){
+				var brdType = $(item).text();
+				
+				switch(brdType){
+				case "b1" : $(item).text("공지사항"); break;
+				case "b2" : $(item).text("입양/분양"); break;
+				case "b3" : $(item).text("입양 후기"); break;
+				case "b4" : $(item).text("자유게시판"); break;
+				case "b5" : $(item).text("고객센터"); break;
+				}
+			});
+		})();
+		
 		
 	</script>
 
