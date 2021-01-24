@@ -287,8 +287,10 @@
 		var brdNo = ${info.brdNo};
 	</script>
 	
-	<jsp:include page="../common/reply.jsp"></jsp:include>
-
+	<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
+		<jsp:include page="../common/reply.jsp"></jsp:include>
+	</c:if>
+	
 	<%-- footer --%>
 	</div>
 	<jsp:include page="../common/footer.jsp"></jsp:include>

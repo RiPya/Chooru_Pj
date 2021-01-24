@@ -188,9 +188,6 @@
 						</c:if>
 					</span>
 					
-					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-					<span class="float-right brd-second">댓글  추가</span>
-					
 			 		<span class="float-right brd-second">조회 ${free.readCount}</span>
 				</p>
 

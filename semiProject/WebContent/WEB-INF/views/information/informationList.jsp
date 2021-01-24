@@ -174,14 +174,15 @@
 					<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> 
 						<%-- 전체 게시글 조회 --%>
 						 <c:forEach var="info" items="${ifList}">
-							 <c:if test="${!empty loginMember || loginMember.grade != '0'.charAt(0)}">
+							 <c:if test="${!empty loginMember && info.nickName == loginMember.nickName}"> <%-- || loginMember.grade != '0'.charAt(0) --%>
+								<tr>
 									<td>${info.brdNo}</td>
 									<td class="cd-color">${info.code}</td>
 									<td class="infoTitle">
 										${info.brdTitle}
 										
-							 		<c:forEach var="img" items="${ifList}">
-						 				<c:if test="${info.brdNo == img.brdNo}">	
+							 		<c:forEach var="img" items="${iList}">
+						 				<c:if test="${img.brdNo == info.brdNo}">	
 						 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
 										</c:if>
 							 		</c:forEach>
@@ -218,8 +219,11 @@
 										<td>${info.readCount}</td>
 									</tr>
 									</c:if>
+										</c:forEach>
+								
 
 									<%-- 본인 글이 아닐 경우 --%>
+									 <c:forEach var="info" items="${ifList}">
 									<c:if test="${!empty loginMember && info.nickName != loginMember.nickName && loginMember.grade != '0'.charAt(0)}">
 										<!-- <tr><td colspan="6">타 회원의 글 입니다 </td><tr> -->
 										<tr>
@@ -261,7 +265,56 @@
 											<td>${info.readCount}</td>
 										</tr>
 									</c:if> 
-							</c:forEach>	
+								</c:forEach>	
+								
+								<%-- 관리자일 경우 --%>
+								<c:forEach var="info" items="${ifList}">
+							 <c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
+								<tr>
+									<td>${info.brdNo}</td>
+									<td class="cd-color">${info.code}</td>
+									<td class="infoTitle">
+										${info.brdTitle}
+										
+							 		<c:forEach var="img" items="${iList}">
+						 				<c:if test="${img.brdNo == info.brdNo}">	
+						 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
+										</c:if>
+							 		</c:forEach>
+																			
+									<c:forEach var="comm" items="${commCounts}">
+										<c:if test='${comm.brdNo == info.brdNo}'>
+											<span class="reply-count">[${comm.count}]</span>
+										</c:if>	
+									</c:forEach>
+									
+									</td>
+									<td class="infoWriter">${info.nickName}</td>
+									<td width="140px">
+									
+										<%-- 날짜 출력 모양 지정 변수 선언 --%>
+										<%-- *조건 확인용 오늘 날짜 --%>	
+										<fmt:formatDate var="today" 
+											value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/> 
+										<!-- *조회한 글의 작성 날짜 모양-->
+										<fmt:formatDate var="createDate" 
+											value="${info.brdCrtDt}" pattern="yyyy-MM-dd"/>
+										
+										<c:choose> 	
+											<c:when test="${createDate != today}">
+												${createDate}
+											</c:when> 
+		
+											<c:otherwise>
+												<fmt:formatDate 
+													value="${info.brdCrtDt}" pattern="HH:mm"/>
+											</c:otherwise>
+										</c:choose>	
+										</td>
+										<td>${info.readCount}</td>
+									</tr>
+									</c:if>
+								</c:forEach>
 					 </c:otherwise>
 					</c:choose>		
 				</tbody>
