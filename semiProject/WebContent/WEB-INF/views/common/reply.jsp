@@ -76,8 +76,7 @@
 <div id="replyContentArea">
 	<div id="reply-write-area">
 		<form action="#" method="post" onsubmit="">
-			<textarea id="reply-textarea" name="reply">
-			</textarea>
+			<textarea id="reply-textarea" name="reply"></textarea>
 			<button id="addReply" class="btn btn-teal float-right replyBtnArea" type="submit">등록</button>
 		</form>
 	</div>
@@ -109,7 +108,7 @@
 		
 <script>
 
-var loginNickName = "${loginMember.memNm}";
+var loginNickName = "${loginMember.nickName}";
 
 
 //페이지 로딩 완료 시 댓글 목록 호출
