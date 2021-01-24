@@ -15,7 +15,7 @@
  		<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js" defer></script>
 		
 		<!-- include summernote-ko-KR -->
-		<script src="lang/summernote-ko-KR.js"></script>
+		<script src="${pageContext.request.contextPath}/resources/js/summernote/lang/summernote-ko-KR.js"></script>
 
 <style>
 	/* 입양 후기 라인 */
@@ -64,7 +64,7 @@
 		}
 
 		#titleInput{
-			width: 76.5% !important;
+			width: 78% !important;
 			display: inline-block !important;
 		}
 		
@@ -153,8 +153,20 @@
         	lang: "ko-KR",
         	placeholder: "내용을 작성해 주세요.",
         	
-
-        
+        	toolbar: [
+			    // [groupName, [list of button]]
+			    ['fontname', ['fontname']],
+			    ['fontsize', ['fontsize']],
+			    ['style', ['bold', 'italic', 'underline','strikethrough', 'clear']],
+			    ['color', ['forecolor','color']],
+			    ['table', ['table']],
+			    ['para', ['ul', 'ol', 'paragraph']],
+			    ['height', ['height']],
+			    ['insert',['picture','link','video']],
+			    ['view', ['fullscreen', 'help']]
+				  ],
+					fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'],
+					fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
          /* 이미지 삽입 후 서버에 저장을 위한 callback */
         	callbacks: {
         			onImageUpload : function(files, editor, welEditable) {
