@@ -352,8 +352,9 @@
 							  type : "post",
 								success : function(result){
 									if(result > 0){ 
-			          		swal({"icon" : "success", "title" : "게시글 상태 변경이 성공했습니다."});
 			          		location.reload(); 
+			          		alert("게시글 상태 변경이 성공했습니다.");			          		
+							// swal({"icon" : "success", "title" : "게시글 상태 변경이 성공했습니다."});
 									}
 			  	      },
 			        	error : function(){

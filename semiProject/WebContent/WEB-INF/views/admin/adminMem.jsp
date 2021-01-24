@@ -381,9 +381,9 @@ tr, td {
 						  type : "post",
 							success : function(result){
 								if(result > 0){ 
-		          		swal({"icon" : "success", "title" : "등급이 변경 되었습니다"});
-		          		
 		          		location.reload();   
+		          		alert("등급이 변경되었습니다.");
+		          		// swal({"icon" : "success", "title" : "등급이 변경 되었습니다"});
 								}
 		  	      },
 		         error : function(){
