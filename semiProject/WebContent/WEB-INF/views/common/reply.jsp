@@ -109,7 +109,8 @@
 <script>
 
 var loginNickName = "${loginMember.nickName}";
-
+// var loginAdmin = "${loginMember.nickName == '관리자'}";
+// 재활용 왜 안먹히지..?
 
 //페이지 로딩 완료 시 댓글 목록 호출
 $(function(){
@@ -132,6 +133,7 @@ function selectReplyList(){
 				
 				var tr = $("<tr>").addClass("reply-row");
 				var rWriter = $("<td>").addClass("rWriter").text(item.nickName);
+				var rWriterAdmin = $("<td>").addClass("rWriter").text(item.nickName).css("color", "red");
 				var rContent = $("<td>").addClass("rContent").text(item.replyContent);
 				var rDate = $("<td>").addClass("rDate").text(item.replyDate);
 					
@@ -144,12 +146,18 @@ function selectReplyList(){
 					
 					var td = $("<td>").addClass("deleteReply");
 	
-					td.append(i);
+					td.append(i);	
 				}
 				
-				tr.append(rWriter).append(rContent).append(rDate).append(td)
-				$("#reply-list").append(tr);
-			
+				// 관리자일 경우 닉네임 빨간색
+				if(item.nickName == '관리자'){
+					tr.append(rWriterAdmin).append(rContent).append(rDate).append(td);
+				} else {
+					tr.append(rWriter).append(rContent).append(rDate).append(td);
+				}
+					console.log(item.nickName);
+				$("#reply-list").append(tr);					
+				
 			});
 		},
 		error : function(){
@@ -184,6 +192,7 @@ $("#addReply").on("click", function(){
 					
 					// 댓글 작성 내용 삭제
 					$("#reply-textarea").val("");
+					
 					selectReplyList();
 	
 					swal({"icon" : "success", "title" : "댓글 등록 성공"});
