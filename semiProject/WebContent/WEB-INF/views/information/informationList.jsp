@@ -145,7 +145,7 @@
 	<div class="container my-5">
 		<div class="header-info">
 			<span class="form-info">고객 센터</span>
-			<span class="form-hr"><span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
+			<span class="form-hr" style="position:absolute; width:90%;"><hr style="width:1000px;"></span>
 		</div>
 			
 		<div class="list-wrapper">
@@ -172,10 +172,9 @@
 					</c:when>
 					
 					<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> 
-						<%-- 본인 글만 조회 --%>
+						<%-- 전체 게시글 조회 --%>
 						 <c:forEach var="info" items="${ifList}">
-							 <c:if test="${!empty loginMember && (info.nickName == loginMember.nickName) && oginMember.grade == '0'.charAt(0)}">
-								<tr>
+							 <c:if test="${!empty loginMember || loginMember.grade != '0'.charAt(0)}">
 									<td>${info.brdNo}</td>
 									<td class="cd-color">${info.code}</td>
 									<td class="infoTitle">
@@ -261,54 +260,7 @@
 											</td>
 											<td>${info.readCount}</td>
 										</tr>
-									</c:if>
-	
-						<%-- 로그인된 계정이 관리자 등급인 경우 --%>	
-						 <c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">	
-								<tr>
-									<td>${info.brdNo}</td>
-									<td class="cd-color">${info.code}</td>
-									<td class="infoTitle">
-										${info.brdTitle}
-										
-<%-- 										<c:forEach var="img" items="${ifList}">
-							 				<c:if test="${info.brdNo == img.brdNo}">	
-							 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
-											</c:if>
-								 		</c:forEach>	 --%>
-																			
-									<!-- 글번호가 같을 때 댓글 수 추가 -->
-										<c:forEach var="comm" items="${commCounts}">
-											<c:if test='${comm.brdNo == info.brdNo}'>
-												<span class="reply-count">[${comm.count}]</span>
-											</c:if>	
-										</c:forEach>
-									</td>
-									
-									<td class="infoWriter">${info.nickName}</td>
-									<td width="140px"> 
-									<%-- 날짜 출력 모양 지정 변수 선언 --%>
-										<%-- *조건 확인용 오늘 날짜 --%>
-										<fmt:formatDate var="today" 
-											value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/> 
-										<%-- *조회한 글의 작성 날짜 모양--%>
-									<fmt:formatDate var="createDate" 
-											value="${info.brdCrtDt}" pattern="yyyy-MM-dd"/>
-										
-										<c:choose> 	
-											<c:when test="${createDate != today}">
-													${createDate}
-											</c:when> 
-					
-											<c:otherwise>
-												<fmt:formatDate 
-													value="${info.brdCrtDt}" pattern="HH:mm"/>
-											</c:otherwise>
-										</c:choose>	
-									</td>
-									<td>${info.readCount}</td>
-								</tr>
-							</c:if>					 
+									</c:if> 
 							</c:forEach>	
 					 </c:otherwise>
 					</c:choose>		
@@ -317,8 +269,8 @@
 		</div>
 
 
-			<%-- 로그인이 되어있는 경우 --%>
-		<c:if test="${!empty loginMember}">
+			<%-- 로그인이 되어있는 경우 --%> <%-- 관리자는 고객센터에 글 작성할 필요가 없음 --%>  
+		<c:if test="${!empty loginMember && loginMember.grade != '0'.charAt(0)}">
 			<button type="button" class="btn btn-teal float-right" id="insertBtn" 
 							onclick="location.href='${contextPath}/information/insertForm.do?${tpStr}'">글쓰기</button>
 		</c:if>

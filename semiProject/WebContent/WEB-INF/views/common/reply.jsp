@@ -135,14 +135,14 @@ function selectReplyList(){
 				var rContent = $("<td>").addClass("rContent").text(item.replyContent);
 				var rDate = $("<td>").addClass("rDate").text(item.replyDate);
 					
-				// 댓글 삭제 
+				// 댓글 삭제 버튼 부분
 				if(item.nickName == loginNickName){
 					var deleteBtn = $("<a>").addClass("deleteBtn");
-					var i = $("<i>").addClass("fas fa-times").attr("onclick", "deleteReply("+item.replyNo+")")
+					var i = $("<i>").addClass("fas fa-times").attr("onclick", "deleteReply("+item.replyNo+")").attr("style", "cursor: pointer");
 
 					i.append(deleteBtn);
 					
-					var td = $("<td>").addClass("deleteReply").attr("style", "cursor: pointer");
+					var td = $("<td>").addClass("deleteReply");
 	
 					td.append(i);
 				}
@@ -185,11 +185,8 @@ $("#addReply").on("click", function(){
 					// 댓글 작성 내용 삭제
 					$("#reply-textarea").val("");
 					selectReplyList();
-					
-					
+	
 					swal({"icon" : "success", "title" : "댓글 등록 성공"});
-					
-					
 				
 				}
 				
