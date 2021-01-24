@@ -199,7 +199,7 @@ public class AdminDAO {
 		int listCount = 0;
 		
 		String query
-		= "SELECT COUNT(*) FROM BOARD WHERE BRD_STATUS = 'N' OR BRD_STATUS = 'B'";
+		= "SELECT COUNT(*) FROM BOARD";
 		
 		try {
 			stmt = conn.createStatement();
