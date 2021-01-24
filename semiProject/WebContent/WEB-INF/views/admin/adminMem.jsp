@@ -151,65 +151,7 @@ tr, td {
 					</tr>
 				</thead>
 				
-				<%-- 게시글 목록 출력 --%>
-				<tbody>
-<%-- 				확인용
-					<c:forEach var="info" begin="1" end="3">
-								<tr>
-									<td>0</td>
-									<td>mgr01</td>
-									<td>김관리</td>
-									<td>관리자</td>
-									<td>0</td>
-									<td>2021-01-10</td>
-									<td>010-1234-5678</td>
-									<td>mgr01@naver.com</td>
-									<td>
-										<input class="form-check-input" type="checkbox" 
-										value="" name="check">
-									</td>
-								</tr>
-								<tr>
-									<td>0</td>
-									<td>mgr01</td>
-									<td>김관리</td>
-									<td>관리자</td>
-									<td>0</td>
-									<td>2021-01-10</td>
-									<td>010-1234-5678</td>
-									<td>mgr01@naver.com</td>
-									<td>
-										<input class="form-check-input" type="checkbox" 
-										value="" name="check">
-									</td>
-								</tr>
-								<tr>
-									<td>0</td>
-									<td>mgr01</td>
-									<td>김관리</td>
-									<td>관리자</td>
-									<td>0</td>
-									<td>2021-01-10</td>
-									<td>010-1234-5678</td>
-									<td>mgr01@naver.com</td>
-									<td>
-										<input class="form-check-input" type="checkbox" 
-										value="" name="check">
-									</td>
-								</tr>
-					</c:forEach>
-					<tr>
-						<td>0</td>
-						<td>mgr01</td>
-						<td>김관리</td>
-						<td>관리자</td>
-						<td>0</td>
-						<td>2021-01-10</td>
-						<td>010-1234-5678</td>
-						<td>mgr01@naver.com</td>
-						
-					</tr> --%>
-					
+				<tbody>					
 				<!-- db연결 후 -->
 				<!-- 회원이 없을 때 -->
 				<c:choose>
@@ -230,8 +172,10 @@ tr, td {
 								<td>${member.phone}</td>
 								<td>${member.email}</td>
 								<td>
-									<input class="form-check-input" type="checkbox" 
-										value="${member.memNo}" name="check">
+									<c:if test="${member.grade != '0'.charAt(0)}">
+										<input class="form-check-input" type="checkbox" 
+											value="${member.memNo}" name="check">
+									</c:if>
 								</td>
 								
 								<!-- 날짜 출력 모양 지정 변수 선언 -->
@@ -240,8 +184,7 @@ tr, td {
 										value="<%= new java.util.Date() %>" pattern="yyyy-MM-dd"/>
 									<!-- *가입한 회원의  날짜 모양-->
 								<fmt:formatDate var="enrollDate" 
-										value="${member.enrollDate}" pattern="yyyy-MM-dd"/> 
-										
+										value="${member.enrollDate}" pattern="yyyy-MM-dd"/> 		
 							</tr>
 						</c:forEach>
 					</c:otherwise>
