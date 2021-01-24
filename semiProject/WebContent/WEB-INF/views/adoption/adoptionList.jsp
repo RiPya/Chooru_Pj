@@ -152,6 +152,7 @@
 /* 페이징바 */
 .pagination {
 	justify-content: center;
+	margin : 0 20%;
 }
 .pagination > li > a {
 	background-color : none;
