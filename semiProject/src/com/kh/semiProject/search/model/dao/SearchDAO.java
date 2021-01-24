@@ -566,7 +566,7 @@ public class SearchDAO {
 		String query = "SELECT COUNT(*) FROM MEMBER "
 				+ "WHERE " + keyValue;	
 
-		System.out.println(query);
+		//System.out.println(query);
 		
 		try {
 			stmt = conn.createStatement();
@@ -680,7 +680,7 @@ public class SearchDAO {
 			pstmt.setInt(1, startRow);
 			pstmt.setInt(2, endRow);
 			
-			System.out.println(query);
+			//System.out.println(query);
 			rset = pstmt.executeQuery();
 			
 			bList = new ArrayList<Board>();
@@ -722,7 +722,7 @@ public class SearchDAO {
 		
 		
 		
-		System.out.println(query);
+		//System.out.println(query);
 		try {
 			stmt = conn.createStatement();
 			rset = stmt.executeQuery(query);
