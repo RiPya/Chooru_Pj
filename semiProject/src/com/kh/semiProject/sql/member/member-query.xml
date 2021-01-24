@@ -15,7 +15,7 @@ SELECT MEM_NO, GRADE, MEM_ID, MEM_NM, PHONE,
 FROM MEMBER
 WHERE MEM_ID = ?
 AND MEM_PW = ?
-AND (GRADE = '0' OR GRADE = '1')
+AND (GRADE = '0' OR GRADE = '1' OR GRADE = '8')
 </entry>
 
 <!-- 현재 비밀번호 일치여부 -->
