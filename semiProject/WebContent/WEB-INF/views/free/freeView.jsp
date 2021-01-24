@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>자유게시판 게시글 제목</title>
+<title>자유 게시글</title>
 <style>
 /* board area */
 	#board-area{ 
