@@ -175,8 +175,6 @@
 						<%-- 전체 게시글 조회 --%>
 						 <c:forEach var="info" items="${ifList}">
 							 <c:if test="${!empty loginMember || loginMember.grade != '0'.charAt(0)}">
-<%-- 							 <c:if test="${!empty loginMember && (info.nickName == loginMember.nickName) }"> --%>
-								<tr>
 									<td>${info.brdNo}</td>
 									<td class="cd-color">${info.code}</td>
 									<td class="infoTitle">
