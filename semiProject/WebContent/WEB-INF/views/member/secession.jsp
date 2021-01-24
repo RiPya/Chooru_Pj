@@ -113,7 +113,7 @@ div {
 	margin : 0 15%;
 }
 
-#currentPwd{
+#cuPwd{
 	margin-bottom : 10px;
 }
 
