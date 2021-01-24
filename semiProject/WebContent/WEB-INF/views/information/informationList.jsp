@@ -170,22 +170,22 @@
 							<td colspan="6">존재하는 게시글이 없습니다.</td>
 						</tr>
 					</c:when>
-					<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> 
 					
+					<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> 
 						<%-- 본인 글만 조회 --%>
 						 <c:forEach var="info" items="${ifList}">
-							 <c:if test="${!empty loginMember && (info.nickName == loginMember.nickName)}">
+							 <c:if test="${!empty loginMember && (info.nickName == loginMember.nickName) && oginMember.grade == '0'.charAt(0)}">
 								<tr>
 									<td>${info.brdNo}</td>
 									<td class="cd-color">${info.code}</td>
 									<td class="infoTitle">
 										${info.brdTitle}
 										
-									<c:forEach var="img" items="${iList}">
+							 		<c:forEach var="img" items="${ifList}">
 						 				<c:if test="${info.brdNo == img.brdNo}">	
 						 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
 										</c:if>
-							 		</c:forEach>			
+							 		</c:forEach>
 																			
 									<c:forEach var="comm" items="${commCounts}">
 										<c:if test='${comm.brdNo == info.brdNo}'>
@@ -262,27 +262,24 @@
 											<td>${info.readCount}</td>
 										</tr>
 									</c:if>
-
-								</c:forEach>
-						
+	
 						<%-- 로그인된 계정이 관리자 등급인 경우 --%>	
 						 <c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">	
-							 <c:forEach var="info" items="${ifList}">
 								<tr>
 									<td>${info.brdNo}</td>
 									<td class="cd-color">${info.code}</td>
 									<td class="infoTitle">
 										${info.brdTitle}
 										
-										<c:forEach var="img" items="${iList}">
+<%-- 										<c:forEach var="img" items="${ifList}">
 							 				<c:if test="${info.brdNo == img.brdNo}">	
 							 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
 											</c:if>
-								 		</c:forEach>	
+								 		</c:forEach>	 --%>
 																			
 									<!-- 글번호가 같을 때 댓글 수 추가 -->
 										<c:forEach var="comm" items="${commCounts}">
-											<c:if test='${comm.brdNo == free.brdNo}'>
+											<c:if test='${comm.brdNo == info.brdNo}'>
 												<span class="reply-count">[${comm.count}]</span>
 											</c:if>	
 										</c:forEach>
@@ -311,11 +308,10 @@
 									</td>
 									<td>${info.readCount}</td>
 								</tr>
-							</c:forEach>
-							</c:if>					 	
+							</c:if>					 
+							</c:forEach>	
 					 </c:otherwise>
-					</c:choose>
-					
+					</c:choose>		
 				</tbody>
 			</table>
 		</div>
