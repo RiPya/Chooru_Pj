@@ -223,12 +223,13 @@
 			<%-- 파라미터의 sk(searchKey)와 sv(searchValue)가 비어있지 않을 때
 					 == 검색 후 페이징바 클릭 --%>
 			<c:choose>
-				<c:when test="${!empty param.sk && !empty param.sv}">
-				 	<c:url var="pageUrl" value="search/brdStatus.do"/>
-				 	
+				<c:when test="${(!empty param.sk && !empty param.sv) || !empty param.sts}" >
+				 	<c:url var="pageUrl" value="/search/brdStatus.do"/>
+				 	<c:set var="stsStr" value="&sts=${param.sts}"/>
 				 	<%-- 쿼리스트링 내용을 변수에 저장 --%>
 				 	<c:set var="searchStr" value="&sk=${param.sk}&sv=${param.sv}"/>
 				</c:when>
+				
 				
 					<%-- 비어있을 때 --%>
 				<c:otherwise>
@@ -236,13 +237,13 @@
 				</c:otherwise>
 			</c:choose>
 			
-			<c:set var="cdStr" value="&cd=${param.cd}"/>
+			
 			
 			
 			
 			<!-- <<, >> 화살표에 들어갈 주소를 변수로 생성(쿼리스트링 사용) -->
-			<c:set var="firstPage" value="${pageUrl}?${tpCdStr}&cp=1${searchStr}"/>
-			<c:set var="lastPage" value="${pageUrl}?${tpCdStr}&cp=${pInfo.maxPage}${searchStr}"/>
+			<c:set var="firstPage" value="${pageUrl}?${tpCdStr}${stsStr}&cp=1${searchStr}"/>
+			<c:set var="lastPage" value="${pageUrl}?${tpCdStr}${stsStr}&cp=${pInfo.maxPage}${searchStr}"/>
 			
 			<%-- EL을 이용한 숫자 연산의 단점 : 연산이 자료형에 영향을 받지 않음
 				<fmt:parseNumber> : 숫자 형태를 지정하여 변수 선언
@@ -253,13 +254,13 @@
 			<%-- 현재페이지가 29라면 c1==2, prev==20 --%>
 			<fmt:parseNumber var="c1" value="${(pInfo.currentPage - 1) / pInfo.pageSize}" integerOnly="true"/>
 			<fmt:parseNumber var="prev" value="${c1 * pInfo.pageSize}" integerOnly="true"/>
-			<c:set var="prevPage" value="${pageUrl}?${tpCdStr}&cp=${prev}${searchStr}"/>
+			<c:set var="prevPage" value="${pageUrl}?${tpCdStr}${stsStr}&cp=${prev}${searchStr}"/>
 			
 			<!-- > 화살표를 눌렀을 때 다음 페이징의 startPage가 next가 되도록 -->
 			<%-- 현재페이지가 23이라면 c2==3, next==31 --%>
 			<fmt:parseNumber var="c2" value="${(pInfo.currentPage + 9) / pInfo.pageSize}" integerOnly="true"/>
 			<fmt:parseNumber var="next" value="${c2 * pInfo.pageSize + 1}" integerOnly="true"/>
-			<c:set var="nextPage" value="${pageUrl}?${tpCdStr}&cp=${next}${searchStr}"/>
+			<c:set var="nextPage" value="${pageUrl}?${tpCdStr}${stsStr}&cp=${next}${searchStr}"/>
 						
 			
 			<div class="my-5">
@@ -285,7 +286,7 @@
 						</c:when>
 						<c:otherwise>
 							<li>
-								<a class="page-link" href="${pageUrl}?${tpCdStr}&cp=${page}${searchStr}">${page}</a>
+								<a class="page-link" href="${pageUrl}?${tpCdStr}${stsStr}&cp=${page}${searchStr}">${page}</a>
 							</li>
 						</c:otherwise>
 						</c:choose>

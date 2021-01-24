@@ -58,7 +58,7 @@ public class SearchService {
 		if(searchKey == null) searchKey = "all"; //고객센터, 전체 검색
 		//System.out.println(searchKey);
 		
-		System.out.println(searchValue);
+		//System.out.println(searchValue);
 		
 		if(searchValue != "") {
 			//검색 조건(searchKey)에 따라 SQL 조합
@@ -95,7 +95,7 @@ public class SearchService {
 			keyValue = "none";
 		}
 		
-		System.out.println(keyValue);
+		//System.out.println(keyValue);
 		
 		return keyValue;
 	}
