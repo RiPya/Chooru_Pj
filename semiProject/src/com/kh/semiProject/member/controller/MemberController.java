@@ -618,18 +618,21 @@ public class MemberController extends HttpServlet {
 				errorMsg = "탈퇴 과정 중 오류 발생";
 				
 				// 현재 비밀번호 얻어오기
-				String currentPwd = request.getParameter("currentPwd");
+				String currentPwd = request.getParameter("cuPwd");
 				
 				// 세션에 로그인 되어있는 내 정보 가져오기
 				HttpSession session = request.getSession();
 				Member loginMember = (Member)session.getAttribute("loginMember");
 				
+				
 				// loginMember 객체에 현재 비밀번호 세팅
 				loginMember.setMemPw(currentPwd);
+				System.out.println("로그인멤 " + loginMember);
 				
 				// 비즈니스 로직 수행
 				int result = service.updateStatus(loginMember);
 				
+				System.out.println("뭐임?: " + result);
 				if(result > 0) {
 					swalIcon = "success";
 					swalTitle = "탈퇴되었습니다.";
