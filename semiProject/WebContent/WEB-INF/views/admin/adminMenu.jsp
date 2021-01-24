@@ -56,7 +56,7 @@
 	<!-- 마이 페이지 > 사이드 메뉴 -->
 	<div class="menu-wrapper">
 		<ul class="menu">
-			<li>관리 페이지</li>
+			<li>관리자 페이지</li>
 			<li><button class="btn btn-light adminPage <c:if test="${empty param.cd || param.cd == 'adMem'}">menu-active</c:if>" type="button">회원 관리</button></li>
 			<li><button class="btn btn-light adminPage <c:if test="${param.cd == 'adBrd'}">menu-active</c:if>" type="button">게시글 관리</button></li>
 		</ul>
