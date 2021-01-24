@@ -226,7 +226,7 @@ public class MemberController extends HttpServlet {
 					response.addCookie(cookie);
 					
 					// 정지회원
-				}else if(loginMember.getGrade() == '8') {
+				}else if(loginMember != null && loginMember.getGrade() == '8') {
 					session.setAttribute("swalIcon", "warning");
 					session.setAttribute("swalTitle", "로그인 실패");
 					session.setAttribute("swalText", "정지된 회원입니다.");

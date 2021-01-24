@@ -654,12 +654,20 @@ public class SearchDAO {
 	public List<Board> selectBrdList(Connection conn, Map<String, Object> map) throws Exception {
 		
 		List<Board> bList = null;
+		
 		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		if(keyValue.equals("none")) {
+			keyValue = " ";
+		} else {
+			keyValue = keyValue + " AND";
+		}
+		
+		String status = (String)map.get("status");
 		
 		String query = "SELECT * "
 					+ "FROM (SELECT ROWNUM RNUM, V.* "
 							+ "FROM(SELECT * FROM V_STATUS "
-								+	"WHERE " + keyValue
+								+	"WHERE " + keyValue + " BRD_STATUS IN (" + status + ")"
 								+	" ORDER BY BRD_NO DESC) V) "
 		 	       	+ "WHERE RNUM BETWEEN ? AND ? ";
 		try {
@@ -672,6 +680,7 @@ public class SearchDAO {
 			pstmt.setInt(1, startRow);
 			pstmt.setInt(2, endRow);
 			
+			System.out.println(query);
 			rset = pstmt.executeQuery();
 			
 			bList = new ArrayList<Board>();
@@ -700,11 +709,20 @@ public class SearchDAO {
 		
 		int listCount = 0;
 		String keyValue = (String)map.get("keyValue");//key-value 조건문
+		if(keyValue.equals("none")) {
+			keyValue = " ";
+		} else {
+			keyValue = keyValue + " AND";
+		}
+		
+		String status = (String)map.get("status");
 		
 		String query
-			= "SELECT COUNT(*) FROM V_STATUS WHERE (BRD_STATUS = 'N' OR BRD_STATUS = 'B') AND "
-					+ keyValue;
-
+			= "SELECT COUNT(*) FROM V_STATUS WHERE " + keyValue + " BRD_STATUS IN (" + status + ")" ;
+		
+		
+		
+		System.out.println(query);
 		try {
 			stmt = conn.createStatement();
 			rset = stmt.executeQuery(query);

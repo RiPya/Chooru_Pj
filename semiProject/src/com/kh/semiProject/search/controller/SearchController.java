@@ -398,10 +398,12 @@ public class SearchController extends HttpServlet {
 				
 				System.out.println("왔니?");
 				System.out.println(code);
+				String status = request.getParameter("sts");
 				
 				map.put("currentPage", currentPage);
 				map.put("keyValue", keyValue);
 				map.put("code", code);
+				map.put("status", status);
 				
 				PageInfo pInfo = service.getadminPage(map);
 				
