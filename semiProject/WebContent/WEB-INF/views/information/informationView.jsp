@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>고객센터 제목</title>
+<title>고객센터</title>
 
 <style>
 

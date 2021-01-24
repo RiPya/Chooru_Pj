@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>입양 후기 게시글</title>
+<title>입양 후기</title>
 <style>
 /* board area */
 	#board-area{ 
