@@ -311,8 +311,8 @@ public class AdoptionService {
 						result = dao.deleteOldImages(conn, brdNo);
 						
 						//확인용
-						System.out.println("이전 이미지 수: " + oldImages.size());
-						System.out.println("삭제 데이터 개수 : " + result);//삭제 데이터 개수 확인
+						//System.out.println("이전 이미지 수: " + oldImages.size());
+						//System.out.println("삭제 데이터 개수 : " + result);//삭제 데이터 개수 확인
 						
 						//3-2. oldImages가 삭제되었을 때 수정 후 이미지(newImages)가 있으면 
 						if(result > 0 && !newImages.isEmpty()) {

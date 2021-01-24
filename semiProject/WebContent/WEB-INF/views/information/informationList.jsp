@@ -172,9 +172,10 @@
 					</c:when>
 					
 					<c:otherwise> <!-- 게시글이 있을 때 모두 출력--> 
-						<%-- 본인 글만 조회 --%>
+						<%-- 전체 게시글 조회 --%>
 						 <c:forEach var="info" items="${ifList}">
-							 <c:if test="${!empty loginMember && (info.nickName == loginMember.nickName) && oginMember.grade == '0'.charAt(0)}">
+							 <c:if test="${!empty loginMember || loginMember.grade != '0'.charAt(0)}">
+<%-- 							 <c:if test="${!empty loginMember && (info.nickName == loginMember.nickName) }"> --%>
 								<tr>
 									<td>${info.brdNo}</td>
 									<td class="cd-color">${info.code}</td>
@@ -271,11 +272,11 @@
 									<td class="infoTitle">
 										${info.brdTitle}
 										
-<%-- 										<c:forEach var="img" items="${ifList}">
+ 										<c:forEach var="img" items="${ifList}">
 							 				<c:if test="${info.brdNo == img.brdNo}">	
 							 					<i class="fas fa-file-image img-exist" style="color:darkgray;"></i>	
 											</c:if>
-								 		</c:forEach>	 --%>
+								 		</c:forEach>
 																			
 									<!-- 글번호가 같을 때 댓글 수 추가 -->
 										<c:forEach var="comm" items="${commCounts}">
@@ -317,8 +318,8 @@
 		</div>
 
 
-			<%-- 로그인이 되어있는 경우 --%>
-		<c:if test="${!empty loginMember}">
+			<%-- 로그인이 되어있는 경우 --%> <%-- 관리자는 고객센터에 글 작성할 필요가 없음 --%>  
+		<c:if test="${!empty loginMember && loginMember.grade != '0'.charAt(0)}">
 			<button type="button" class="btn btn-teal float-right" id="insertBtn" 
 							onclick="location.href='${contextPath}/information/insertForm.do?${tpStr}'">글쓰기</button>
 		</c:if>
