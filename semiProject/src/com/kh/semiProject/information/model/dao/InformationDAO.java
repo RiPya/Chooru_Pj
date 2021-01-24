@@ -273,8 +273,6 @@ public class InformationDAO {
 				info.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
 				info.setReadCount(rset.getInt("READ_COUNT"));
 				
-				
-				
 				ifList.add(info);
 			}
 		} finally {
