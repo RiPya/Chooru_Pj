@@ -215,10 +215,6 @@
 						</c:if>
 					</span>
 					
-					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-					<!-- 댓글은 ajax로 가져올 때 같이 가져와야 실시간 반영 가능 -->
-					<span class="float-right brd-second">댓글 추가</span>
-					
 			 		<span class="float-right brd-second">조회 ${review.readCount}</span>
 				</p>
 

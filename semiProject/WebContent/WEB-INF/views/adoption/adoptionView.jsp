@@ -123,9 +123,6 @@
 
 					<span class="inline-block brd-second" id="writer">닉네임 : ${adoption.nickName}</span>
 					 					
-					<!-- float하면 앞의 요소가 먼저 정렬되기 때문에 댓글 요소가 앞에 -->
-					<span class="float-right brd-second">댓글 <%-- ${adoption.replyCount} --%></span>
-					
 					<!-- 조회 -->
 			 		<span class="float-right brd-second">조회 ${adoption.readCount}</span>
 					<br>
