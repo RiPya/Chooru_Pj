@@ -138,7 +138,7 @@ function selectReplyList(){
 				var rDate = $("<td>").addClass("rDate").text(item.replyDate);
 					
 				// 댓글 삭제 버튼 부분
-				if(item.nickName == loginNickName){
+				if(item.nickName == loginNickName || loginNickName == '관리자'){
 					var deleteBtn = $("<a>").addClass("deleteBtn");
 					var i = $("<i>").addClass("fas fa-times").attr("onclick", "deleteReply("+item.replyNo+")").attr("style", "cursor: pointer");
 

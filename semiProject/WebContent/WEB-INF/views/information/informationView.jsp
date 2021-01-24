@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>고객센터 제목</title>
+<title>고객센터</title>
 
 <style>
 
@@ -287,9 +287,8 @@
 		var brdNo = ${info.brdNo};
 	</script>
 	
-	<c:if test="${!empty loginMember && loginMember.grade == '0'.charAt(0)}">
-		<jsp:include page="../common/reply.jsp"></jsp:include>
-	</c:if>
+	<jsp:include page="../common/reply.jsp"></jsp:include>
+
 	
 	<%-- footer --%>
 	</div>
