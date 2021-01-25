@@ -10,7 +10,7 @@
     <title>Semi Project</title>
     
     <%-- header에 넣으면 안됨 / css파일은 WEB-INF 밖에? --%>
-		<link rel="stylesheet" href="css/mainStyle.css?ver=2.6" type="text/css">
+		<link rel="stylesheet" href="css/mainStyle.css?ver=2.7" type="text/css">
 </head>
 <body>
     <!-- header.jsp include -->
