@@ -56,7 +56,7 @@
 }
 
 #address, #adtNote {
-	width: 90% !important;
+	width: 82.5% !important;
 }
 
 .adtGender, .adtYn {
@@ -117,7 +117,8 @@
 
 			<div class="form-inline">
 				<label for="address" class="form-label mr-5">주소</label> 
-				<input type="text" name="address"  id="address" class="form-control ml-1" value="${adoption.address}">
+				<input type="text" name="address"  id="address" class="form-control ml-1 mr-2 postcodify_address" placeholder="주소를 입력해 주세요(시/군/구)" value="${adoption.address}">
+				<button type="button" id="postcodifyBtn" class="btn btn-teal btn-lg">검색</button>
 				
 			</div>
 
