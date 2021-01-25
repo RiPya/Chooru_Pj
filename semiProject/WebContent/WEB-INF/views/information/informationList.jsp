@@ -240,7 +240,7 @@
 											</c:forEach>
 											
 											</td>
-											<td class="infoWriter">-</td>
+											<td class="infoWriter">익명</td>
 											<td width="140px">
 											
 											<%-- 날짜 출력 모양 지정 변수 선언 --%>
