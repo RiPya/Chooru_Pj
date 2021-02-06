@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.member.model.vo.Member;
@@ -300,6 +301,220 @@ public class AdminDAO {
 		}
 		
 		return result;
+	}
+
+	
+	//게시글 조회-------------------------------------------------------------
+
+	/** 공지사항 select
+	 * @param conn
+	 * @param board
+	 * @return notice
+	 * @throws Exception
+	 */
+	public Board selectNotice(Connection conn, Board board) throws Exception {
+		Board notice = null;
+		
+		String query = prop.getProperty("selectNotice");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, board.getBrdNo());
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				notice = new Board();
+				notice.setBrdNo(rset.getInt("BRD_NO"));
+				notice.setBrdTitle(rset.getString("TITLE"));
+				notice.setBrdContent(rset.getString("CONTENT"));
+				notice.setNickName(rset.getString("N_NM"));
+				notice.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				notice.setBrdModify(rset.getTimestamp("BRD_MODIFY"));
+				notice.setReadCount(rset.getInt("READ_COUNT"));
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return notice;
+	}
+
+
+	/** 후기 select
+	 * @param conn
+	 * @param board
+	 * @return review
+	 * @throws Exception
+	 */
+	public Board selectReview(Connection conn, Board board) throws Exception{
+		Board review = null;
+		
+		String query = prop.getProperty("selectReview");
+		/*SELECT * FROM V_REVIEW WHERE BRD_NO = ? AND BRD_STATUS = 'Y'*/
+		/* VIEW :
+		  	SELECT BRD_NO, TITLE, CONTENT, ADT_DATE, ADT_LINK, N_NM, 
+			BRD_CRT_DT, BRD_MODIFY, READ_COUNT, BRD_STATUS*/
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, board.getBrdNo());
+			
+			rset = pstmt.executeQuery();
+						
+			if(rset.next()) {
+				review = new Board();
+				review.setBrdNo(rset.getInt("BRD_NO"));
+				review.setBrdTitle(rset.getString("TITLE"));
+				review.setBrdContent(rset.getString("CONTENT"));
+				review.setAdtDate(rset.getDate("ADT_DATE"));
+				review.setAdtLink(rset.getString("ADT_LINK"));
+				review.setNickName(rset.getString("N_NM"));
+				review.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				review.setBrdModify(rset.getTimestamp("BRD_MODIFY"));
+				review.setReadCount(rset.getInt("READ_COUNT"));
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return review;
+	}
+
+
+	/**자유 select
+	 * @param conn
+	 * @param board
+	 * @return free
+	 * @throws Exception
+	 */
+	public Board selectFree(Connection conn, Board board) throws Exception{
+		Board free = null;
+		
+		String query = prop.getProperty("selectFree");
+		/*SELECT * FROM V_FREE WHERE BRD_NO = ? AND BRD_STATUS = 'Y'*/
+		/* VIEW :
+		  	SELECT BRD_NO, TITLE, CONTENT, FREE_CODE, FREE_TYPE, N_NM, 
+			BRD_CRT_DT, BRD_MODIFY, READ_COUNT, BRD_STATUS*/
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			//System.out.println(query);
+			//System.out.println(brdNo);
+			
+			
+			pstmt.setInt(1, board.getBrdNo());
+			
+			rset = pstmt.executeQuery();
+						
+			if(rset.next()) {
+				free = new Board();
+				//System.out.println("1 : " + free);
+				
+				free.setBrdNo(rset.getInt("BRD_NO"));
+				free.setBrdTitle(rset.getString("TITLE"));
+				free.setBrdContent(rset.getString("CONTENT"));
+				free.setCode(rset.getString("FREE_TYPE"));//코드 자리에 자유 타입(한글이름)
+				free.setNickName(rset.getString("N_NM"));
+				free.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				free.setBrdModify(rset.getTimestamp("BRD_MODIFY"));
+				free.setReadCount(rset.getInt("READ_COUNT"));
+				
+				//System.out.println("2 : " + free);
+			}
+			
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return free;
+	}
+
+
+	/** 고객센터 select
+	 * @param conn
+	 * @param board
+	 * @return info
+	 * @throws Exception
+	 */
+	public Board selectInfo(Connection conn, Board board) throws Exception {
+		Board info = null;
+		
+		String query = prop.getProperty("selectInfo");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, board.getBrdNo());
+			
+			rset = pstmt.executeQuery();
+						
+			if(rset.next()) {
+				info = new Board();
+				info.setBrdNo(rset.getInt("BRD_NO"));
+				info.setBrdTitle(rset.getString("TITLE"));
+				info.setBrdContent(rset.getString("CONTENT"));
+				info.setCode(rset.getString("INFO_TYPE"));//코드 자리에 고객센터 타입(한글이름)
+				info.setNickName(rset.getString("N_NM"));
+				info.setBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				info.setReadCount(rset.getInt("READ_COUNT"));
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return info;
+	}
+
+
+	/** 입양/분양 select
+	 * @param conn
+	 * @param brdNo
+	 * @return adoption
+	 * @throws Exception
+	 */
+	public Adoption selectAdoption(Connection conn, int brdNo) throws Exception {
+		
+		Adoption adoption = null;
+		
+		String query = prop.getProperty("selectAdoption");
+
+		try {
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, brdNo);
+			
+			rset = pstmt.executeQuery();
+						
+			if(rset.next()) {
+				adoption = new Adoption();
+				
+				adoption.setAdtBrdNo(rset.getInt("BRD_NO"));
+				adoption.setAdtCode(rset.getString("ADT_CODE"));
+				adoption.setAdtBrdTitle(rset.getString("TITLE"));
+				adoption.setAddress(rset.getString("ADDRESS"));
+				adoption.setAdtNote(rset.getString("ADT_NOTE"));
+				adoption.setAdtBreed(rset.getString("ADT_BREED"));
+				adoption.setAdtAge(rset.getString("ADT_AGE"));
+				adoption.setAdtGender(rset.getString("ADT_GENDER"));
+				adoption.setAdtVaccination(rset.getString("ADT_VACCINATION").charAt(0));
+				adoption.setAdtTime(rset.getDate("ADT_TIME"));
+				adoption.setAdtYn(rset.getString("ADT_YN").charAt(0));
+				adoption.setAdtBrdContent(rset.getString("CONTENT"));
+				adoption.setNickName(rset.getString("N_NM"));
+				adoption.setAdtBrdCrtDt(rset.getTimestamp("BRD_CRT_DT"));
+				adoption.setAdtBrdModify(rset.getTimestamp("BRD_MODIFY"));
+				adoption.setReadCount(rset.getInt("READ_COUNT"));
+
+			}
+		} finally {
+			close(rset);
+			close(pstmt);
+		}
+		return adoption;
 	}
 	
 	

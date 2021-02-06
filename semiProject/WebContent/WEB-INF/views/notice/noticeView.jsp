@@ -230,11 +230,11 @@
 
 					<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
 					<c:choose> 
-					<%-- 마이페이지(내글 목록)에서 왔을 때 --%>
+ 						<%-- 마이페이지(내글 목록)에서 왔을 때 --%>
 					 	<c:when test="${!empty param.from && param.from == 'myL'}">
 					 		<c:url var="goToList" value="/member/myActiveList.do">
 					 			<c:param name="cp">${param.cp}</c:param>
-					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="tp">mypage</c:param>
 					 			<c:param name="my">${param.my}</c:param>
 					 		</c:url>
 					 	</c:when>
@@ -242,10 +242,11 @@
 					 	<c:when test="${!empty param.from && param.from == 'myR'}">
 					 		<c:url var="goToList" value="/member/myActiveReply.do">
 					 			<c:param name="cp">${param.cp}</c:param>
-					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="tp">mypage</c:param>
 					 			<c:param name="my">${param.my}</c:param>
 					 		</c:url>
 					 	</c:when>
+						<%-- 이전 목록이 전체 검색일 때 파라미터에 sl 있음 --%>
 						<c:when test="${!empty param.from && param.from == 's'}">
 							<c:url var="goToList" value="/search/search.do">
 								<c:param name="cp">${param.cp}</c:param>
@@ -254,6 +255,25 @@
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
 						</c:when>
+						<%-- 이전 목록이 관리자 페이지(게시글 페이지) --%>
+						<c:when test="${!empty param.from && param.from == 'adPage' && empty param.sts}">
+					 		<c:url var="goToList" value="/admin/adminBrd.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">adminMem</c:param>
+					 			<c:param name="cd">adBrd</c:param>
+					 		</c:url>
+					 	</c:when>
+					 	<%-- 이전 목록이 관리자 페이지(게시글 페이지) 검색 --%>
+						<c:when test="${!empty param.from && param.from == 'adPage' && !empty param.sts}">
+					 		<c:url var="goToList" value="/search/brdStatus.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">adminMem</c:param>
+					 			<c:param name="cd">adBrd</c:param>
+								<c:param name="sk">${param.sk}</c:param>
+								<c:param name="sv">${param.sv}</c:param>
+								<c:param name="sts">${param.sts}</c:param>
+					 		</c:url>
+					 	</c:when>
 						<c:when test="${empty param.from && !empty param.sk && !empty param.sv }">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라
 								board 위치에서 바뀌어야 됨

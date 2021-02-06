@@ -2,7 +2,9 @@ package com.kh.semiProject.admin.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.kh.semiProject.admin.model.service.AdminService;
+import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.member.model.vo.Member;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
@@ -205,6 +208,71 @@ public class AdminController extends HttpServlet {
 //				response.sendRedirect(path);
 			}
 			
+			
+			else if(command.equals("/adminView.do")) {
+				errorMsg = "게시글 상세 조회 과정에서 오류 발생";
+				
+				int brdNo =  Integer.parseInt(request.getParameter("no"));
+				
+				Board board = new Board();
+				board.setBrdNo(brdNo);
+				board.setBrdType(brdType);
+				
+				board = service.selectBrd(board);
+				
+				if(board != null) {
+					//이미지는 따로 가져올 필요 없음. content에 이미 이미지 url이 있음.
+					
+					switch(brdType) {
+					case "b1" : 
+						//리퀘스트로 notice 보내기
+						request.setAttribute("notice", board);
+						path = "/WEB-INF/views/notice/noticeView.jsp"; break;
+					case "b3" :
+						//리퀘스트로 review 보내기
+						request.setAttribute("review", board);
+						path = "/WEB-INF/views/review/reviewView.jsp"; break;
+					case "b4" :
+						request.setAttribute("free", board);
+						path = "/WEB-INF/views/free/freeView.jsp"; break;
+					case "b5" :
+						request.setAttribute("info", board);
+						path = "/WEB-INF/views/information/informationView.jsp"; break;
+					}
+
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+					
+				} else {
+					request.getSession().setAttribute("swalIcon", "error");
+					request.getSession().setAttribute("swalTitle", "게시글 조회에 실패했습니다.");
+					response.sendRedirect(request.getHeader("referer"));
+				}
+				
+			}
+			
+			else if(command.equals("/adminAdtView.do")) {
+				errorMsg = "게시글 상세 조회 과정에서 오류 발생";
+				
+				int brdNo =  Integer.parseInt(request.getParameter("no"));
+				
+				Adoption adoption = service.selectAdoption(brdNo);
+					
+				if(adoption != null) {
+					//이미지는 따로 가져올 필요 없음. content에 이미 이미지 url이 있음.
+					
+					path = "/WEB-INF/views/adoption/adoptionView.jsp";
+					request.setAttribute("adoption", adoption);
+					view = request.getRequestDispatcher(path);
+					view.forward(request, response);
+					
+				} 
+				else {
+					request.getSession().setAttribute("swalIcon", "error");
+					request.getSession().setAttribute("swalTitle", "게시글 조회에 실패했습니다.");
+					response.sendRedirect(request.getHeader("referer"));
+				}
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();

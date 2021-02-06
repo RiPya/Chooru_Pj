@@ -416,10 +416,9 @@
 					
 					//해당 카테고리(freeCode)를 가지는 게시글 목록만 다시 출력하도록 요청
 					//해당 카테고리의 1페이지로 리셋해야 하기 때문에 cp=1
-					var url = "${contextPath}/free/list.do?${tpStr}${searchStr}&cp=1&cd=" + freeCode;
+					var url = "${contextPath}/free/list.do?${tpStr}&cp=1&cd=" + freeCode;
 									//cp(페이지), tp(게시판타입 b1 b2 b3 b4 adminMem b5 mypage), cd(카테고리)
 									//tpStr = tp=_
-					
 					location.href = url;
 				});
 					

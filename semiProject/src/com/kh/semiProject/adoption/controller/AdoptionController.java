@@ -136,13 +136,14 @@ public class AdoptionController extends HttpServlet {
 				} 
 				else {
 					request.getSession().setAttribute("swalIcon", "error");
-					request.getSession().setAttribute("swalTitle", "게시판 상세 조회 실패");
+					request.getSession().setAttribute("swalTitle", "삭제 혹은 블라인드 된 게시글입니다.");
+					response.sendRedirect(request.getHeader("referer"));
 				}
 			}
 			
 			// 입양/분양 글 작성 폼 연결 Controller
 			else if(command.equals("/insertForm.do")) {
-				errorMsg = "게시판 상세 조회 과정에서 오류 발생";
+				errorMsg = "게시글 작성 폼 연결 과정에서 오류 발생";
 
 				path = "/WEB-INF/views/adoption/adoptionInsert.jsp";
 				
