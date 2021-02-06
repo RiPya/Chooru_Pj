@@ -222,7 +222,7 @@
 					 	<c:when test="${!empty param.from && param.from == 'myL'}">
 					 		<c:url var="goToList" value="/member/myActiveList.do">
 					 			<c:param name="cp">${param.cp}</c:param>
-					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="tp">mypage</c:param>
 					 			<c:param name="my">${param.my}</c:param>
 					 		</c:url>
 					 	</c:when>
@@ -230,7 +230,7 @@
 					 	<c:when test="${!empty param.from && param.from == 'myR'}">
 					 		<c:url var="goToList" value="/member/myActiveReply.do">
 					 			<c:param name="cp">${param.cp}</c:param>
-					 			<c:param name="tp">${param.tp}</c:param>
+					 			<c:param name="tp">mypage</c:param>
 					 			<c:param name="my">${param.my}</c:param>
 					 		</c:url>
 					 	</c:when>
@@ -243,6 +243,25 @@
 								<c:param name="tp">${param.tp}</c:param>
 							</c:url>
 						</c:when>
+						<%-- 이전 목록이 관리자 페이지(게시글 페이지) --%>
+						<c:when test="${!empty param.from && param.from == 'adPage' && empty param.sts}">
+					 		<c:url var="goToList" value="/admin/adminBrd.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">adminMem</c:param>
+					 			<c:param name="cd">adBrd</c:param>
+					 		</c:url>
+					 	</c:when>
+					 	<%-- 이전 목록이 관리자 페이지(게시글 페이지) 검색 --%>
+						<c:when test="${!empty param.from && param.from == 'adPage' && !empty param.sts}">
+					 		<c:url var="goToList" value="/search/brdStatus.do">
+					 			<c:param name="cp">${param.cp}</c:param>
+					 			<c:param name="tp">adminMem</c:param>
+					 			<c:param name="cd">adBrd</c:param>
+								<c:param name="sk">${param.sk}</c:param>
+								<c:param name="sv">${param.sv}</c:param>
+								<c:param name="sts">${param.sts}</c:param>
+					 		</c:url>
+					 	</c:when>
 						<%-- 파라미터에 sk,sv가 존재한다면 == 이전 목록이 검색 게시글 목록인 경우 --%>
 						<c:when test="${empty param.from && !empty param.sv && !empty param.sk}">
 							<%-- search.do는 board/view.do에서 마지막 주소만 바뀌면 되는 것이 아니라

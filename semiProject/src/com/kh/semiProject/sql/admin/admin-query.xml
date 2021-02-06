@@ -32,5 +32,25 @@ FROM (SELECT ROWNUM RNUM, V.*
 SELECT SEQ_MNO.NEXTVAL FROM DUAL
 </entry>
 
-</properties>
+<entry key="selectNotice">
+SELECT * FROM V_NOTICE 
+WHERE BRD_NO = ? 
+</entry>
 
+<entry key="selectReview">
+SELECT * FROM V_REVIEW WHERE BRD_NO = ?
+</entry>
+
+<entry key="selectFree">
+SELECT * FROM V_FREE WHERE BRD_NO = ?
+</entry>
+
+<entry key="selectInfo">
+SELECT * FROM V_INFORMATION WHERE BRD_NO = ?
+</entry>
+
+<!-- 입양/분양 게시글 상세 조회용 -->
+<entry key="selectAdoption">
+SELECT * FROM V_ADOPTION WHERE BRD_NO = ? 
+</entry>
+</properties>

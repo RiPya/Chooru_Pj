@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import com.kh.semiProject.admin.model.dao.AdminDAO;
+import com.kh.semiProject.adoption.model.vo.Adoption;
 import com.kh.semiProject.common.model.vo.Board;
 import com.kh.semiProject.common.model.vo.PageInfo;
 import com.kh.semiProject.member.model.vo.Member;
@@ -146,6 +147,46 @@ public class AdminService {
 		else rollback(conn);
 		
 		return result;
+	}
+
+
+	/** 관리페이지에서 게시글 조회
+	 * @param board
+	 * @return board
+	 * @throws Exception
+	 */
+	public Board selectBrd(Board board) throws Exception {
+		Connection conn = getConnection();
+		
+		
+		String brdType = board.getBrdType();
+		if(brdType == null) brdType = "all";//전체 검색(헤더 검색창)
+		
+		switch(brdType) {
+		case "b1" : board = dao.selectNotice(conn, board); break; //공지사항
+		case "b3" : board = dao.selectReview(conn, board); break; //입양 후기
+		case "b4" : board = dao.selectFree(conn, board); break;//자유
+		case "b5" : board = dao.selectInfo(conn, board); break; //고객센터
+		}
+		
+		return board;
+	}
+
+
+	/** 입양/분양 select
+	 * @param brdNo
+	 * @return adoption
+	 * @throws Exception
+	 */
+	public Adoption selectAdoption(int brdNo) throws Exception{
+		
+		Connection conn = getConnection();
+		
+		Adoption adoption = dao.selectAdoption(conn, brdNo);
+		
+		close(conn);
+		
+		return adoption;
 	}
 }
 

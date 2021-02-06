@@ -427,6 +427,44 @@
 			});
 		})();
 		
+		//상세 조회
+		// 게시글 상세보기 기능 (jquery를 통해 작업)
+		$("#list-table .brdTitle").on("click", function(){//제목 클릭시
+			//boardType 얻어오기 (파라미터 보내기와 상세 조회를 위해 필요함)
+			var type = $(this).parent().children().eq(1).text();
+			
+			//게시글 번호 얻어오기
+			var adminBrdNo = $(this).parent().children().eq(0).text();
+
+			var brdType = ""; /*주소용 게시판  */
+			
+			switch(type) {
+			case "공지사항" : type="b1"; break;
+			case "입양/분양" : type="b2"; break;
+			case "입양 후기" : type="b3"; break;
+			case "자유게시판" : type="b4"; break;
+			case "고객센터" : type="b5"; break;
+			}
+			
+			
+			var url = "";
+			
+			if(type == "b2") {
+				url = "${contextPath}/admin/adminAdtView.do?tp=" + type + 
+				  "&from=adPage&cp=${pInfo.currentPage}${stsStr}${searchStr}&no=" + adminBrdNo; 
+			} else {
+				url = "${contextPath}/admin/adminView.do?tp=" + type + 
+						  "&from=adPage&cp=${pInfo.currentPage}${stsStr}${searchStr}&no=" + adminBrdNo; 
+							//cp(페이지), tp(게시판타입 b4 자유게시판), no 글번호
+							//type : 각 목록의 게시판 type
+			}
+
+			location.href = url;
+		});
+		
+		
+		
+		
 		
 	</script>
 

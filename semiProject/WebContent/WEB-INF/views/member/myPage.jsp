@@ -362,11 +362,11 @@
 			var brdType = ""; /*주소용 게시판  */
 			
 			switch(type) {
-			case "공지사항" : brdType = "notice"; break;
-			case "입양/분양" : brdType = "adoption"; break;
-			case "입양 후기" : brdType = "review"; break;
-			case "자유게시판" : brdType = "free"; break;
-			case "고객센터" : brdType = "information"; break;
+			case "공지사항" : brdType = "notice"; type="b1"; break;
+			case "입양/분양" : brdType = "adoption"; type="b2"; break;
+			case "입양 후기" : brdType = "review"; type="b3"; break;
+			case "자유게시판" : brdType = "free"; type="b4"; break;
+			case "고객센터" : brdType = "information"; type="b5"; break;
 			}
 			
 			
